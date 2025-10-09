@@ -1,0 +1,25 @@
+wp-config.php
+
+# WordPress uploads and cache
+wp-content/uploads/
+wp-content/cache/
+wp-content/backup*/
+wp-content/backups/
+wp-content/upgrade/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+
+# WordPress system files
+.htaccess
+sitemap.xml
+sitemap.xml.gz
+wp-sitemap*.xml
+
+# WordPress debug and error logs
+wp-content/debug.log
+debug.log
+error_log
+
+# WordPress temporary files
+wp-content/temp/
+wp-content/ai1wm-backups/
