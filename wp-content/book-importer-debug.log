@@ -1,0 +1,287 @@
+[2025-10-09 08:40:38] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:40:38] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:40:38] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:40:41] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:40:41] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:40:41] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:42:28] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:42:28] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:42:28] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:42:30] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:42:30] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:42:30] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:42:30] === SAVING PODS FIELDS ===
+[2025-10-09 08:42:30] Post ID: 22
+[2025-10-09 08:42:30] Book Data: Array
+(
+    [title] => Sample Book 1
+    [content] => This is the description for sample book 1
+    [author] => Author Name 1
+    [other_title] => Alternative Title 1|Other Title 1|Third Title 1
+    [isbn] => 9780123456789
+    [publication_date] => 2024-01-15
+    [status] => publish
+)
+
+[2025-10-09 08:42:30] SUCCESS: Pods object initialized
+[2025-10-09 08:42:31] Author save result: SUCCESS - Value: Author Name 1
+[2025-10-09 08:42:31] ISBN save result: SUCCESS - Value: 9780123456789
+[2025-10-09 08:42:31] Processing other_title field - Raw value: Alternative Title 1|Other Title 1|Third Title 1
+[2025-10-09 08:42:31] parseRepeatableField input: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:42:31] After explode: Array
+(
+    [0] => Alternative Title 1
+    [1] => Other Title 1
+    [2] => Third Title 1
+)
+
+[2025-10-09 08:42:31] Processing value 0: 'Alternative Title 1' -> 'Alternative Title 1'
+[2025-10-09 08:42:31] Processing value 1: 'Other Title 1' -> 'Other Title 1'
+[2025-10-09 08:42:31] Processing value 2: 'Third Title 1' -> 'Third Title 1'
+[2025-10-09 08:42:31] Final cleaned values: Array
+(
+    [0] => Alternative Title 1
+    [1] => Other Title 1
+    [2] => Third Title 1
+)
+
+[2025-10-09 08:42:31] Parsed other_titles: Array
+(
+    [0] => Alternative Title 1
+    [1] => Other Title 1
+    [2] => Third Title 1
+)
+
+[2025-10-09 08:42:31] Attempting to save 3 other_title entries
+[2025-10-09 08:42:31] Clear existing entries result: SUCCESS
+[2025-10-09 08:42:31] Prepared entry 0: Alternative Title 1
+[2025-10-09 08:42:31] Prepared entry 1: Other Title 1
+[2025-10-09 08:42:31] Prepared entry 2: Third Title 1
+[2025-10-09 08:43:13] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:43:13] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:43:13] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:43:15] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:43:15] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:43:15] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:43:15] === SAVING PODS FIELDS ===
+[2025-10-09 08:43:15] Post ID: 28
+[2025-10-09 08:43:15] Book Data: Array
+(
+    [title] => Sample Book 1
+    [content] => This is the description for sample book 1
+    [author] => Author Name 1
+    [other_title] => Alternative Title 1|Other Title 1|Third Title 1
+    [isbn] => 9780123456789
+    [publication_date] => 2024-01-15
+    [status] => publish
+)
+
+[2025-10-09 08:43:15] SUCCESS: Pods object initialized
+[2025-10-09 08:43:15] Author save result: SUCCESS - Value: Author Name 1
+[2025-10-09 08:43:15] ISBN save result: SUCCESS - Value: 9780123456789
+[2025-10-09 08:43:15] Processing other_title field - Raw value: Alternative Title 1|Other Title 1|Third Title 1
+[2025-10-09 08:43:15] parseRepeatableField input: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:43:15] After explode: Array
+(
+    [0] => Alternative Title 1
+    [1] => Other Title 1
+    [2] => Third Title 1
+)
+
+[2025-10-09 08:43:15] Processing value 0: 'Alternative Title 1' -> 'Alternative Title 1'
+[2025-10-09 08:43:15] Processing value 1: 'Other Title 1' -> 'Other Title 1'
+[2025-10-09 08:43:15] Processing value 2: 'Third Title 1' -> 'Third Title 1'
+[2025-10-09 08:43:15] Final cleaned values: Array
+(
+    [0] => Alternative Title 1
+    [1] => Other Title 1
+    [2] => Third Title 1
+)
+
+[2025-10-09 08:43:15] Parsed other_titles: Array
+(
+    [0] => Alternative Title 1
+    [1] => Other Title 1
+    [2] => Third Title 1
+)
+
+[2025-10-09 08:43:15] Attempting to save 3 other_title entries
+[2025-10-09 08:43:15] Clear existing entries result: SUCCESS
+[2025-10-09 08:43:15] Prepared entry 0: Alternative Title 1
+[2025-10-09 08:43:15] Prepared entry 1: Other Title 1
+[2025-10-09 08:43:15] Prepared entry 2: Third Title 1
+[2025-10-09 08:43:31] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:43:31] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:43:31] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:43:31] === SAVING PODS FIELDS ===
+[2025-10-09 08:43:31] Post ID: 30
+[2025-10-09 08:43:31] Book Data: Array
+(
+    [title] => Sample Book 2
+    [content] => This is the description for sample book 2
+    [author] => Author Name 2
+    [other_title] => Alternative Title 2|Other Title 2
+    [isbn] => 9780987654321
+    [publication_date] => 2024-02-20
+    [status] => draft
+)
+
+[2025-10-09 08:43:31] SUCCESS: Pods object initialized
+[2025-10-09 08:43:31] Author save result: SUCCESS - Value: Author Name 2
+[2025-10-09 08:43:31] ISBN save result: SUCCESS - Value: 9780987654321
+[2025-10-09 08:43:31] Processing other_title field - Raw value: Alternative Title 2|Other Title 2
+[2025-10-09 08:43:31] parseRepeatableField input: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:43:31] After explode: Array
+(
+    [0] => Alternative Title 2
+    [1] => Other Title 2
+)
+
+[2025-10-09 08:43:31] Processing value 0: 'Alternative Title 2' -> 'Alternative Title 2'
+[2025-10-09 08:43:31] Processing value 1: 'Other Title 2' -> 'Other Title 2'
+[2025-10-09 08:43:31] Final cleaned values: Array
+(
+    [0] => Alternative Title 2
+    [1] => Other Title 2
+)
+
+[2025-10-09 08:43:31] Parsed other_titles: Array
+(
+    [0] => Alternative Title 2
+    [1] => Other Title 2
+)
+
+[2025-10-09 08:43:31] Attempting to save 2 other_title entries
+[2025-10-09 08:43:31] Clear existing entries result: SUCCESS
+[2025-10-09 08:43:31] Prepared entry 0: Alternative Title 2
+[2025-10-09 08:43:31] Prepared entry 1: Other Title 2
+[2025-10-09 08:46:31] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:46:31] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:46:31] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:46:33] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:46:33] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:46:33] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:46:33] === SAVING PODS FIELDS ===
+[2025-10-09 08:46:33] Post ID: 32
+[2025-10-09 08:46:33] Book Data: Array
+(
+    [title] => Sample Book 3
+    [content] => This is the description for sample book 3
+    [author] => Author Name 3
+    [other_title] => Single Alternative Title
+    [isbn] => 9781122334455
+    [publication_date] => 2024-03-10
+    [status] => publish
+)
+
+[2025-10-09 08:46:33] SUCCESS: Pods object initialized
+[2025-10-09 08:46:33] Author save result: SUCCESS - Value: Author Name 3
+[2025-10-09 08:46:33] ISBN save result: SUCCESS - Value: 9781122334455
+[2025-10-09 08:46:33] Processing other_title field - Raw value: Single Alternative Title
+[2025-10-09 08:46:33] Field 'other_title' config: Pods\Whatsit\Field Object
+(
+    [args] => Array
+        (
+            [object_type] => field
+            [object_storage_type] => post_type
+            [name] => other_title
+            [id] => 19
+            [parent] => 15
+            [group] => 16
+            [label] => Other Title
+            [description] => 
+            [weight] => 0
+            [type] => text
+            [text_allowed_html_tags] => strong em a ul ol li b i
+            [text_max_length] => 255
+            [repeatable] => 1
+            [repeatable_format] => ul
+            [default_evaluate_tags] => 0
+            [default_empty_fields] => 0
+            [roles_allowed] => administrator
+            [revisions_revision_field] => 0
+            [enable_conditional_logic] => 1
+            [rest_pick_response] => array
+            [rest_pick_depth] => 1
+            [required] => 1
+            [required_help_boolean] => 0
+            [repeatable_add_new_label] => title.title
+            [repeatable_format_separator] => ======
+            [text_trim] => 1
+            [text_trim_lines] => 0
+            [text_trim_p_brs] => 0
+            [text_trim_extra_lines] => 0
+            [text_allow_html] => 0
+            [text_sanitize_html] => 1
+            [text_allow_shortcode] => 0
+            [logged_in_only] => 0
+            [admin_only] => 0
+            [restrict_role] => 0
+            [restrict_capability] => 0
+            [hidden] => 0
+            [read_only] => 0
+        )
+
+)
+
+[2025-10-09 08:46:33] parseRepeatableField input: 'Single Alternative Title'
+[2025-10-09 08:46:33] After explode: Array
+(
+    [0] => Single Alternative Title
+)
+
+[2025-10-09 08:46:33] Processing value 0: 'Single Alternative Title' -> 'Single Alternative Title'
+[2025-10-09 08:46:33] Final cleaned values: Array
+(
+    [0] => Single Alternative Title
+)
+
+[2025-10-09 08:46:33] Parsed other_titles: Array
+(
+    [0] => Single Alternative Title
+)
+
+[2025-10-09 08:46:33] Attempting to save 1 other_title entries
+[2025-10-09 08:46:33] Clear existing entries result: SUCCESS
+[2025-10-09 08:46:33] Trying simple array format: Array
+(
+    [0] => Single Alternative Title
+)
+
+[2025-10-09 08:46:33] Simple array save result: SUCCESS
+[2025-10-09 08:46:33] Final saved meta: Array
+(
+    [0] => Single Alternative Title
+)
+
+[2025-10-09 08:46:33] Pods field data: Array
+(
+    [0] => Single Alternative Title
+)
+
+[2025-10-09 08:46:33] === END SAVING PODS FIELDS ===
+
+[2025-10-09 08:49:39] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:49:39] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:49:39] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:49:52] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:49:52] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:49:52] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:51:06] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:51:06] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:51:06] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:51:11] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:51:11] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:51:11] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:51:11] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:51:11] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:51:11] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 08:51:15] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 08:51:15] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 08:51:15] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 09:04:41] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 09:04:41] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 09:04:41] CSV Row 4 - other_title: 'Single Alternative Title'
+[2025-10-09 09:07:56] CSV Row 2 - other_title: 'Alternative Title 1|Other Title 1|Third Title 1'
+[2025-10-09 09:07:56] CSV Row 3 - other_title: 'Alternative Title 2|Other Title 2'
+[2025-10-09 09:07:56] CSV Row 4 - other_title: 'Single Alternative Title'

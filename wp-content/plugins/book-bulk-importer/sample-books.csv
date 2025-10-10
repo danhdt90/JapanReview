@@ -1,0 +1,6 @@
+title,content,author,other_title,isbn,publication_date,status
+"Sample Book 1","This is the description for sample book 1. It contains detailed information about the book content and what readers can expect.","Author Name 1","Alternative Title 1|Other Title 1|Third Title 1","9780123456789","2024-01-15","publish"
+"Sample Book 2","This is the description for sample book 2. A comprehensive guide covering various topics in the field.","Author Name 2","Alternative Title 2|Other Title 2","9780987654321","2024-02-20","draft"
+"Sample Book 3","This is the description for sample book 3. An in-depth analysis of modern techniques and methodologies.","Author Name 3","Single Alternative Title","9781122334455","2024-03-10","publish"
+"Programming PHP","Complete guide to PHP programming language including frameworks and best practices","John Doe","PHP Guide|Learn PHP|PHP Programming Book","9780134034287","2024-04-01","publish"
+"WordPress Development","Master WordPress development from basics to advanced topics","Jane Smith","WP Development|WordPress Guide|Building with WordPress","9780321934116","2024-05-15","draft"

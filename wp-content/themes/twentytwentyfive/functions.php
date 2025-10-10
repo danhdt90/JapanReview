@@ -156,3 +156,139 @@ if ( ! function_exists( 'twentytwentyfive_format_binding' ) ) :
 		}
 	}
 endif;
+
+// Register Custom Post Type: Book
+if ( ! function_exists( 'twentytwentyfive_register_book_post_type' ) ) :
+	/**
+	 * Register Book Custom Post Type
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return void
+	 */
+	function twentytwentyfive_register_book_post_type() {
+		$labels = array(
+			'name'                  => _x( 'Books', 'Post Type General Name', 'twentytwentyfive' ),
+			'singular_name'         => _x( 'Book', 'Post Type Singular Name', 'twentytwentyfive' ),
+			'menu_name'             => __( 'Books', 'twentytwentyfive' ),
+			'name_admin_bar'        => __( 'Book', 'twentytwentyfive' ),
+			'archives'              => __( 'Book Archives', 'twentytwentyfive' ),
+			'attributes'            => __( 'Book Attributes', 'twentytwentyfive' ),
+			'parent_item_colon'     => __( 'Parent Book:', 'twentytwentyfive' ),
+			'all_items'             => __( 'All Books', 'twentytwentyfive' ),
+			'add_new_item'          => __( 'Add New Book', 'twentytwentyfive' ),
+			'add_new'               => __( 'Add New', 'twentytwentyfive' ),
+			'new_item'              => __( 'New Book', 'twentytwentyfive' ),
+			'edit_item'             => __( 'Edit Book', 'twentytwentyfive' ),
+			'update_item'           => __( 'Update Book', 'twentytwentyfive' ),
+			'view_item'             => __( 'View Book', 'twentytwentyfive' ),
+			'view_items'            => __( 'View Books', 'twentytwentyfive' ),
+			'search_items'          => __( 'Search Book', 'twentytwentyfive' ),
+			'not_found'             => __( 'Not found', 'twentytwentyfive' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'twentytwentyfive' ),
+			'featured_image'        => __( 'Featured Image', 'twentytwentyfive' ),
+			'set_featured_image'    => __( 'Set featured image', 'twentytwentyfive' ),
+			'remove_featured_image' => __( 'Remove featured image', 'twentytwentyfive' ),
+			'use_featured_image'    => __( 'Use as featured image', 'twentytwentyfive' ),
+			'insert_into_item'      => __( 'Insert into book', 'twentytwentyfive' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this book', 'twentytwentyfive' ),
+			'items_list'            => __( 'Books list', 'twentytwentyfive' ),
+			'items_list_navigation' => __( 'Books list navigation', 'twentytwentyfive' ),
+			'filter_items_list'     => __( 'Filter books list', 'twentytwentyfive' ),
+		);
+
+		$args = array(
+			'label'                 => __( 'Book', 'twentytwentyfive' ),
+			'description'           => __( 'A custom post type for books', 'twentytwentyfive' ),
+			'labels'                => $labels,
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'revisions', 'author' ),
+			'taxonomies'            => array( 'category', 'post_tag' ),
+			'hierarchical'          => false,
+			'public'                => true,
+			'show_ui'               => true,
+			'show_in_menu'          => true,
+			'menu_position'         => 5,
+			'menu_icon'             => 'dashicons-book',
+			'show_in_admin_bar'     => true,
+			'show_in_nav_menus'     => true,
+			'can_export'            => true,
+			'has_archive'           => true,
+			'exclude_from_search'   => false,
+			'publicly_queryable'    => true,
+			'capability_type'       => 'post',
+			'show_in_rest'          => true,
+			'rest_base'             => 'books',
+			'rest_controller_class' => 'WP_REST_Posts_Controller',
+			'rewrite'               => array(
+				'slug'       => 'books',
+				'with_front' => false,
+			),
+		);
+
+		register_post_type( 'book', $args );
+	}
+endif;
+add_action( 'init', 'twentytwentyfive_register_book_post_type', 0 );
+
+// Register Custom Taxonomy for Books: Genre
+if ( ! function_exists( 'twentytwentyfive_register_book_genre_taxonomy' ) ) :
+	/**
+	 * Register Book Genre Taxonomy
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return void
+	 */
+	function twentytwentyfive_register_book_genre_taxonomy() {
+		$labels = array(
+			'name'                       => _x( 'Genres', 'Taxonomy General Name', 'twentytwentyfive' ),
+			'singular_name'              => _x( 'Genre', 'Taxonomy Singular Name', 'twentytwentyfive' ),
+			'menu_name'                  => __( 'Genres', 'twentytwentyfive' ),
+			'all_items'                  => __( 'All Genres', 'twentytwentyfive' ),
+			'parent_item'                => __( 'Parent Genre', 'twentytwentyfive' ),
+			'parent_item_colon'          => __( 'Parent Genre:', 'twentytwentyfive' ),
+			'new_item_name'              => __( 'New Genre Name', 'twentytwentyfive' ),
+			'add_new_item'               => __( 'Add New Genre', 'twentytwentyfive' ),
+			'edit_item'                  => __( 'Edit Genre', 'twentytwentyfive' ),
+			'update_item'                => __( 'Update Genre', 'twentytwentyfive' ),
+			'view_item'                  => __( 'View Genre', 'twentytwentyfive' ),
+			'separate_items_with_commas' => __( 'Separate genres with commas', 'twentytwentyfive' ),
+			'add_or_remove_items'        => __( 'Add or remove genres', 'twentytwentyfive' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', 'twentytwentyfive' ),
+			'popular_items'              => __( 'Popular Genres', 'twentytwentyfive' ),
+			'search_items'               => __( 'Search Genres', 'twentytwentyfive' ),
+			'not_found'                  => __( 'Not Found', 'twentytwentyfive' ),
+			'no_terms'                   => __( 'No genres', 'twentytwentyfive' ),
+			'items_list'                 => __( 'Genres list', 'twentytwentyfive' ),
+			'items_list_navigation'      => __( 'Genres list navigation', 'twentytwentyfive' ),
+		);
+
+		$args = array(
+			'labels'                     => $labels,
+			'hierarchical'               => true,
+			'public'                     => true,
+			'show_ui'                    => true,
+			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+			'show_in_rest'               => true,
+			'rest_base'                  => 'book-genres',
+			'rest_controller_class'      => 'WP_REST_Terms_Controller',
+			'rewrite'                    => array(
+				'slug'       => 'book-genre',
+				'with_front' => false,
+			),
+		);
+
+		register_taxonomy( 'book_genre', array( 'book' ), $args );
+	}
+endif;
+add_action( 'init', 'twentytwentyfive_register_book_genre_taxonomy', 0 );
+
+// Flush rewrite rules on theme activation
+function twentytwentyfive_flush_rewrite_rules() {
+	twentytwentyfive_register_book_post_type();
+	twentytwentyfive_register_book_genre_taxonomy();
+	flush_rewrite_rules();
+}
+add_action( 'after_switch_theme', 'twentytwentyfive_flush_rewrite_rules' );

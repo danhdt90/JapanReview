@@ -1,0 +1,4 @@
+title,content,author,other_title[0].other_title,other_title[1].other_title,other_title[2].other_title,isbn,publication_date,status
+"Sách Mẫu 1","Mô tả chi tiết cho sách mẫu 1","Tác Giả 1","Tựa Đề Khác 1","Tựa Đề Thay Thế 1","Tựa Đề Thứ Ba 1","9780123456789","2024-01-15","publish"
+"Sách Mẫu 2","Mô tả chi tiết cho sách mẫu 2","Tác Giả 2","Tựa Đề Khác 2","Tựa Đề Thay Thế 2","","9780987654321","2024-02-20","draft"
+"Sách Mẫu 3","Mô tả chi tiết cho sách mẫu 3","Tác Giả 3","Tựa Đề Khác 3","","","9781122334455","2024-03-10","publish"
