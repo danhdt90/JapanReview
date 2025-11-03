@@ -25,24 +25,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// BE COMMENT : MANUAL ACTIVE CLASS REMOVAL 
 // ===== ACTIVE MENU BY URL =====
-document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('.jr-nav .nav-link');
-    if (!navLinks.length) return;
+// document.addEventListener('DOMContentLoaded', () => {
+//     const navLinks = document.querySelectorAll('.jr-nav .nav-link');
+//     if (!navLinks.length) return;
 
-    const currentPath = window.location.pathname.split('/').pop(); // ví dụ: 'news.php'
+//     const currentPath = window.location.pathname.split('/').pop(); // ví dụ: 'news.php'
 
-    navLinks.forEach(link => {
-        const linkPath = link.getAttribute('href').split('/').pop();
-        if (linkPath === currentPath || (linkPath === 'index.php' && currentPath === '')) {
-            // bỏ active cũ
-            navLinks.forEach(l => l.classList.remove('active'));
-            // set active mới
-            link.classList.add('active');
-            link.setAttribute('aria-current', 'page');
-        }
-    });
-});
+//     navLinks.forEach(link => {
+//         const linkPath = link.getAttribute('href').split('/').pop();
+//         if (linkPath === currentPath || (linkPath === 'index.php' && currentPath === '')) {
+//             // bỏ active cũ
+//             navLinks.forEach(l => l.classList.remove('active'));
+//             // set active mới
+//             link.classList.add('active');
+//             link.setAttribute('aria-current', 'page');
+//         }
+//     });
+// });
 
 
 // ========== INTRO ANIMATION ==========

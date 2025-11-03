@@ -1,6 +1,7 @@
 <?php 
     define('ASSETS_PATH', get_stylesheet_directory_uri() . '/assets');
     define('STYLESHEET_PATH', ASSETS_PATH . '/css');
+    define('STYLESHEET_PATH_FE', ASSETS_PATH . '/scss');
     define('SCRIPT_PATH', ASSETS_PATH . '/js');
     define('IMAGE_PATH', ASSETS_PATH . '/images');
 
@@ -15,8 +16,8 @@
         add_theme_support( 'post-thumbnails' );
 
         register_nav_menus( array (
-            'menu' => __('Menu', 'brandwoods2025'),
-            'footer' => __('Footer', 'brandwoods2025'),
+            'menu_header' => __('Menu Header', 'brandwoods2025'),
+            'menu_footer' => __('Menu Footer', 'brandwoods2025'),
         ) );
     }
 
@@ -24,21 +25,20 @@
 
     function brandwoods_enqueue_scripts() {
         wp_enqueue_style(
-            'brandwoods-be-style',
-            get_stylesheet_uri(),
+            get_template_directory_uri() . 'assets/css/style-be.css',
             [],
-            filemtime(get_stylesheet_directory() . STYLESHEET_PATH .'/style-be.css')
+            '1.0'
         );
     
         
         wp_enqueue_script(
             'brandwoods-be-script',
-            get_template_directory_uri() .SCRIPT_PATH .'/main-be.js',
+            get_template_directory_uri() .'/assets/js/main-be.js',
             ['jquery'],
-            filemtime(get_template_directory() . SCRIPT_PATH .'/main-be.js'),
-            true
+            '1.0'
         );
     }
+    
     add_action('wp_enqueue_scripts', 'brandwoods_enqueue_scripts');
 
 
@@ -100,5 +100,46 @@
         }
     endif;
     add_action( 'init', 'brandwoods_pattern_categories' );
+
+    if ( ! function_exists( 'brandwoods_render_menu' ) ) :
+
+        function brandwoods_render_menu($name) {
+    
+            $menuLocations = get_nav_menu_locations();
+
+            if (!empty($menuLocations )) {
+                $navbar_items = wp_get_nav_menu_items($menuLocations[$name]);
+                $child_items = [];
+
+                if($navbar_items) {
+                    foreach ($navbar_items as $key => $item) {
+                        if ($item->menu_item_parent) {
+                            array_push($child_items, $item);
+                            unset($navbar_items[$key]);
+                        }
+                    }
+                }
+                
+                if($navbar_items) {
+                    foreach ($navbar_items as $item) {
+                        foreach ($child_items as $key => $child) {
+                            if ($child->menu_item_parent == $item->ID) {
+                                if (!$item->child_items) {
+                                    $item->child_items = [];
+                                }
+            
+                                array_push($item->child_items, $child);
+            
+                                unset($child_items[$key]);
+                            }
+                        }
+                    }
+                }
+                return $navbar_items;
+            }
+        }
+    
+    endif;
+
     
 ?>
