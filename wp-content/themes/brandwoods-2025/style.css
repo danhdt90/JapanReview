@@ -55,3 +55,9 @@ h1, h2, h3, h4, h5, h6, blockquote, caption, figcaption, p {
 .more-link {
 	display: block;
 }
+
+.news-side-list .cate_active a,
+.news-side-list .tag_active a {
+	color: #065EB0;
+	font-weight: 500;
+}

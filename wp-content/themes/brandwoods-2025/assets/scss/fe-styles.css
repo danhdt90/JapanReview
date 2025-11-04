@@ -58,9 +58,24 @@ section {
   position: sticky;
   top: 0;
   z-index: 1020;
+  /* Contact button */
 }
 .jr-header.scrolled {
   border-bottom-color: rgba(0, 0, 0, 0.18);
+}
+.jr-header .btn-contact {
+  background: #14538a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 30px;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 1.28px;
+}
+.jr-header .btn-contact:hover, .jr-header .btn-contact:focus {
+  color: #fff;
+  background: rgb(13.5443037975, 56.2088607595, 93.4556962025);
 }
 
 /* viền đen trên cùng giống ảnh */
@@ -133,22 +148,6 @@ section {
 }
 .jr-nav .nav-link.active {
   color: #14538a;
-}
-
-/* Contact button */
-.btn-contact {
-  background: #14538a;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 30px;
-  font-weight: 600;
-  font-size: 16px;
-  letter-spacing: 1.28px;
-}
-.btn-contact:hover, .btn-contact:focus {
-  color: #fff;
-  background: rgb(13.5443037975, 56.2088607595, 93.4556962025);
 }
 
 /* Hamburger (tùy biến để giống hình – 3 gạch đen) */
@@ -234,7 +233,7 @@ section {
   z-index: 1;
 }
 .jr-intro .jr-intro__title {
-  color: #1a1a1a;
+  color: #000;
   font-weight: 400;
   font-size: 50px;
   letter-spacing: 0.01em;
@@ -258,6 +257,10 @@ section {
   text-wrap: pretty;
   font-weight: 500;
 }
+.jr-intro .jr-intro__lead em,
+.jr-intro .jr-intro__text em {
+  font-weight: 400;
+}
 .jr-intro .jr-intro__lead {
   font-weight: 500;
 }
@@ -267,6 +270,7 @@ section {
 }
 .jr-intro .jr-subbar {
   position: absolute;
+  z-index: 10;
   bottom: 0;
   left: 0;
   right: 0;
@@ -315,6 +319,7 @@ section {
   scrollbar-width: none;
   /* Firefox ẩn thanh cuộn */
   font-size: 16px;
+  font-weight: 400;
   letter-spacing: 0.02em;
   /* Thay dấu phân cách mặc định thành “›” và đổi màu nhạt */
 }
@@ -394,6 +399,7 @@ section {
 }
 .issue-card .issue-cover.ratio-3x4 {
   --bs-aspect-ratio: calc(4 / 3 * 100%);
+  min-height: 453px;
 }
 .issue-card .issue-cover img {
   width: 100%;
@@ -423,7 +429,7 @@ section {
   padding: 20px 30px;
   border-radius: 5px;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
@@ -456,6 +462,8 @@ section {
 .btn-viewmore.black {
   background: #4C4C4C;
   border-radius: 0;
+  font-size: 18px;
+  font-weight: 500;
 }
 .btn-viewmore.black:hover, .btn-viewmore.black:focus {
   background: #000;
@@ -483,6 +491,7 @@ section {
   font-size: 16px;
   color: #B2453B;
   margin-bottom: 10px;
+  font-weight: 400;
 }
 .jr-news .news-meta .bullet {
   margin-inline: 0.5rem;
@@ -492,6 +501,8 @@ section {
   color: #B2453B;
   text-decoration: none;
   font-size: 18px;
+  margin-left: 5px;
+  font-weight: 400;
 }
 .jr-news .news-meta .news-cat:hover {
   text-decoration: underline;
@@ -504,13 +515,13 @@ section {
   word-break: break-word;
 }
 .jr-news .news-title a {
-  color: #171717;
+  color: #000;
   text-decoration: none;
   background: linear-gradient(currentColor, currentColor) left bottom/0 1px no-repeat;
   transition: background-size 0.25s ease, color 0.2s ease;
 }
 .jr-news .news-title a:hover, .jr-news .news-title a:focus {
-  color: rgb(2.6, 2.6, 2.6);
+  color: black;
   background-size: 100% 1px;
 }
 .jr-news .news-tags {
@@ -523,6 +534,7 @@ section {
 }
 .jr-news .news-tags li a {
   font-size: 14px;
+  font-weight: 400;
   color: #000;
   text-decoration: none;
 }
@@ -697,7 +709,7 @@ section {
 }
 .jr-tagcloud a {
   color: #000;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 500;
   text-decoration: none;
   position: relative;
@@ -785,6 +797,7 @@ section {
   padding: 0.35rem 0 0;
   margin: 0;
   font-size: 16px;
+  font-weight: 400;
   color: #000;
 }
 
@@ -844,18 +857,19 @@ section {
 
 /* Dùng lại .btn-contact (đã có từ phần header); nếu chưa, giữ block này: */
 .btn-contact {
-  background: #14538a;
+  background: #1A5E89;
   color: #fff;
   border: none;
   border-radius: 5px;
   font-size: 20px;
   font-weight: 500;
-  padding: 0 30px;
-  min-width: 142px;
+  padding: 11px 30px;
+  min-width: 256px;
+  transition: background 0.2s ease;
 }
 .btn-contact:hover, .btn-contact:focus {
   color: #fff;
-  filter: brightness(1.05);
+  background: rgb(17.8650306748, 64.5889570552, 94.1349693252);
 }
 @media (max-width: 992px) {
   .btn-contact {
@@ -911,6 +925,7 @@ section {
 }
 .jr-footer .jr-footer-note p {
   font-size: 12px;
+  font-weight: 500;
 }
 
 /* Back-to-top button */
@@ -1104,8 +1119,7 @@ section {
 /* Tag cloud */
 .jr-subtitle {
   color: #000;
-  font-weight: 600;
-  font-size: clamp(1.3rem, 1.4vw + 0.8rem, 1.9rem);
+  font-weight: 500;
 }
 
 /* ===== Article Detail ===== */
@@ -1184,8 +1198,10 @@ section {
   font-weight: 700;
   font-size: 32px;
   color: #000;
+  font-family: "Noto Sans JP", sans-serif;
 }
 .jr-about .jr-about-text {
+  font-family: "Noto Sans JP", sans-serif;
   max-width: 860px;
   margin: 0 auto;
 }
@@ -1198,12 +1214,13 @@ section {
   word-break: break-word;
 }
 .jr-about .jr-related-links {
-  font-size: 0.95rem;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: "Noto Sans JP", sans-serif;
 }
 .jr-about .jr-related-links a {
   display: inline-block;
   color: #065EB0;
-  text-decoration: none;
   word-break: break-all;
 }
 .jr-about .jr-related-links a:hover {
@@ -1237,6 +1254,7 @@ section {
   margin-bottom: 0.75rem;
   color: #065EB0;
   font-size: 18px;
+  font-weight: 400;
   font-family: "Noto Sans JP", sans-serif;
 }
 .news-side-title .dot {
@@ -1287,6 +1305,7 @@ section {
 .news-date {
   color: #333;
   font-size: 16px;
+  font-weight: 400;
 }
 
 .news-chip {
@@ -1333,6 +1352,10 @@ section {
   background: #fff;
   font-family: "Noto Sans JP", sans-serif;
 }
+.news-detail .jr-sec-title {
+  font-size: 64px;
+  font-family: "Noto Sans JP", sans-serif;
+}
 
 /* tái dùng style từ trang list */
 .news-row-head {
@@ -1349,10 +1372,9 @@ section {
   border: 1px solid rgba(0, 0, 0, 0.18);
   border-radius: 999px;
   padding: 0.15rem 0.5rem;
-  font-size: 0.8rem;
   color: #B6B6B6;
   background: #fff;
-  font-size: 18px;
+  font-weight: 400;
 }
 
 .news-title {
@@ -1378,7 +1400,7 @@ section {
 }
 
 .news-link {
-  color: #14538a;
+  color: #065EB0;
   text-decoration: none;
   word-break: break-all;
 }
@@ -1397,6 +1419,7 @@ section {
   color: #9aa0a6;
   text-decoration: none;
   display: inline-block;
+  font-weight: 400;
 }
 .news-side-list a:hover {
   color: #111;

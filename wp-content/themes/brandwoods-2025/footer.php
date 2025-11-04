@@ -29,7 +29,7 @@
         <!-- Note -->
         <div class="jr-footer-note small mx-auto">
             <p class="mb-0">
-                This official website is administered and managed by the International Research Center for Japanese Studies (Nichibunken).
+                This official website is administered and managed by the International Research Center for Japanese Studies (Nichibunken).<br>
                 The URLs and contents of this official site are subject to change without notice.<br>
                 Nichibunken is not responsible for the content of external sites to which links are provided on this site.<br>
                 © International Research Center for Japanese Studies All rights reserved

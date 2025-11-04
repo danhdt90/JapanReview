@@ -20,7 +20,7 @@
                             ?>
                                 <article class="news-row" data-cat="Announcement" data-tags="Japan,Publication">
                                     <div class="news-row-head">
-                                        <time class="news-date" datetime="2025-08-01"><?= get_the_date('Y.m.d'); ?></time>
+                                        <time class="news-date" datetime="<?= get_the_date('Y.m.d'); ?>"><?= get_the_date('Y.m.d'); ?></time>
                                         <!-- Curent category -->
                                         <?php if ($categories && !is_wp_error($categories)) : ?>
                                             <?php foreach ($categories as $cat) : ?>
@@ -37,12 +37,10 @@
                         endwhile;
                     echo '</div>';
                     wp_reset_postdata();
-                    ?>
-                        <nav class="jr-pagination mt-4" aria-label="News pagination">
-                            <ul class="pagination justify-content-center gap-2"
-                                data-pager data-total="10" data-current="1" data-base="/news.html"></ul>
-                        </nav>
-                    <?php
+                    
+                    // Paginate News
+                    brandwoods_pagination($news);
+
                 else :
                     echo '<p>No news found.</p>';
                 endif;

@@ -25,7 +25,15 @@
 
     function brandwoods_enqueue_scripts() {
         wp_enqueue_style(
-            get_template_directory_uri() . 'assets/css/style-be.css',
+            'brandwoods-be-style',
+            get_template_directory_uri() . '/assets/css/styles-be.css',
+            [],
+            '1.0'
+        );
+
+        wp_enqueue_style(
+            'brandwoods-be-style-default',
+            get_template_directory_uri() . '/style.css',
             [],
             '1.0'
         );
@@ -141,5 +149,67 @@
     
     endif;
 
-    
+    if ( ! function_exists( 'brandwoods_pagination' )) :
+
+        function brandwoods_pagination($query = null) {
+            if ($query === null) {
+                global $wp_query;
+                $query = $wp_query;
+            }
+        
+            $big = 999999999; 
+        
+            if ($query->max_num_pages <= 1) {
+                return;
+            }
+        
+            $current = max(1, get_query_var('paged'));
+            $total   = $query->max_num_pages;
+        
+            // Default page
+            $pages_to_show = [1, 2, $total];
+        
+            for ($i = $current - 1; $i <= $current + 1; $i++) {
+                if ($i > 0 && $i <= $total) {
+                    $pages_to_show[] = $i;
+                }
+            }
+        
+            $pages_to_show = array_unique($pages_to_show);
+            sort($pages_to_show);
+        
+            echo '<nav class="jr-pagination mt-4" aria-label="News pagination">';
+            echo '<ul class="pagination justify-content-center gap-2">';
+        
+            if ($current > 1) {
+                echo '<li class="page-item"><a class="page-link" href="' . esc_url(get_pagenum_link($current - 1)) . '">‹</a></li>';
+            } else {
+                echo '<li class="page-item disabled"><span class="page-link">‹</span></li>';
+            }
+        
+            $last_page = 0;
+            foreach ($pages_to_show as $page_num) {
+                if ($page_num - $last_page > 1) {
+                    echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+                }
+        
+                if ($page_num == $current) {
+                    echo '<li class="page-item active"><span class="page-link">' . $page_num . '</span></li>';
+                } else {
+                    echo '<li class="page-item"><a class="page-link" href="' . esc_url(get_pagenum_link($page_num)) . '">' . $page_num . '</a></li>';
+                }
+        
+                $last_page = $page_num;
+            }
+        
+            if ($current < $total) {
+                echo '<li class="page-item"><a class="page-link" href="' . esc_url(get_pagenum_link($current + 1)) . '">›</a></li>';
+            } else {
+                echo '<li class="page-item disabled"><span class="page-link">›</span></li>';
+            }
+        
+            echo '</ul></nav>';
+        }
+        
+    endif;
 ?>

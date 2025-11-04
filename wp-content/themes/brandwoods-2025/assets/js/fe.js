@@ -224,28 +224,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
+// BE COMMENT : MANUAL ACTIVE CLASS REMOVAL 
 // Back to index & đánh dấu sidebar theo query
-document.addEventListener('DOMContentLoaded', () => {
-    // back
-    const back = document.getElementById('btn-news-back');
-    if (back) {
-        back.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (history.length > 1) history.back();
-            else window.location.href = back.dataset.back || '/news.html';
-        });
-    }
+// document.addEventListener('DOMContentLoaded', () => {
+//     // back
+//     const back = document.getElementById('btn-news-back');
+//     if (back) {
+//         back.addEventListener('click', (e) => {
+//             e.preventDefault();
+//             if (history.length > 1) history.back();
+//             else window.location.href = back.dataset.back || '/news.html';
+//         });
+//     }
 
-    // active theo ?category=&tag=
-    const url = new URL(location.href);
-    const cat = url.searchParams.get('category') || '';
-    const tag = url.searchParams.get('tag') || '';
-    const setActive = (sel, attr, val) => {
-        document.querySelectorAll(`${sel} a`).forEach(a => {
-            a.classList.toggle('active', (a.dataset[attr] ?? '') === val);
-        });
-    };
-    setActive('#news-cats', 'cat', cat);
-    setActive('#news-tags', 'tag', tag);
-});
+//     // active theo ?category=&tag=
+//     const url = new URL(location.href);
+//     const cat = url.searchParams.get('category') || '';
+//     const tag = url.searchParams.get('tag') || '';
+//     const setActive = (sel, attr, val) => {
+//         document.querySelectorAll(`${sel} a`).forEach(a => {
+//             a.classList.toggle('active', (a.dataset[attr] ?? '') === val);
+//         });
+//     };
+//     setActive('#news-cats', 'cat', cat);
+//     setActive('#news-tags', 'tag', tag);
+// });

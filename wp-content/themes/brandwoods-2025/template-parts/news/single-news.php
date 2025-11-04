@@ -50,20 +50,22 @@
                 <hr class="news-hr">
 
                 <article class="news-body">
-                    <p>TextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextText...</p>
-                    <p>TextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextText...</p>
-                    <p>URL: <a class="news-link" href="https://dept.sophia.ac.jp/monumenta/" target="_blank" rel="noopener">https://dept.sophia.ac.jp/monumenta/</a></p>
+                    <!-- News Content -->
+                    <?= the_content(); ?>
+                    <!-- Url CPT -->
+                     <?php $new_url = get_field('news_url'); ?>
+                    <p>URL: <a class="news-link" href="<?= $new_url; ?>" target="_blank" rel="noopener"><?= $new_url ?></a></p>
                 </article>
 
                 <div class="news-tags mt-4">
                     <?php $tags = get_the_terms(get_the_ID(), 'post_tag'); ?>
                     <?php if ($tags && !is_wp_error($tags)) : ?>
                     <div class="mb-2 fw-medium text-muted">タグ登録：</div>
-                    <?php foreach ($tags as $ctag) : ?>
                         <ul class="jr-tagcloud justify-content-start ms-0">
-                            <li><a href="/news?tag=<?php echo esc_attr($ctag->slug);?>">#<?= $ctag->name; ?></a></li>
+                            <?php foreach ($tags as $ctag) : ?>
+                                <li><a href="/news?tag=<?php echo esc_attr($ctag->slug);?>">#<?= $ctag->name; ?></a></li>
+                            <?php endforeach; ?>
                         </ul>
-                    <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
 

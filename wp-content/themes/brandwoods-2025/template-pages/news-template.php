@@ -2,6 +2,7 @@
 /*
     Template Name: News Page
 */
+    $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 
     $news_categories = get_terms([
         'taxonomy'   => 'category',
@@ -26,10 +27,16 @@
 
     $args = [
         'post_type'      => 'post',
-        'posts_per_page' => -1,
+        'posts_per_page' => get_option( 'posts_per_page' ),
+        'paged'          => $paged,
         'post_status'    => 'publish',
         'orderby'        => 'date',
         'order'          => 'DESC',
+
+        'no_found_rows'          => false,
+        'cache_results'          => true,
+        'update_post_term_cache' => true,
+        'update_post_meta_cache' => true,
     ];
 
     if ( isset($_GET['category']) && $_GET['category'] != '' ) {
@@ -53,6 +60,8 @@
 ?>
 
 <?php get_header(); ?>
-<?php get_template_part('/template-parts/components/breadcrumb', null , array('id' => get_the_ID())) ?>
-    <?php get_template_part('template-parts/news/archive', 'news', (array('categories'=> $news_categories , 'tags'=> $news_tags , 'news_data' => $query))); ?>
+    <?php get_template_part('/template-parts/components/breadcrumb', null , array('id' => get_the_ID())) ?>
+    <?php get_template_part('/template-parts/news/archive', 'news', (array('categories'=> $news_categories , 'tags'=> $news_tags , 'news_data' => $query))); ?>
+    <?php get_template_part('/template-parts/components/search', 'dual'); ?>
+    <?php get_template_part('/template-parts/components/contact', 'form'); ?>
 <?php get_footer(); ?>
