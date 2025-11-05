@@ -51,7 +51,8 @@ jobs:
 
             echo "==> Cập nhật symlink current..."
             if [ -d "$APP_DIR/current" ] && [ ! -L "$APP_DIR/current" ]; then rm -rf "$APP_DIR/current"; fi
-            ln -sfn "$RELEASE_PATH" "$APP_DIR/current"
+            cd "$APP_DIR"
+            ln -sfn "releases/$TS" current
 
             # echo "==> Reload Nginx..."
             # sudo systemctl reload nginx
