@@ -50,7 +50,8 @@ jobs:
             ln -sfn $APP_DIR/shared/uploads $RELEASE_PATH/wp-content/uploads
 
             echo "==> Cập nhật symlink current..."
-            ln -sfn $RELEASE_PATH $APP_DIR/current
+            if [ -d "$APP_DIR/current" ] && [ ! -L "$APP_DIR/current" ]; then rm -rf "$APP_DIR/current"; fi
+            ln -sfn "$RELEASE_PATH" "$APP_DIR/current"
 
             # echo "==> Reload Nginx..."
             # sudo systemctl reload nginx
