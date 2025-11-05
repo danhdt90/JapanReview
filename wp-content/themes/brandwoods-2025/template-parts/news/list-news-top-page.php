@@ -6,7 +6,7 @@
         'posts_per_page' => 5,
         'paged'          => $paged,
         'post_status'    => 'publish',
-        'orderby'        => 'date',
+        'orderby'        => 'modified', // or date
         'order'          => 'DESC',
 
         'no_found_rows'          => false,
@@ -39,7 +39,7 @@
                                             <time datetime="2025-10-01"><?= get_the_date('Y.m.d'); ?></time>
                                             <?php if ($categories && !is_wp_error($categories)) : ?>
                                                 <?php foreach ($categories as $cat) : ?>
-                                                    <a class="news-cat" href="/news?category=<?php echo esc_attr($cat->slug); ?>"><?= $cat->name; ?></a>
+                                                    <a class="news-cat" href="<?= esc_url( home_url( '/news/' ) ); ?>?category=<?php echo esc_attr($cat->slug); ?>"><?= $cat->name; ?></a>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
                                         </div>
@@ -51,7 +51,7 @@
                                         <ul class="news-tags">
                                             <?php if ($post_tag && !is_wp_error($post_tag)) : ?>
                                                 <?php foreach ($post_tag as $ctag) : ?>
-                                                    <li><a href="/news?tag=<?php echo esc_attr($ctag->slug); ?>">#<?= $ctag->name; ?></a></li>
+                                                    <li><a href="<?= esc_url( home_url( '/news/' ) ); ?>?tag=<?php echo esc_attr($ctag->slug); ?>">#<?= $ctag->name; ?></a></li>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
                                         </ul>
@@ -64,7 +64,7 @@
                         ?>
                         <!-- View more -->
                         <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="500">
-                            <a href="/news" class="btn btn-viewmore">
+                            <a href="<?= esc_url( home_url( '/news/' ) ); ?>" class="btn btn-viewmore">
                                 <span>View More</span>
                                 <span class="btn-circle" aria-hidden="true"><i class="bi bi-arrow-right-short"></i></span>
                             </a>

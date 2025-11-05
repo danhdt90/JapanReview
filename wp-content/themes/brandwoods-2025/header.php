@@ -9,7 +9,7 @@
             <div class="container-xxl position-relative">
 
                 <!-- Brand / Logo -->
-                <a class="navbar-brand jr-brand d-flex flex-column" href="/">
+                <a class="navbar-brand jr-brand d-flex flex-column" href="<?= esc_url( home_url( '/' ) ); ?>">
                     <img src="<?= IMAGE_PATH; ?>/logo.svg" alt="Japan Review Logo" class="jr-brand__logo" width="115">
                 </a>
 

@@ -6,7 +6,7 @@
 
 <?php get_header(); ?>
 
-    <?php get_template_part('/template-parts/components/breadcrumb', null , array('id' => get_the_ID())) ?>
+    <?php get_template_part('/template-parts/components/breadcrumb', null , array('title' => get_the_title())) ?>
 
     <section id="jr-about" class="jr-about py-7 py-lg-9" aria-labelledby="about-title">
         <div class="container">

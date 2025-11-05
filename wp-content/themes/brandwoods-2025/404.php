@@ -1,9 +1,8 @@
 <?php
+    $page_404 = get_page_by_path('page-404');
+    $page_id = $page_404 ? $page_404->ID : '';
     get_header();
     get_template_part('/template-parts/components/breadcrumb', null , array('id' => $page_id));
-
-    $page_404 = get_page_by_path('page-404');
-    $page_id = $page_404->ID;
 
     if ($page_404) {
         ?>        

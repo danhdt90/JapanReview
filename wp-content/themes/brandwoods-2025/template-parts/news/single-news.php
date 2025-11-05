@@ -63,14 +63,14 @@
                     <div class="mb-2 fw-medium text-muted">タグ登録：</div>
                         <ul class="jr-tagcloud justify-content-start ms-0">
                             <?php foreach ($tags as $ctag) : ?>
-                                <li><a href="/news?tag=<?php echo esc_attr($ctag->slug);?>">#<?= $ctag->name; ?></a></li>
+                                <li><a href="<?= esc_url( home_url( '/news/' ) ); ?>?tag=<?php echo esc_attr($ctag->slug);?>">#<?= $ctag->name; ?></a></li>
                             <?php endforeach; ?>
                         </ul>
                     <?php endif; ?>
                 </div>
 
                 <div class="mt-5 text-center">
-                    <a href="/news" class="btn btn-viewmore black" id="btn-news-back">
+                    <a href="<?= esc_url( home_url( '/news/' ) ); ?>" class="btn btn-viewmore black" id="btn-news-back">
                         <span>Back to Index</span>
                     </a>
                 </div>

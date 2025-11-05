@@ -3,7 +3,7 @@
 
         <!-- Logo -->
         <h2 id="footer-title" class="jr-footer-logo">
-            <a href="/" class="d-inline-block">
+            <a href="<?= esc_url( home_url( '/' ) ); ?>" class="d-inline-block">
                 <img src="<?= IMAGE_PATH; ?>/logo.svg" alt="Japan Review Logo" width="150">
             </a>
         </h2>

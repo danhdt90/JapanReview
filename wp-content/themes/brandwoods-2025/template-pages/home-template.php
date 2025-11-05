@@ -6,7 +6,7 @@
 
 <?php get_header(); ?>
     
-<section id="jr-intro" class="jr-intro position-relative" aria-labelledby="intro-title">
+  <section id="jr-intro" class="jr-intro position-relative" aria-labelledby="intro-title">
     <div class="container-xxl">
       <div class="row justify-content-center">
         <div class="col-12 col-lg-9 col-xxl-8 text-center">
@@ -33,58 +33,11 @@
   </section>
 
   <section id="jr-issues" class="jr-issues py-7 py-lg-9" aria-labelledby="issues-title">
-    <div class="container text-center">
-      <h2 id="issues-title" class="jr-sec-title" data-aos="fade-up">Latest Issues</h2>
-
-      <div class="row g-5 justify-content-center">
-        <!-- Issue 1 -->
-        <div class="col-10 col-sm-6 col-lg-4">
-          <a class="issue-card" href="articles-list.php" data-aos="fade-up" data-aos-delay="100">
-            <figure class="m-0">
-              <div class="issue-cover ratio ratio-3x4">
-                <img src="assets/images/issues/issues01.png" class="img-fluid" alt="Japan Review No.34 (2019)" loading="lazy">
-              </div>
-            </figure>
-          </a>
-        </div>
-
-        <!-- Issue 2 -->
-        <div class="col-10 col-sm-6 col-lg-4">
-          <a class="issue-card" href="articles-list.php" data-aos="fade-up" data-aos-delay="200">
-            <figure class="m-0">
-              <div class="issue-cover ratio ratio-3x4">
-                <img src="assets/images/issues/issues02.png" class="img-fluid" alt="Japan Review No.27 (2014)" loading="lazy">
-              </div>
-            </figure>
-          </a>
-        </div>
-
-        <!-- Issue 3 -->
-        <div class="col-10 col-sm-6 col-lg-4">
-          <a class="issue-card" href="articles-list.php" data-aos="fade-up" data-aos-delay="300">
-            <figure class="m-0">
-              <div class="issue-cover ratio ratio-3x4">
-                <img src="assets/images/issues/issues03.png" class="img-fluid" alt="Japan Review Vol.38 (2023)" loading="lazy">
-              </div>
-            </figure>
-          </a>
-        </div>
-      </div>
-
-      <!-- View more -->
-      <div class="mt-5">
-        <a href="articles-list.php" class="btn btn-viewmore" data-aos="fade-up" data-aos-delay="400">
-          <span>View More</span>
-          <span class="btn-circle" aria-hidden="true">
-            <i class="bi bi-arrow-right-short"></i>
-          </span>
-        </a>
-      </div>
-    </div>
+    <?php get_template_part('/template-parts/issue/list-issue-top', 'page'); ?>
   </section>
 
   <section id="jr-news" class="jr-news py-7 py-lg-9" aria-labelledby="news-title">
-    <?php get_template_part('/template-parts/components/list-news-top', 'page'); ?>
+    <?php get_template_part('/template-parts/news/list-news-top', 'page'); ?>
   </section>
 
   <section id="jr-search" class="jr-search py-7 py-lg-9" aria-labelledby="search-title">
@@ -179,7 +132,7 @@
               <!-- thumb -->
               <!-- <div class="col-auto">
                 <a href="#" class="art-thumb ratio ratio-3x4" aria-label="Open article">
-                  <img src="assets/images/issues/issues01.png" alt="" loading="lazy">
+                  <img src="<?= IMAGE_PATH; ?>/issues/issues01.png" alt="" loading="lazy">
                 </a>
               </div> -->
 
@@ -266,8 +219,8 @@
       </div>
 
       <!-- Illustrations -->
-      <img class="jr-art-ill jr-art-ill-left" src="assets/images/illust_people_left2.png" alt="" aria-hidden="true">
-      <img class="jr-art-ill jr-art-ill-right" src="assets/images/illust_people_right2.png" alt="" aria-hidden="true">
+      <img class="jr-art-ill jr-art-ill-left" src="<?= IMAGE_PATH; ?>/illust_people_left2.png" alt="" aria-hidden="true">
+      <img class="jr-art-ill jr-art-ill-right" src="<?= IMAGE_PATH; ?>/illust_people_right2.png" alt="" aria-hidden="true">
     </div>
   </section>
 

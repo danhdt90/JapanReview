@@ -20,7 +20,7 @@
                         $is_active = ($cate->slug == $current_params['category']) ? 'cate_active' : '';
                         ?>
                             <li class="<?= $is_active; ?>" >
-                                <a href="/news?category=<?php echo esc_attr($cate->slug); ?>" data-cat="Announcement"><?= $cate->name; ?></a>
+                                <a href="<?= esc_url( home_url( '/news/' ) ); ?>?category=<?php echo esc_attr($cate->slug); ?>" data-cat="Announcement"><?= $cate->name; ?></a>
                             </li>
                         <?php
                     }
@@ -42,7 +42,7 @@
                         $is_active = ($ctag->slug == $current_params['tag']) ? 'tag_active' : '';
                         ?>
                             <li class="<?= $is_active ?>">
-                                <a href="/news?tag=<?php echo esc_attr($ctag->slug); ?>" data-cat="Announcement"><?= $ctag->name; ?></a>
+                                <a href="<?= esc_url( home_url( '/news/' ) ); ?>?tag=<?php echo esc_attr($ctag->slug); ?>" data-cat="Announcement"><?= $ctag->name; ?></a>
                             </li>
                         <?php
                     }

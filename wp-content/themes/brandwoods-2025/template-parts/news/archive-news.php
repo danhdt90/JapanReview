@@ -40,9 +40,7 @@
                     
                     // Paginate News
                     brandwoods_pagination($news);
-
-                else :
-                    echo '<p>No news found.</p>';
+                    
                 endif;
             ?>
         </div>

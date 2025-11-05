@@ -5,12 +5,12 @@
 ?>
 
 <?php get_header(); ?>
-<?php get_template_part('/template-parts/components/breadcrumb', null , array('id' => get_the_ID())) ?>
+<?php get_template_part('/template-parts/components/breadcrumb', null , array('title' => get_the_title())) ?>
 
     <section id="jr-about" class="jr-about py-7 py-lg-9" aria-labelledby="about-title">
         <div class="container">
             <!-- Title -->
-            <h1 id="about-title" class="jr-sec-title text-center mb-5 jr-sec-title-sub">About</h1>
+            <h1 id="about-title" class="jr-sec-title text-center mb-5 jr-sec-title-sub"><?= get_the_title(); ?></h1>
 
             <!-- Content -->
             <?= the_content(); ?>

@@ -1,5 +1,5 @@
 <?php
-    $id = $args['id'];
+    $title = $args['title'];
 ?>
 <div class="jr-subbar" aria-label="Breadcrumb">
     <div class="container-xxl">
@@ -9,7 +9,7 @@
                     <a href="/">Top</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
-                    <?= get_the_title($id); ?> 
+                    <?= $title; ?>
                 </li>
             </ol>
         </nav>
