@@ -44,14 +44,14 @@ jobs:
 
             echo "==> Dọn rác..."
             rm -rf .git .github tests
-
+            cd "$APP_DIR"
             echo "==> Symlink shared file..."
-            ln -sfn $APP_DIR/shared/wp-config.php $RELEASE_PATH/wp-config.php
-            ln -sfn $APP_DIR/shared/uploads $RELEASE_PATH/wp-content/uploads
+            ln -sfn "shared/wp-config.php" wp-config.php
+            ln -sfn "shared/uploads" wp-content/uploads
 
             echo "==> Cập nhật symlink current..."
             if [ -d "$APP_DIR/current" ] && [ ! -L "$APP_DIR/current" ]; then rm -rf "$APP_DIR/current"; fi
-            cd "$APP_DIR"
+            
             ln -sfn "releases/$TS" current
 
             # echo "==> Reload Nginx..."
