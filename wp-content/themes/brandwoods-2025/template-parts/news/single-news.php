@@ -53,8 +53,14 @@
                     <!-- News Content -->
                     <?= the_content(); ?>
                     <!-- Url CPT -->
-                     <?php $new_url = get_field('news_url'); ?>
-                    <p>URL: <a class="news-link" href="<?= $new_url; ?>" target="_blank" rel="noopener"><?= $new_url ?></a></p>
+                     <?php 
+                        $new_url = get_field('news_url');
+                        if($new_url) :
+                            ?>
+                                <p>URL: <a class="news-link" href="<?= $new_url; ?>" target="_blank" rel="noopener"><?= $new_url ?></a></p>
+                            <?php
+                        endif
+                     ?>
                 </article>
 
                 <div class="news-tags mt-4">
