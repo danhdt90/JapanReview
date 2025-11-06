@@ -64,10 +64,10 @@ jobs:
             mkdir -p wp-content
             # Đang ở: $APP_DIR/releases/$TS
             # wp-config.php: ../shared/wp-config.php (từ release lên app_dir/shared)
-            ln -sfn ../shared/wp-config.php wp-config.php
+            #ln -sfn ../shared/wp-config.php wp-config.php
             # uploads/upgrade: từ .../wp-content → ../../shared/wp-content/...
-            ln -sfn ../../shared/wp-content/uploads wp-content/uploads
-            ln -sfn ../../shared/wp-content/upgrade  wp-content/upgrade
+            #ln -sfn ../../shared/wp-content/uploads wp-content/uploads
+            #ln -sfn ../../shared/wp-content/upgrade  wp-content/upgrade
             
             echo "==> Atomic switch 'current' (relative)"
             cd "$APP_DIR"
@@ -75,7 +75,7 @@ jobs:
             if [ -d "$APP_DIR/current" ] && [ ! -L "$APP_DIR/current" ]; then
               rm -rf "$APP_DIR/current"
             fi
-            ln -sfn "releases/$TS" current
+            #ln -sfn "releases/$TS" current
             
             echo "==> Prune old releases (keep 5)"
             ls -1dt "$APP_DIR"/releases/* | tail -n +6 | xargs -r rm -rf
