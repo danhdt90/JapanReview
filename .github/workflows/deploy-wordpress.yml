@@ -48,8 +48,8 @@ jobs:
             echo "==> Symlink shared file (relative)..."
             # tạo symlink NGAY TRONG thư mục release, trỏ tương đối tới ../shared
             mkdir -p wp-content
-            ln -sfn ../shared/wp-config.php wp-config.php
-            ln -sfn ../shared/uploads     wp-content/uploads
+            ln -sfn ../../shared/wp-config.php wp-config.php
+            ln -sfn ../../shared/uploads wp-content/uploads
 
             echo "==> Cập nhật symlink current..."
             cd "$APP_DIR"
