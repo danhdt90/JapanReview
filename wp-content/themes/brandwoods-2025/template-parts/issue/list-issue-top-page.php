@@ -47,7 +47,7 @@
                     <a href="<?= esc_url( home_url( '/issues/' ) ); ?>" class="btn btn-viewmore" data-aos="fade-up" data-aos-delay="400">
                         <span>View More</span>
                         <span class="btn-circle" aria-hidden="true">
-                        <i class="bi bi-arrow-right-short"></i>
+                            <i class="bi bi-arrow-right-short"></i>
                         </span>
                     </a>
                 </div>

@@ -30,7 +30,7 @@
         'posts_per_page' => get_option( 'posts_per_page' ),
         'paged'          => $paged,
         'post_status'    => 'publish',
-        'orderby'        => 'date',
+        'orderby'        => 'modified', // or publish date
         'order'          => 'DESC',
 
         'no_found_rows'          => false,

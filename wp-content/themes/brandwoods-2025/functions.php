@@ -230,4 +230,32 @@
     // }
     // add_filter('post_link', 'brandwoods_add_news_permalink', 10, 3);
 
+    
+    // check unique volume issuse
+    add_filter('acf/validate_value/name=volume', function( $valid, $value, $field, $input ) {
+        if ( !$valid || empty($value) ) {
+            return $valid;
+        }
+    
+        $current_post_id = isset($_POST['post_ID']) ? intval($_POST['post_ID']) : 0;
+    
+        $args = [
+            'post_type'      => 'issue',
+            'post_status'    => 'any',
+            'meta_key'       => 'volume',
+            'meta_value'     => $value,
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+            'post__not_in'   => [$current_post_id],
+        ];
+    
+        $existing = get_posts($args);
+    
+        if ( $existing ) {
+            $valid = 'This volume already exists. Please enter another number.';
+        }
+    
+        return $valid;
+    }, 10, 4);
+
 ?>
