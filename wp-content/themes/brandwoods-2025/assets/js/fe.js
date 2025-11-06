@@ -25,24 +25,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// BE COMMENT : MANUAL ACTIVE CLASS REMOVAL 
 // ===== ACTIVE MENU BY URL =====
-document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('.jr-nav .nav-link');
-    if (!navLinks.length) return;
+// document.addEventListener('DOMContentLoaded', () => {
+//     const navLinks = document.querySelectorAll('.jr-nav .nav-link');
+//     if (!navLinks.length) return;
 
-    const currentPath = window.location.pathname.split('/').pop(); // ví dụ: 'news.php'
+//     const currentPath = window.location.pathname.split('/').pop(); // ví dụ: 'news.php'
 
-    navLinks.forEach(link => {
-        const linkPath = link.getAttribute('href').split('/').pop();
-        if (linkPath === currentPath || (linkPath === 'index.php' && currentPath === '')) {
-            // bỏ active cũ
-            navLinks.forEach(l => l.classList.remove('active'));
-            // set active mới
-            link.classList.add('active');
-            link.setAttribute('aria-current', 'page');
-        }
-    });
-});
+//     navLinks.forEach(link => {
+//         const linkPath = link.getAttribute('href').split('/').pop();
+//         if (linkPath === currentPath || (linkPath === 'index.php' && currentPath === '')) {
+//             // bỏ active cũ
+//             navLinks.forEach(l => l.classList.remove('active'));
+//             // set active mới
+//             link.classList.add('active');
+//             link.setAttribute('aria-current', 'page');
+//         }
+//     });
+// });
 
 
 // ========== INTRO ANIMATION ==========
@@ -223,28 +224,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
+// BE COMMENT : MANUAL ACTIVE CLASS REMOVAL 
 // Back to index & đánh dấu sidebar theo query
-document.addEventListener('DOMContentLoaded', () => {
-    // back
-    const back = document.getElementById('btn-news-back');
-    if (back) {
-        back.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (history.length > 1) history.back();
-            else window.location.href = back.dataset.back || '/news.html';
-        });
-    }
+// document.addEventListener('DOMContentLoaded', () => {
+//     // back
+//     const back = document.getElementById('btn-news-back');
+//     if (back) {
+//         back.addEventListener('click', (e) => {
+//             e.preventDefault();
+//             if (history.length > 1) history.back();
+//             else window.location.href = back.dataset.back || '/news.html';
+//         });
+//     }
 
-    // active theo ?category=&tag=
-    const url = new URL(location.href);
-    const cat = url.searchParams.get('category') || '';
-    const tag = url.searchParams.get('tag') || '';
-    const setActive = (sel, attr, val) => {
-        document.querySelectorAll(`${sel} a`).forEach(a => {
-            a.classList.toggle('active', (a.dataset[attr] ?? '') === val);
-        });
-    };
-    setActive('#news-cats', 'cat', cat);
-    setActive('#news-tags', 'tag', tag);
-});
+//     // active theo ?category=&tag=
+//     const url = new URL(location.href);
+//     const cat = url.searchParams.get('category') || '';
+//     const tag = url.searchParams.get('tag') || '';
+//     const setActive = (sel, attr, val) => {
+//         document.querySelectorAll(`${sel} a`).forEach(a => {
+//             a.classList.toggle('active', (a.dataset[attr] ?? '') === val);
+//         });
+//     };
+//     setActive('#news-cats', 'cat', cat);
+//     setActive('#news-tags', 'tag', tag);
+// });

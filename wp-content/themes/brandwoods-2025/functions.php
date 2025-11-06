@@ -1,6 +1,7 @@
 <?php 
     define('ASSETS_PATH', get_stylesheet_directory_uri() . '/assets');
     define('STYLESHEET_PATH', ASSETS_PATH . '/css');
+    define('STYLESHEET_PATH_FE', ASSETS_PATH . '/scss');
     define('SCRIPT_PATH', ASSETS_PATH . '/js');
     define('IMAGE_PATH', ASSETS_PATH . '/images');
 
@@ -15,8 +16,8 @@
         add_theme_support( 'post-thumbnails' );
 
         register_nav_menus( array (
-            'menu' => __('Menu', 'brandwoods2025'),
-            'footer' => __('Footer', 'brandwoods2025'),
+            'menu_header' => __('Menu Header', 'brandwoods2025'),
+            'menu_footer' => __('Menu Footer', 'brandwoods2025'),
         ) );
     }
 
@@ -25,20 +26,27 @@
     function brandwoods_enqueue_scripts() {
         wp_enqueue_style(
             'brandwoods-be-style',
-            get_stylesheet_uri(),
+            get_template_directory_uri() . '/assets/css/styles-be.css',
             [],
-            filemtime(get_stylesheet_directory() . STYLESHEET_PATH .'/style-be.css')
+            '1.0'
+        );
+
+        wp_enqueue_style(
+            'brandwoods-be-style-default',
+            get_template_directory_uri() . '/style.css',
+            [],
+            '1.0'
         );
     
         
         wp_enqueue_script(
             'brandwoods-be-script',
-            get_template_directory_uri() .SCRIPT_PATH .'/main-be.js',
+            get_template_directory_uri() .'/assets/js/main-be.js',
             ['jquery'],
-            filemtime(get_template_directory() . SCRIPT_PATH .'/main-be.js'),
-            true
+            '1.0'
         );
     }
+    
     add_action('wp_enqueue_scripts', 'brandwoods_enqueue_scripts');
 
 
@@ -100,5 +108,126 @@
         }
     endif;
     add_action( 'init', 'brandwoods_pattern_categories' );
+
+    if ( ! function_exists( 'brandwoods_render_menu' ) ) :
+
+        function brandwoods_render_menu($name) {
     
+            $menuLocations = get_nav_menu_locations();
+
+            if (!empty($menuLocations )) {
+                $navbar_items = wp_get_nav_menu_items($menuLocations[$name]);
+                $child_items = [];
+
+                if($navbar_items) {
+                    foreach ($navbar_items as $key => $item) {
+                        if ($item->menu_item_parent) {
+                            array_push($child_items, $item);
+                            unset($navbar_items[$key]);
+                        }
+                    }
+                }
+                
+                if($navbar_items) {
+                    foreach ($navbar_items as $item) {
+                        foreach ($child_items as $key => $child) {
+                            if ($child->menu_item_parent == $item->ID) {
+                                if (!$item->child_items) {
+                                    $item->child_items = [];
+                                }
+            
+                                array_push($item->child_items, $child);
+            
+                                unset($child_items[$key]);
+                            }
+                        }
+                    }
+                }
+                return $navbar_items;
+            }
+        }
+    
+    endif;
+
+    if ( ! function_exists( 'brandwoods_pagination' )) :
+
+        function brandwoods_pagination($query = null) {
+            if ($query === null) {
+                global $wp_query;
+                $query = $wp_query;
+            }
+        
+            $big = 999999999; 
+        
+            if ($query->max_num_pages <= 1) {
+                return;
+            }
+        
+            $current = max(1, get_query_var('paged'));
+            $total   = $query->max_num_pages;
+        
+            // Default page
+            $pages_to_show = [1, 2, $total];
+        
+            for ($i = $current - 1; $i <= $current + 1; $i++) {
+                if ($i > 0 && $i <= $total) {
+                    $pages_to_show[] = $i;
+                }
+            }
+        
+            $pages_to_show = array_unique($pages_to_show);
+            sort($pages_to_show);
+        
+            echo '<nav class="jr-pagination mt-4" aria-label="News pagination">';
+            echo '<ul class="pagination justify-content-center gap-2">';
+        
+            if ($current > 1) {
+                echo '<li class="page-item"><a class="page-link" href="' . esc_url(get_pagenum_link($current - 1)) . '">‹</a></li>';
+            } else {
+                echo '<li class="page-item disabled"><span class="page-link">‹</span></li>';
+            }
+        
+            $last_page = 0;
+            foreach ($pages_to_show as $page_num) {
+                if ($page_num - $last_page > 1) {
+                    echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+                }
+        
+                if ($page_num == $current) {
+                    echo '<li class="page-item active"><span class="page-link">' . $page_num . '</span></li>';
+                } else {
+                    echo '<li class="page-item"><a class="page-link" href="' . esc_url(get_pagenum_link($page_num)) . '">' . $page_num . '</a></li>';
+                }
+        
+                $last_page = $page_num;
+            }
+        
+            if ($current < $total) {
+                echo '<li class="page-item"><a class="page-link" href="' . esc_url(get_pagenum_link($current + 1)) . '">›</a></li>';
+            } else {
+                echo '<li class="page-item disabled"><span class="page-link">›</span></li>';
+            }
+        
+            echo '</ul></nav>';
+        }
+        
+    endif;
+
+    // Rewrite post/post-name => news/post-name
+    // function brandwoods_add_news_rewrite_rules() {
+    //     add_rewrite_rule(
+    //         '^news/([^/]+)/?$',
+    //         'index.php?name=$matches[1]',
+    //         'top'
+    //     );
+    // }
+    // add_action('init', 'brandwoods_add_news_rewrite_rules');
+    // function brandwoods_add_news_permalink($permalink, $post, $leavename) {
+    //     if ($post->post_type === 'post') {
+    //         return home_url('/news/' . $post->post_name . '/');
+    //     }
+    //     return $permalink;
+    // }
+    // add_filter('post_link', 'brandwoods_add_news_permalink', 10, 3);
+
 ?>
