@@ -27,43 +27,57 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script_stop: true
           script: |
-            set -e
-
+            set -euo pipefail
             APP_DIR=/home/ec2-user/wordspace/apache-mariadb/src/brandwoods-local
             REPO_URL=git@github.com:danhdt90/brandwoods-2025.git
             BRANCH=develop
             TS=$(date +%Y%m%d_%H%M%S)
-            RELEASE_PATH=$APP_DIR/releases/$TS
-
-            echo "==> Tạo thư mục release,uploads, upgrade mới..."
+            RELEASE_PATH="$APP_DIR/releases/$TS"
+            
+            echo "==> Prepare shared dirs & permissions"
             mkdir -p "$APP_DIR/shared/wp-content/uploads" "$APP_DIR/shared/wp-content/upgrade"
+            # Cho phép www-data (uid 33 trong container) ghi vào shared (staging: nới quyền cho nhanh)
             sudo chown -R 33:33 "$APP_DIR/shared/wp-content" || true
             sudo chmod -R a+rwX "$APP_DIR/shared/wp-content" || true
-            sudo chown -R 33:33 "$APP_DIR/shared/uploads" || true
-            sudo chmod -R a+rwX "$APP_DIR/shared/uploads" || true
             
+            echo "==> Trust github.com host key"
+            mkdir -p ~/.ssh && chmod 700 ~/.ssh
+            ssh-keyscan -t rsa,ecdsa,ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null || true
+            chmod 600 ~/.ssh/known_hosts
+            
+            # Nếu deploy key trên EC2 không phải ~/.ssh/id_ed25519, bật dòng dưới và sửa đường dẫn:
+            # export GIT_SSH_COMMAND='ssh -i ~/.ssh/brainwood_deploy -o IdentitiesOnly=yes'
+            
+            echo "==> Create new release: $RELEASE_PATH"
             mkdir -p "$RELEASE_PATH"
             cd "$RELEASE_PATH"
-
-            echo "==> Clone code..."
-            git clone --depth=1 --branch "$BRANCH" "$REPO_URL" .
-
-            echo "==> Dọn rác..."
-            rm -rf .git .github tests
-
-            echo "==> Symlink shared file (relative)..."
-            # tạo symlink NGAY TRONG thư mục release, trỏ tương đối tới ../shared
-            mkdir -p wp-content
-            ln -sfn ../../shared/wp-config.php wp-config.php
-            ln -sfn ../../shared/uploads wp-content/uploads
-            ln -sfn ../../shared/wp-content/upgrade wp-content/upgrade 
             
-            echo "==> Cập nhật symlink current..."
+            echo "==> Clone code"
+            git clone --depth=1 --branch "$BRANCH" "$REPO_URL" .
+            # Nếu repo dùng submodule:
+            # git submodule update --init --recursive
+            
+            echo "==> Clean dev-only files"
+            rm -rf .git .github tests
+            
+            echo "==> Symlink shared (relative)"
+            mkdir -p wp-content
+            # Đang ở: $APP_DIR/releases/$TS
+            # wp-config.php: ../shared/wp-config.php (từ release lên app_dir/shared)
+            ln -sfn ../shared/wp-config.php wp-config.php
+            # uploads/upgrade: từ .../wp-content → ../../shared/wp-content/...
+            ln -sfn ../../shared/wp-content/uploads wp-content/uploads
+            ln -sfn ../../shared/wp-content/upgrade  wp-content/upgrade
+            
+            echo "==> Atomic switch 'current' (relative)"
             cd "$APP_DIR"
-            if [ -d "$APP_DIR/current" ] && [ ! -L "$APP_DIR/current" ]; then rm -rf "$APP_DIR/current"; fi
+            # Nếu 'current' lỡ là thư mục thật, xoá để tránh lồng cấp
+            if [ -d "$APP_DIR/current" ] && [ ! -L "$APP_DIR/current" ]; then
+              rm -rf "$APP_DIR/current"
+            fi
             ln -sfn "releases/$TS" current
-
-            # echo "==> Reload Nginx..."
-            # sudo systemctl reload nginx
-
-            echo "✅ Deploy thành công! Bản mới: $TS"
+            
+            echo "==> Prune old releases (keep 5)"
+            ls -1dt "$APP_DIR"/releases/* | tail -n +6 | xargs -r rm -rf
+            
+            echo "✅ Deployed release: $TS"
