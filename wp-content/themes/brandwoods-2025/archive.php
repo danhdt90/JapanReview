@@ -2,8 +2,12 @@
 
 <?php 
     $post_type = get_post_type();
-
-    get_template_part('template-parts/'.$post_type.'/archive', $post_type);
+    
+    if($post_type == 'post') {
+        get_template_part('template-parts/archive', 'news');
+    } else {
+        get_template_part('template-parts/'.$post_type.'/archive', $post_type);
+    }
  ?>
     
 <?php get_footer(); ?>
