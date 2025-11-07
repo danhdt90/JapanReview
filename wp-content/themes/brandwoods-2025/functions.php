@@ -214,21 +214,21 @@
     endif;
 
     // Rewrite post/post-name => news/post-name
-    // function brandwoods_add_news_rewrite_rules() {
-    //     add_rewrite_rule(
-    //         '^news/([^/]+)/?$',
-    //         'index.php?name=$matches[1]',
-    //         'top'
-    //     );
-    // }
-    // add_action('init', 'brandwoods_add_news_rewrite_rules');
-    // function brandwoods_add_news_permalink($permalink, $post, $leavename) {
-    //     if ($post->post_type === 'post') {
-    //         return home_url('/news/' . $post->post_name . '/');
-    //     }
-    //     return $permalink;
-    // }
-    // add_filter('post_link', 'brandwoods_add_news_permalink', 10, 3);
+    function brandwoods_add_news_rewrite_rules() {
+        add_rewrite_rule(
+            '^news/([^/]+)/?$',
+            'index.php?name=$matches[1]',
+            'top'
+        );
+    }
+    add_action('init', 'brandwoods_add_news_rewrite_rules');
+    function brandwoods_add_news_permalink($permalink, $post, $leavename) {
+        if ($post->post_type === 'post') {
+            return home_url('/news/' . $post->post_name . '/');
+        }
+        return $permalink;
+    }
+    add_filter('post_link', 'brandwoods_add_news_permalink', 10, 3);
 
     
     // check unique volume issuse
