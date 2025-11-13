@@ -1,8 +1,8 @@
-// Admin JavaScript for Book Bulk Importer
+// Admin JavaScript for Article Bulk Importer
 jQuery(document).ready(function($) {
     'use strict';
 
-    var BookBulkImporter = {
+    var ArticleBulkImporter = {
         
         init: function() {
             this.bindEvents();
@@ -305,7 +305,7 @@ jQuery(document).ready(function($) {
     };
     
     // Initialize
-    BookBulkImporter.init();
+    ArticleBulkImporter.init();
     
     // Download sample CSV
     $(document).on('click', '.download-sample-csv', function(e) {

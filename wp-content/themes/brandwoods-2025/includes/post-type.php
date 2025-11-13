@@ -38,49 +38,49 @@
         }
     endif;
 
-    // Register Custom Post Type: Book
-    if ( ! function_exists( 'brandwoods_register_book_post_type' ) ) :
+    // Register Custom Post Type: Article
+    if ( ! function_exists( 'brandwoods_register_article_post_type' ) ) :
         /**
-         * Register Book Custom Post Type
+         * Register Article Custom Post Type
          *
          * @since Brandwoods 2025
          *
          * @return void
          */
-        function brandwoods_register_book_post_type() {
+        function brandwoods_register_article_post_type() {
             $labels = array(
-                'name'                  => _x( 'Books', 'Post Type General Name', 'brandwoods2025' ),
-                'singular_name'         => _x( 'Book', 'Post Type Singular Name', 'brandwoods2025' ),
-                'menu_name'             => __( 'Books', 'brandwoods2025' ),
-                'name_admin_bar'        => __( 'Book', 'brandwoods2025' ),
-                'archives'              => __( 'Book Archives', 'brandwoods2025' ),
-                'attributes'            => __( 'Book Attributes', 'brandwoods2025' ),
-                'parent_item_colon'     => __( 'Parent Book:', 'brandwoods2025' ),
-                'all_items'             => __( 'All Books', 'brandwoods2025' ),
-                'add_new_item'          => __( 'Add New Book', 'brandwoods2025' ),
+                'name'                  => _x( 'Articles', 'Post Type General Name', 'brandwoods2025' ),
+                'singular_name'         => _x( 'Article', 'Post Type Singular Name', 'brandwoods2025' ),
+                'menu_name'             => __( 'Articles', 'brandwoods2025' ),
+                'name_admin_bar'        => __( 'Article', 'brandwoods2025' ),
+                'archives'              => __( 'Article Archives', 'brandwoods2025' ),
+                'attributes'            => __( 'Article Attributes', 'brandwoods2025' ),
+                'parent_item_colon'     => __( 'Parent Article:', 'brandwoods2025' ),
+                'all_items'             => __( 'All Articles', 'brandwoods2025' ),
+                'add_new_item'          => __( 'Add New Article', 'brandwoods2025' ),
                 'add_new'               => __( 'Add New', 'brandwoods2025' ),
-                'new_item'              => __( 'New Book', 'brandwoods2025' ),
-                'edit_item'             => __( 'Edit Book', 'brandwoods2025' ),
-                'update_item'           => __( 'Update Book', 'brandwoods2025' ),
-                'view_item'             => __( 'View Book', 'brandwoods2025' ),
-                'view_items'            => __( 'View Books', 'brandwoods2025' ),
-                'search_items'          => __( 'Search Book', 'brandwoods2025' ),
+                'new_item'              => __( 'New Article', 'brandwoods2025' ),
+                'edit_item'             => __( 'Edit Article', 'brandwoods2025' ),
+                'update_item'           => __( 'Update Article', 'brandwoods2025' ),
+                'view_item'             => __( 'View Article', 'brandwoods2025' ),
+                'view_items'            => __( 'View Articles', 'brandwoods2025' ),
+                'search_items'          => __( 'Search Article', 'brandwoods2025' ),
                 'not_found'             => __( 'Not found', 'brandwoods2025' ),
                 'not_found_in_trash'    => __( 'Not found in Trash', 'brandwoods2025' ),
                 'featured_image'        => __( 'Featured Image', 'brandwoods2025' ),
                 'set_featured_image'    => __( 'Set featured image', 'brandwoods2025' ),
                 'remove_featured_image' => __( 'Remove featured image', 'brandwoods2025' ),
                 'use_featured_image'    => __( 'Use as featured image', 'brandwoods2025' ),
-                'insert_into_item'      => __( 'Insert into book', 'brandwoods2025' ),
-                'uploaded_to_this_item' => __( 'Uploaded to this book', 'brandwoods2025' ),
-                'items_list'            => __( 'Books list', 'brandwoods2025' ),
-                'items_list_navigation' => __( 'Books list navigation', 'brandwoods2025' ),
-                'filter_items_list'     => __( 'Filter books list', 'brandwoods2025' ),
+                'insert_into_item'      => __( 'Insert into article', 'brandwoods2025' ),
+                'uploaded_to_this_item' => __( 'Uploaded to this article', 'brandwoods2025' ),
+                'items_list'            => __( 'Articles list', 'brandwoods2025' ),
+                'items_list_navigation' => __( 'Articles list navigation', 'brandwoods2025' ),
+                'filter_items_list'     => __( 'Filter articles list', 'brandwoods2025' ),
             );
 
             $args = array(
-                'label'                 => __( 'Book', 'brandwoods2025' ),
-                'description'           => __( 'A custom post type for books', 'brandwoods2025' ),
+                'label'                 => __( 'Article', 'brandwoods2025' ),
+                'description'           => __( 'A custom post type for articles', 'brandwoods2025' ),
                 'labels'                => $labels,
                 'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'revisions', 'author' ),
                 'taxonomies'            => array( 'category', 'post_tag' ),
@@ -98,29 +98,29 @@
                 'publicly_queryable'    => true,
                 'capability_type'       => 'post',
                 'show_in_rest'          => true,
-                'rest_base'             => 'books',
+                'rest_base'             => 'articles',
                 'rest_controller_class' => 'WP_REST_Posts_Controller',
                 'rewrite'               => array(
-                    'slug'       => 'books',
+                    'slug'       => 'articles',
                     'with_front' => false,
                 ),
             );
 
-            register_post_type( 'book', $args );
+            register_post_type( 'article', $args );
         }
     endif;
-    add_action( 'init', 'brandwoods_register_book_post_type', 0 );
+    add_action( 'init', 'brandwoods_register_article_post_type', 0 );
 
-    // Register Custom Taxonomy for Books: Genre
-    if ( ! function_exists( 'brandwoods_register_book_genre_taxonomy' ) ) :
+    // Register Custom Taxonomy for Articles: Genre
+    if ( ! function_exists( 'brandwoods_register_article_genre_taxonomy' ) ) :
         /**
-         * Register Book Genre Taxonomy
+         * Register Article Genre Taxonomy
          *
          * @since Brandwoods 2025
          *
          * @return void
          */
-        function brandwoods_register_book_genre_taxonomy() {
+        function brandwoods_register_article_genre_taxonomy() {
             $labels = array(
                 'name'                       => _x( 'Genres', 'Taxonomy General Name', 'brandwoods2025' ),
                 'singular_name'              => _x( 'Genre', 'Taxonomy Singular Name', 'brandwoods2025' ),
@@ -153,23 +153,23 @@
                 'show_in_nav_menus'          => true,
                 'show_tagcloud'              => true,
                 'show_in_rest'               => true,
-                'rest_base'                  => 'book-genres',
+                'rest_base'                  => 'article-genres',
                 'rest_controller_class'      => 'WP_REST_Terms_Controller',
                 'rewrite'                    => array(
-                    'slug'       => 'book-genre',
+                    'slug'       => 'article-genre',
                     'with_front' => false,
                 ),
             );
 
-            register_taxonomy( 'book_genre', array( 'book' ), $args );
+            register_taxonomy( 'article_genre', array( 'article' ), $args );
         }
     endif;
-    add_action( 'init', 'brandwoods_register_book_genre_taxonomy', 0 );
+    add_action( 'init', 'brandwoods_register_article_genre_taxonomy', 0 );
 
     // Flush rewrite rules on theme activation
     function brandwoods_flush_rewrite_rules() {
-        brandwoods_register_book_post_type();
-        brandwoods_register_book_genre_taxonomy();
+        brandwoods_register_article_post_type();
+        brandwoods_register_article_genre_taxonomy();
         flush_rewrite_rules();
     }
     add_action( 'after_switch_theme', 'brandwoods_flush_rewrite_rules' );

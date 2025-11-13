@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Book Bulk Importer
- * Description: Import books in bulk from CSV files with Pods repeatable fields support
+ * Plugin Name: Article Bulk Importer
+ * Description: Import articles in bulk from CSV files with Pods repeatable fields support
  * Version: 1.0.0
  * Author: Your Name
  */
@@ -82,8 +82,8 @@ class BookBulkImporter {
     public function addAdminMenu() {
         add_submenu_page(
             'tools.php',
-            'Book Bulk Importer',
-            'Book Bulk Importer',
+            'Article Bulk Importer',
+            'Article Bulk Importer',
             'manage_options',
             'book-bulk-importer',
             array($this, 'adminPageCallback')
@@ -142,14 +142,14 @@ class BookBulkImporter {
         // Check if Pods is active
         if (!class_exists('Pods')) {
             deactivate_plugins(plugin_basename(__FILE__));
-            wp_die('Book Bulk Importer requires Pods plugin to be active.');
+            wp_die('Article Bulk Importer requires Pods plugin to be active.');
         }
         
         // Create upload directory if it doesn't exist
         $upload_dir = wp_upload_dir();
-        $book_import_dir = $upload_dir['basedir'] . '/book-imports';
-        if (!file_exists($book_import_dir)) {
-            wp_mkdir_p($book_import_dir);
+        $article_import_dir = $upload_dir['basedir'] . '/article-imports';
+        if (!file_exists($article_import_dir)) {
+            wp_mkdir_p($article_import_dir);
         }
     }
     
@@ -166,7 +166,7 @@ class BookBulkImporter {
     public function podsNotActiveNotice() {
         ?>
         <div class="notice notice-error">
-            <p><?php _e('Book Bulk Importer requires Pods plugin to be active.', 'book-bulk-importer'); ?></p>
+            <p><?php _e('Article Bulk Importer requires Pods plugin to be active.', 'book-bulk-importer'); ?></p>
         </div>
         <?php
     }
