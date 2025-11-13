@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Page Class for Book Bulk Importer
+ * Admin Page Class for Article Bulk Importer
  */
 
 if (!defined('ABSPATH')) {
@@ -21,46 +21,32 @@ class BookBulkImporter_AdminPage {
     public function render() {
         ?>
         <div class="wrap">
-            <h1><?php _e('Book Bulk Importer', 'book-bulk-importer'); ?></h1>
+            <h1><?php _e('Article Bulk Importer', 'book-bulk-importer'); ?></h1>
             
             <div class="book-import-container">
                 <div class="book-import-section">
                     <h2><?php _e('CSV Format Guidelines', 'book-bulk-importer'); ?></h2>
-                    <p><?php _e('Your CSV file should have the following columns:', 'book-bulk-importer'); ?></p>
-                    <ul>
-                        <li><strong>title</strong> - <?php _e('Book title (required)', 'book-bulk-importer'); ?></li>
-                        <li><strong>content</strong> - <?php _e('Book description/content', 'book-bulk-importer'); ?></li>
-                        <li><strong>author</strong> - <?php _e('Book author', 'book-bulk-importer'); ?></li>
-                        <li><strong>other_title</strong> - <?php _e('Alternative titles (see formats below)', 'book-bulk-importer'); ?></li>
-                        <li><strong>isbn</strong> - <?php _e('ISBN number', 'book-bulk-importer'); ?></li>
-                        <li><strong>publication_date</strong> - <?php _e('Publication date (YYYY-MM-DD format)', 'book-bulk-importer'); ?></li>
-                        <li><strong>status</strong> - <?php _e('Post status (publish, draft, private)', 'book-bulk-importer'); ?></li>
-                    </ul>
-                    
-                    <div class="alternative-title-formats">
-                        <h3><?php _e('Alternative Title Formats', 'book-bulk-importer'); ?></h3>
-                        <div style="margin-bottom: 15px;">
-                            <h4><?php _e('Method 1: Indexed Columns (Recommended)', 'book-bulk-importer'); ?></h4>
-                            <p><?php _e('Use separate columns for each alternative title:', 'book-bulk-importer'); ?></p>
-                            <code>other_title[0].other_title,other_title[1].other_title,other_title[2].other_title</code>
-                        </div>
-                        <div>
-                            <h4><?php _e('Method 2: Pipe-Separated (Legacy)', 'book-bulk-importer'); ?></h4>
-                            <p><?php _e('Use a single column with pipe-separated values:', 'book-bulk-importer'); ?></p>
-                            <code>"Title1|Title2|Title3"</code>
+                    <div class="repeatable-field-info">
+                        <h3><?php _e('Repeatable Fields Format', 'book-bulk-importer'); ?></h3>
+                        <p><?php _e('For repeatable fields, use indexed columns:', 'book-bulk-importer'); ?></p>
+                        <div class="examples">
+                            <h4><?php _e('Example 1: Multiple Titles', 'book-bulk-importer'); ?></h4>
+                            <code>タイトル[0].タイトル, タイトル[1].タイトル, タイトル[2].タイトル</code>
+                            
+                            <h4><?php _e('Example 2: Multiple Content Descriptions', 'book-bulk-importer'); ?></h4>
+                            <code>内容記述[0].内容記述, 内容記述[1].内容記述, 内容記述[2].内容記述</code>
                         </div>
                     </div>
                     
                     <div class="example-csv">
-                        <h3><?php _e('Example CSV Content (Indexed Format):', 'book-bulk-importer'); ?></h3>
-                        <code>
-                            title,author,other_title[0].other_title,other_title[1].other_title,other_title[2].other_title,isbn<br>
-                            "Sample Book 1","Author 1","Alt Title 1","Alt Title 2","Alt Title 3","9780123456789"<br>
-                            "Sample Book 2","Author 2","Single Alt Title","","","9780987654321"
-                        </code>
+                        <h3><?php _e('Example CSV Content:', 'book-bulk-importer'); ?></h3>
+                        <div style="overflow-x: auto; font-family: monospace; background: #f5f5f5; padding: 10px; border: 1px solid #ddd;">
+                            <div>タイトル[0].タイトル,その他のタイトル[0].その他のタイトル,著者[0].作成者姓名.姓名,資源タイプ.資源タイプ,ID登録.ID登録,内容記述[0].内容記述,書誌情報.巻,書誌情報.発行日.日付,書誌情報.開始ページ,書誌情報.終了ページ,抄録[0].内容記述</div>
+                            <div>"Sample Article Title","Alternative Title","Author Name","Article","10.1000/sample","Content description",1,2024/01/15,1,200,"Abstract content"</div>
+                            <div>"Another Article","Second Alt Title","Another Author","Article","10.1000/sample2","Another description",2,2024/02/20,5,150,"Another abstract"</div>
+                        </div>
                         <div style="margin-top: 15px;">
-                            <a href="#" class="button download-sample-csv" data-format="indexed"><?php _e('Download Sample CSV (Indexed)', 'book-bulk-importer'); ?></a>
-                            <a href="#" class="button download-sample-csv" data-format="legacy"><?php _e('Download Sample CSV (Legacy)', 'book-bulk-importer'); ?></a>
+                            <a href="#" class="button download-sample-csv" data-format="indexed"><?php _e('Download Sample CSV', 'book-bulk-importer'); ?></a>
                         </div>
                     </div>
                 </div>
@@ -78,7 +64,7 @@ class BookBulkImporter_AdminPage {
                                 </th>
                                 <td>
                                     <input type="file" id="csv_file" name="csv_file" accept=".csv" required />
-                                    <p class="description"><?php _e('Select a CSV file to import books.', 'book-bulk-importer'); ?></p>
+                                    <p class="description"><?php _e('Select a CSV file to import articles.', 'book-bulk-importer'); ?></p>
                                 </td>
                             </tr>
                             <tr>
@@ -87,23 +73,23 @@ class BookBulkImporter_AdminPage {
                                 </th>
                                 <td>
                                     <input type="checkbox" id="update_existing" name="update_existing" value="1" />
-                                    <label for="update_existing"><?php _e('Update existing books if they already exist (matched by title)', 'book-bulk-importer'); ?></label>
+                                    <label for="update_existing"><?php _e('Update existing articles if they already exist (matched by title)', 'book-bulk-importer'); ?></label>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">
+                                <!-- <th scope="row">
                                     <label for="dry_run"><?php _e('Test Run', 'book-bulk-importer'); ?></label>
                                 </th>
                                 <td>
                                     <input type="checkbox" id="dry_run" name="dry_run" value="1" />
                                     <label for="dry_run"><?php _e('Perform a test run (validate data without importing)', 'book-bulk-importer'); ?></label>
-                                </td>
+                                </td> -->
                             </tr>
                         </table>
                         
                         <p class="submit">
                             <button type="button" id="validate-csv" class="button"><?php _e('Validate CSV', 'book-bulk-importer'); ?></button>
-                            <button type="submit" id="import-books" class="button-primary" disabled><?php _e('Import Books', 'book-bulk-importer'); ?></button>
+                            <button type="submit" id="import-books" class="button-primary" disabled><?php _e('Import Articles', 'book-bulk-importer'); ?></button>
                         </p>
                     </form>
                 </div>
@@ -193,7 +179,7 @@ class BookBulkImporter_AdminPage {
                 wp_send_json_error($csv_data['message']);
             }
             
-            // Import books
+            // Import articles
             $import_result = $book_importer->importBooks(
                 $csv_data['data'], 
                 $update_existing, 
@@ -223,13 +209,8 @@ class BookBulkImporter_AdminPage {
         $format = isset($_POST['format']) ? sanitize_text_field($_POST['format']) : 'indexed';
         
         try {
-            if ($format === 'legacy') {
-                $csv_content = BookBulkImporter_CsvImporter::getLegacySampleCsvContent();
-                $filename = 'sample-books-legacy.csv';
-            } else {
-                $csv_content = BookBulkImporter_CsvImporter::getSampleCsvContent();
-                $filename = 'sample-books-indexed.csv';
-            }
+            $csv_content = BookBulkImporter_CsvImporter::getSampleCsvContent();
+            $filename = 'sample-articles.csv';
             
             wp_send_json_success(array(
                 'content' => $csv_content,
