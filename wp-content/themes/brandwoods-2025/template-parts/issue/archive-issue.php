@@ -1,39 +1,37 @@
 <?php
-    $paged = get_query_var('paged') ? get_query_var('paged') : 1;
-
-    $args = [
-        'post_type'      => 'issue',
-        'posts_per_page' => 3,
-        'paged'          => $paged,
-        'post_status'    => 'publish',
-        'orderby'        => 'modified', // or date
-        'order'          => 'DESC',
-
-        'no_found_rows'          => false,
-        'cache_results'          => true,
-        'update_post_term_cache' => true,
-        'update_post_meta_cache' => true,
-    ];
-
-    $query = new WP_Query($args);
-
+    $query = $args['data'];
+    $desktop_banner = $args['desktop_banner'];
+    $mobile_banner = $args['mobile_banner'];
 ?>
 
-<?php get_template_part('/template-parts/components/breadcrumb', null , array('title' => 'Issuse')) ?>
-
-<section id="page-articles" class="page-articles py-7 py-lg-9" aria-labelledby="articles-title">
+<section id="jr-about" class="jr-about pb-0" aria-labelledby="issues-title">
     <div class="container">
-        <h1 id="articles-title" class="jr-sec-title text-center">発行年 2024年など</h1>
+        <h1 id="issues-title" class="jr-sec-title jr-sec-title-sub"><?= get_the_title(); ?></h1>
+    </div>
+    <figure class="about-hero__figure">
+        <?php if($desktop_banner) : ?>
+            <img src="<?= $desktop_banner['url']; ?>" alt="About artwork" class="about-hero__img d-none d-md-block">
+        <?php endif; ?>
+        <?php if($mobile_banner) : ?>
+            <img src="<?= $mobile_banner['url']; ?>" alt="About artwork" class="about-hero__img d-block d-md-none">
+        <?php endif; ?>
+    </figure>
+</section>
+
+<?php get_template_part('/template-parts/components/search', 'dual'); ?>
+
+<section id="page-articles" class="page-articles" aria-labelledby="articles-title">
+    <div class="container">
         <?php
             if ($query->have_posts()) :
                 ?>
                     <!-- Grid -->
-                    <div id="articles-grid" class="row g-5 justify-content-center">
+                    <div id="articles-grid" class="row g-3 g-lg-5 justify-content-start">
                         <!-- Item -->
                          <?php 
                             while ($query->have_posts()) : $query->the_post();
                                 ?>
-                                    <div class="col-10 col-sm-6 col-lg-4">
+                                    <div class="col-6 col-sm-6 col-lg-4">
                                         <a href="<?= get_the_permalink(); ?>" class="issue-card">
                                             <div class="issue-cover ratio ratio-3x4">
                                                 <img src="<?= get_field('cover_image')['url']; ?>" alt="<?= the_title(); ?>" loading="lazy">
@@ -51,7 +49,7 @@
             endif;
         ?>
 
-        
-
     </div>
 </section>
+
+<?php get_template_part('/template-parts/components/search', 'dual'); ?>

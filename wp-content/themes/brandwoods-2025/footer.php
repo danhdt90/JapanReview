@@ -2,7 +2,7 @@
     <div class="container-xxl text-center">
 
         <!-- Logo -->
-        <h2 id="footer-title" class="jr-footer-logo">
+        <h2 id="footer-title" class="jr-footer-logo" data-aos="fade-up" data-aos-delay="100">
             <a href="<?= esc_url( home_url( '/' ) ); ?>" class="d-inline-block">
                 <img src="<?= IMAGE_PATH; ?>/logo.svg" alt="Japan Review Logo" width="150">
             </a>
@@ -13,11 +13,11 @@
             $footer = brandwoods_render_menu('menu_footer');
             if ( $footer !== false && count($footer) > 0) :
                 ?>
-                    <ul class="jr-footer-nav mb-4">
+                    <ul class="jr-footer-nav" data-aos="fade-up" data-aos-delay="200">
                         <?php 
                             foreach ($footer as $index => $items) :
                                 ?>
-                                    <li><a href="<?= $items->url; ?>"><?= $items->title; ?></a></li>
+                                    <li class="<?=implode(" ", $items->classes);?>"><a href="<?= $items->url; ?>" target="<?= $items->target;?>"><?= $items->title; ?></a></li>
                                 <?php
                             endforeach;
                         ?>
