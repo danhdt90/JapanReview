@@ -46,6 +46,8 @@ jobs:
             ln -sfn ../../shared/.htaccess .htaccess
             ln -sfn ../../shared/wp-config.php wp-config.php
             ln -sfn ../../../shared/uploads wp-content/uploads
+            sudo chown -R 33:33 "../../../shared/uploads"
+            sudo chmod -R 775 "../../../shared/uploads"
             ln -sfn ../../../shared/upgrade wp-content/upgrade
             echo "==> Cập nhật symlink current..."
             cd "$APP_DIR"
