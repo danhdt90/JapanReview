@@ -33,6 +33,9 @@ jobs:
             BRANCH=develop
             TS=$(date +%Y%m%d_%H%M%S)
             RELEASE_PATH=$APP_DIR/releases/$TS
+            //add permission for upload folder
+            sudo chown -R 33:33 "$APP_DIR/shared/wp-content/uploads"
+            sudo chmod -R 775 "$APP_DIR/shared/wp-content/uploads"
             echo "==> Tạo thư mục release mới..."
             mkdir -p "$RELEASE_PATH"
             cd "$RELEASE_PATH"
@@ -46,8 +49,6 @@ jobs:
             ln -sfn ../../shared/.htaccess .htaccess
             ln -sfn ../../shared/wp-config.php wp-config.php
             ln -sfn ../../../shared/uploads wp-content/uploads
-            sudo chown -R 33:33 "../../../shared/uploads"
-            sudo chmod -R 775 "../../../shared/uploads"
             ln -sfn ../../../shared/upgrade wp-content/upgrade
             echo "==> Cập nhật symlink current..."
             cd "$APP_DIR"
