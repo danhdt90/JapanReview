@@ -68,15 +68,6 @@ class BookBulkImporter_AdminPage {
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">
-                                    <label for="update_existing"><?php _e('Update Existing', 'book-bulk-importer'); ?></label>
-                                </th>
-                                <td>
-                                    <input type="checkbox" id="update_existing" name="update_existing" value="1" />
-                                    <label for="update_existing"><?php _e('Update existing articles if they already exist (matched by title)', 'book-bulk-importer'); ?></label>
-                                </td>
-                            </tr>
-                            <tr>
                                 <!-- <th scope="row">
                                     <label for="dry_run"><?php _e('Test Run', 'book-bulk-importer'); ?></label>
                                 </th>
@@ -164,7 +155,7 @@ class BookBulkImporter_AdminPage {
         }
         
         $file = $_FILES['csv_file'];
-        $update_existing = isset($_POST['update_existing']) && $_POST['update_existing'] === '1';
+        $update_existing = false; // Always import as new, never update existing articles
         $dry_run = isset($_POST['dry_run']) && $_POST['dry_run'] === '1';
         
         try {

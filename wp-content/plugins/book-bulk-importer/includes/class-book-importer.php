@@ -97,24 +97,7 @@ class BookBulkImporter_BookImporter {
      * Import single book
      */
     private function importSingleBook($book_data, $update_existing, $dry_run) {
-        // Log incoming book data for debugging
-        try {
-            if (!empty($book_data)) {
-                // Prefer JSON for readable Unicode output; fallback to print_r if json_encode fails
-                $json = json_encode($book_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-                if ($json === false) {
-                    $log = print_r($book_data, true);
-                } else {
-                    // Truncate very large logs to avoid huge entries
-                    $log = (strlen($json) > 10000) ? substr($json, 0, 10000) . '... (truncated)' : $json;
-                }
-                error_log('[BookBulkImporter] importSingleBook - book_data: ' . $log);
-            } else {
-                error_log('[BookBulkImporter] importSingleBook - book_data is empty');
-            }
-        } catch (Exception $e) {
-            error_log('[BookBulkImporter] importSingleBook - failed to log book_data: ' . $e->getMessage());
-        }
+        
         // Validate required fields - check both title and タイトル[0].タイトル
         $title = '';
         if (!empty($book_data['title'])) {
@@ -134,21 +117,13 @@ class BookBulkImporter_BookImporter {
             );
         }
         
-        // Check if book already exists
-        $existing_post = $this->findExistingBook($title);
-        
-        if ($existing_post && !$update_existing) {
-            return array(
-                'success' => false,
-                'message' => 'Article already exists and update_existing is disabled'
-            );
-        }
+        // Skip duplicate check - always create new article
+        // No checking for existing posts
         
         if ($dry_run) {
-            $action = $existing_post ? 'updated' : 'created';
             return array(
                 'success' => true,
-                'action' => $action,
+                'action' => 'created',
                 'message' => 'Validation successful'
             );
         }
@@ -170,15 +145,9 @@ class BookBulkImporter_BookImporter {
             }
         }
         
-        // Insert or update post
-        if ($existing_post) {
-            $post_data['ID'] = $existing_post->ID;
-            $post_id = wp_update_post($post_data);
-            $action = 'updated';
-        } else {
-            $post_id = wp_insert_post($post_data);
-            $action = 'created';
-        }
+        // Always insert new post (never update)
+        $post_id = wp_insert_post($post_data);
+        $action = 'created';
         
         if (is_wp_error($post_id)) {
             return array(
@@ -217,9 +186,6 @@ class BookBulkImporter_BookImporter {
     private function savePodsFields($post_id, $book_data) {
         try {
             // === REPEATABLE FIELDS ===
-            error_log("Saving repeatable fields for post ID: $post_id");
-            error_log("data book_data: " . print_r($book_data, true));
-
             // Main Title - タイトル[0].タイトル
             // First element becomes post title, rest goes to repeater
             $main_titles = $this->parseJapaneseRepeatableFields($book_data, 'タイトル', 'main_title');
