@@ -104,35 +104,53 @@ class BookBulkImporter {
      * Enqueue admin scripts and styles
      */
     public function enqueueAdminScripts($hook) {
-        if ($hook !== 'tools_page_book-bulk-importer') {
-            return;
+        // Load scripts for bulk importer admin page
+        if ($hook === 'tools_page_book-bulk-importer') {
+            wp_enqueue_script(
+                'book-bulk-importer-admin',
+                BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/admin.js',
+                array('jquery'),
+                BOOK_BULK_IMPORTER_VERSION,
+                true
+            );
+            
+            wp_enqueue_style(
+                'book-bulk-importer-admin',
+                BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/admin.css',
+                array(),
+                BOOK_BULK_IMPORTER_VERSION
+            );
+            
+            // Localize script for AJAX
+            wp_localize_script('book-bulk-importer-admin', 'bookBulkImporter', array(
+                'ajaxUrl' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('book_bulk_importer_nonce'),
+                'strings' => array(
+                    'importing' => __('Importing...', 'book-bulk-importer'),
+                    'success' => __('Import completed successfully!', 'book-bulk-importer'),
+                    'error' => __('Import failed. Please try again.', 'book-bulk-importer'),
+                )
+            ));
         }
         
-        wp_enqueue_script(
-            'book-bulk-importer-admin',
-            BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/admin.js',
-            array('jquery'),
-            BOOK_BULK_IMPORTER_VERSION,
-            true
-        );
-        
-        wp_enqueue_style(
-            'book-bulk-importer-admin',
-            BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/admin.css',
-            array(),
-            BOOK_BULK_IMPORTER_VERSION
-        );
-        
-        // Localize script for AJAX
-        wp_localize_script('book-bulk-importer-admin', 'bookBulkImporter', array(
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('book_bulk_importer_nonce'),
-            'strings' => array(
-                'importing' => __('Importing...', 'book-bulk-importer'),
-                'success' => __('Import completed successfully!', 'book-bulk-importer'),
-                'error' => __('Import failed. Please try again.', 'book-bulk-importer'),
-            )
-        ));
+        // Load validation scripts only for Article post type edit/add pages
+        if (in_array($hook, array('post.php', 'post-new.php'))) {
+            global $post;
+            
+            // Check if current post type is 'article'
+            if (!$post || $post->post_type !== 'article') {
+                return;
+            }
+            
+            // Enqueue custom validation JavaScript
+            wp_enqueue_script(
+                'book-importer-article-validation',
+                BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/js/custom-validate.js',
+                array('jquery'),
+                BOOK_BULK_IMPORTER_VERSION,
+                true
+            );
+        }
     }
     
     /**
