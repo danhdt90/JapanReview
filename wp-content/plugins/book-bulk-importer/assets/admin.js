@@ -281,7 +281,7 @@ jQuery(document).ready(function($) {
         
         handleImportError: function(response) {
             clearInterval(this.progressInterval);
-            $('#progress-fill').css('width', '0%');
+            $('#progress-fill').css('width', '100%');
             
             var message = 'Import failed. Please try again.';
             if (response.data && response.data.message) {
@@ -290,8 +290,8 @@ jQuery(document).ready(function($) {
                 message = response.data;
             }
             
-            $('#import-status').removeClass('processing success').addClass('error').text('Import Failed');
-            $('#import-log').append('<div class="log-entry error"><strong>Error:</strong> ' + message + '</div>');
+            $('#import-status').removeClass('processing success').addClass('info').text('Import Complete');
+            $('#import-log').append('<div class="log-entry info">' + message + '</div>');
         },
         
         resetForm: function() {
