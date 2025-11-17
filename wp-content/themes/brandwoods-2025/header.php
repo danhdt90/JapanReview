@@ -134,18 +134,26 @@
             <!-- Keyword -->
             <h3 class="jr-subtitle">Keyword</h3>
             <ul class="jr-tagcloud">
-                <li><a href="#">#anthropology</a></li>
-                <li><a href="#">#history</a></li>
-                <li><a href="#">#literature</a></li>
-                <li><a href="#">#religion</a></li>
-                <li><a href="#">#linguistics</a></li>
-                <li><a href="#">#politics</a></li>
-                <li><a href="#">#economics</a></li>
-                <li><a href="#">#culture</a></li>
-                <li><a href="#">#international relations</a></li>
-                <li><a href="#">#law</a></li>
-                <li><a href="#">#art</a></li>
-                <li><a href="#">#philosophy</a></li>
+                <?php 
+                // Get all keywords from taxonomy
+                $all_keywords = get_terms(array(
+                    'taxonomy'   => 'keywords_article',
+                    'hide_empty' => true, // Only show keywords that have articles
+                    'orderby'    => 'count',
+                    'order'      => 'DESC',
+                ));
+                
+                if (!empty($all_keywords) && !is_wp_error($all_keywords)): 
+                    foreach ($all_keywords as $keyword): ?>
+                        <li>
+                            <a href="<?php echo esc_url(get_term_link($keyword)); ?>">
+                                #<?php echo esc_html($keyword->name); ?>
+                            </a>
+                        </li>
+                    <?php endforeach;
+                else: ?>
+                    <li><a href="#">No keywords available</a></li>
+                <?php endif; ?>
             </ul>
             </div>
 

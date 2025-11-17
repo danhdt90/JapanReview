@@ -19,24 +19,26 @@
 
         <h3 class="jr-subtitle mt-4 mb-3" data-aos="fade-up" data-aos-delay="200">Keyword</h3>
         <ul class="jr-tagcloud mb-0" data-aos="fade-up" data-aos-delay="300">
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
-            <li><a href="#">#journal article</a></li>
+            <?php 
+            // Get all keywords from taxonomy
+            $all_keywords = get_terms(array(
+                'taxonomy'   => 'keywords_article',
+                'hide_empty' => true, // Only show keywords that have articles
+                'orderby'    => 'count',
+                'order'      => 'DESC',
+            ));
+            
+            if (!empty($all_keywords) && !is_wp_error($all_keywords)): 
+                foreach ($all_keywords as $keyword): ?>
+                    <li>
+                        <a href="<?php echo esc_url(get_term_link($keyword)); ?>">
+                            #<?php echo esc_html($keyword->name); ?>
+                        </a>
+                    </li>
+                <?php endforeach;
+            else: ?>
+                <li><a href="#">No keywords available</a></li>
+            <?php endif; ?>
         </ul>
     </div>
 </section>

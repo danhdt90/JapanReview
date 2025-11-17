@@ -166,10 +166,66 @@
     endif;
     add_action( 'init', 'brandwoods_register_article_genre_taxonomy', 0 );
 
+    // Register Custom Taxonomy for Articles: Keywords
+    if ( ! function_exists( 'brandwoods_register_article_keywords_taxonomy' ) ) :
+        /**
+         * Register Article Keywords Taxonomy
+         *
+         * @since Brandwoods 2025
+         *
+         * @return void
+         */
+        function brandwoods_register_article_keywords_taxonomy() {
+            $labels = array(
+                'name'                       => _x( 'Keywords', 'Taxonomy General Name', 'brandwoods2025' ),
+                'singular_name'              => _x( 'Keyword', 'Taxonomy Singular Name', 'brandwoods2025' ),
+                'menu_name'                  => __( 'Keywords', 'brandwoods2025' ),
+                'all_items'                  => __( 'All Keywords', 'brandwoods2025' ),
+                'parent_item'                => null,
+                'parent_item_colon'          => null,
+                'new_item_name'              => __( 'New Keyword Name', 'brandwoods2025' ),
+                'add_new_item'               => __( 'Add New Keyword', 'brandwoods2025' ),
+                'edit_item'                  => __( 'Edit Keyword', 'brandwoods2025' ),
+                'update_item'                => __( 'Update Keyword', 'brandwoods2025' ),
+                'view_item'                  => __( 'View Keyword', 'brandwoods2025' ),
+                'separate_items_with_commas' => __( 'Separate keywords with commas', 'brandwoods2025' ),
+                'add_or_remove_items'        => __( 'Add or remove keywords', 'brandwoods2025' ),
+                'choose_from_most_used'      => __( 'Choose from the most used keywords', 'brandwoods2025' ),
+                'popular_items'              => __( 'Popular Keywords', 'brandwoods2025' ),
+                'search_items'               => __( 'Search Keywords', 'brandwoods2025' ),
+                'not_found'                  => __( 'No keywords found', 'brandwoods2025' ),
+                'no_terms'                   => __( 'No keywords', 'brandwoods2025' ),
+                'items_list'                 => __( 'Keywords list', 'brandwoods2025' ),
+                'items_list_navigation'      => __( 'Keywords list navigation', 'brandwoods2025' ),
+            );
+
+            $args = array(
+                'labels'                     => $labels,
+                'hierarchical'               => false, // Like tags, not categories
+                'public'                     => true,
+                'show_ui'                    => true,
+                'show_admin_column'          => true,
+                'show_in_nav_menus'          => true,
+                'show_tagcloud'              => true,
+                'show_in_rest'               => true,
+                'rest_base'                  => 'keywords-article',
+                'rest_controller_class'      => 'WP_REST_Terms_Controller',
+                'rewrite'                    => array(
+                    'slug'       => 'keyword',
+                    'with_front' => false,
+                ),
+            );
+
+            register_taxonomy( 'keywords_article', array( 'article' ), $args );
+        }
+    endif;
+    add_action( 'init', 'brandwoods_register_article_keywords_taxonomy', 0 );
+
     // Flush rewrite rules on theme activation
     function brandwoods_flush_rewrite_rules() {
         brandwoods_register_article_post_type();
         brandwoods_register_article_genre_taxonomy();
+        brandwoods_register_article_keywords_taxonomy();
         flush_rewrite_rules();
     }
     add_action( 'after_switch_theme', 'brandwoods_flush_rewrite_rules' );

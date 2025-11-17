@@ -1,494 +1,242 @@
 <?php
-/**
- * The template for displaying single article posts
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
- *
- * @package WordPress
- * @subpackage BrandWoods_2025
- * @since BrandWoods 2025 1.0
- */
+    $desktoop_banenr = get_field('desktop_banner');
+    $mobile_banner = get_field('mobile_banner');
+    $volume = pods_field('volume');
+
+    // Helper function to extract value from array or string
+    $extract_value = function($field) {
+        if (is_array($field)) {
+            return !empty($field[0]) ? $field[0] : '';
+        }
+        return $field;
+    };
+
+    $volume_value = $extract_value($volume);
+    $cover_image_iss = '';
+    $issue = get_posts([
+        'post_type'      => 'issue',
+        'posts_per_page' => 1,
+        'meta_key'       => 'volume',
+        'meta_value'     => $volume,
+    ]);
+    
+    $articleDetail = [
+        'main_title' => pods_field('main_title'), // Repeater field (array)
+        'other_title' => pods_field('other_title'), // Repeater field (array)
+        'group_author' => pods_field('group_author'), // Repeater field (array)
+        'resource_type' => pods_field('resource_type'), // Single field
+        'doi' => pods_field('doi'), // Single field
+        'content_description' => pods_field('content_description'), // Repeater field (array)
+        'volume' => pods_field('volume'), // Single field
+        'publication_date' => pods_field('publication_date'), // Single field
+        'start_page' => pods_field('start_page'), // Single field
+        'end_page' => pods_field('end_page'), // Single field
+        'abstract' => pods_field('abstract'), // Repeater field (array)
+    ];
+    if (!empty($issue)) {
+        $issue_id = $issue[0]->ID;
+        $cover_image_iss = get_field('cover_image', $issue_id);
+    }
 
 ?>
 
-<div id="primary" class="content-area">
-    <main id="main" class="site-main">
-        
-        <article class="single-article">
-            <!-- Article Header -->
-            <header class="article-header">
-                <h1 class="article-title"><?php the_title(); ?></h1>
+<section id="jr-about" class="jr-about" aria-labelledby="Articles-title">
+    <div class="container">
+        <h1 id="Articles-title" class="jr-sec-title jr-sec-title-sub">Articles</h1>
+    </div>
+
+    <!-- figure ra ngoài container -->
+    <figure class="about-hero__figure">
+        <?php if($desktoop_banenr) : ?>
+            <img src="<?= $desktoop_banenr['url'] ?>" alt="About artwork" class="about-hero__img d-none d-md-block">
+        <?php endif; ?>
+        <?php if($mobile_banner) : ?>
+            <img src="<?= $mobile_bannere ?>" alt="About artwork" class="about-hero__img d-block d-md-none">
+        <?php endif; ?>
+    </figure>
+
+    <section id="jr-article" class="jr-article p-0" aria-labelledby="art-title">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Cover -->
+                <?php $cover_image = pods_field('cover_image'); ?>
                 
-                <!-- Main Titles (additional titles) -->
-                <?php 
-                $main_titles = pods_field('main_title');
-                if (!empty($main_titles) && is_array($main_titles)): ?>
-                    <div class="additional-titles">
-                        <?php foreach ($main_titles as $index => $title): ?>
-                            <h2 class="additional-title">タイトル[<?php echo ($index + 1); ?>]: <?php echo esc_html($title); ?></h2>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-                
-                <!-- Other Titles -->
-                <?php 
-                $other_titles = pods_field('other_title');
-                if (!empty($other_titles) && is_array($other_titles)): ?>
-                    <div class="other-titles">
-                        <h3>その他のタイトル:</h3>
-                        <?php foreach ($other_titles as $index => $title): ?>
-                            <p class="other-title">その他のタイトル[<?php echo $index; ?>]: <?php echo esc_html($title); ?></p>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            </header>
-
-            <!-- Article Meta Information -->
-            <div class="article-meta">
-                <div class="meta-grid">
-                    <!-- Authors -->
-                    <?php 
-                    $group_authors = pods_field('group_author');
-                    if (!empty($group_authors) && is_array($group_authors)): ?>
-                        <div class="meta-item authors">
-                            <span class="meta-label">著者:</span>
-                            <div class="meta-value">
-                                <?php foreach ($group_authors as $index => $author): ?>
-                                    <span class="author">著者[<?php echo $index; ?>]: <?php echo esc_html($author); ?></span>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- Resource Type -->
-                    <?php 
-                    $resource_type = pods_field('resource_type');
-                    if (!empty($resource_type)): ?>
-                        <div class="meta-item resource-type">
-                            <span class="meta-label">資源タイプ:</span>
-                            <span class="meta-value">
-                                <?php 
-                                if (is_array($resource_type)) {
-                                    echo esc_html(is_array($resource_type[0]) ? $resource_type[0] : implode(', ', $resource_type));
-                                } else {
-                                    echo esc_html($resource_type);
-                                }
-                                ?>
-                            </span>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- DOI -->
-                    <?php 
-                    $doi = pods_field('doi');
-                    if (!empty($doi)): ?>
-                        <div class="meta-item doi">
-                            <span class="meta-label">ID登録 (DOI):</span>
-                            <span class="meta-value">
-                                <?php 
-                                if (is_array($doi)) {
-                                    echo esc_html(is_array($doi[0]) ? $doi[0] : implode(', ', $doi));
-                                } else {
-                                    echo esc_html($doi);
-                                }
-                                ?>
-                            </span>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- Publication Info -->
-                    <div class="publication-info">
-                        <?php 
-                        $volume = pods_field('volume');
-                        $publication_date = pods_field('publication_date');
-                        $start_page = pods_field('start_page');
-                        $end_page = pods_field('end_page');
-                        
-                        // Helper function to extract value from array or string
-                        $extract_value = function($field) {
-                            if (is_array($field)) {
-                                return !empty($field[0]) ? $field[0] : '';
-                            }
-                            return $field;
-                        };
-                        
-                        $volume_value = $extract_value($volume);
-                        $date_value = $extract_value($publication_date);
-                        $start_page_value = $extract_value($start_page);
-                        $end_page_value = $extract_value($end_page);
-                        
-                        if (!empty($volume_value) || !empty($date_value) || !empty($start_page_value) || !empty($end_page_value)): ?>
-                            <div class="meta-item publication">
-                                <span class="meta-label">書誌情報:</span>
-                                <div class="meta-value publication-details">
-                                    <?php if (!empty($volume_value)): ?>
-                                        <span class="volume">巻: <?php echo esc_html($volume_value); ?></span>
-                                    <?php endif; ?>
-                                    
-                                    <?php if (!empty($date_value)): ?>
-                                        <span class="pub-date">発行日: <?php echo esc_html($date_value); ?></span>
-                                    <?php endif; ?>
-                                    
-                                    <?php if (!empty($start_page_value) || !empty($end_page_value)): ?>
-                                        <span class="pages">
-                                            ページ: 
-                                            <?php if (!empty($start_page_value)): echo esc_html($start_page_value); endif; ?>
-                                            <?php if (!empty($start_page_value) && !empty($end_page_value)): echo ' - '; endif; ?>
-                                            <?php if (!empty($end_page_value)): echo esc_html($end_page_value); endif; ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Article Content -->
-            <div class="article-content">
-                <!-- Content Description -->
-                <?php 
-                $content_descriptions = pods_field('content_description');
-                if (!empty($content_descriptions) && is_array($content_descriptions)): ?>
-                    <div class="content-descriptions">
-                        <h3>内容記述:</h3>
-                        <?php foreach ($content_descriptions as $index => $description): ?>
-                            <div class="content-description">
-                                <strong>内容記述[<?php echo $index; ?>]:</strong>
-                                <p><?php echo wp_kses_post($description); ?></p>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Abstract -->
-                <?php 
-                $abstracts = pods_field('abstract');
-                if (!empty($abstracts) && is_array($abstracts)): ?>
-                    <div class="abstracts">
-                        <h3>抄録:</h3>
-                        <?php foreach ($abstracts as $index => $abstract): ?>
-                            <div class="abstract">
-                                <strong>抄録[<?php echo $index; ?>]:</strong>
-                                <p><?php echo wp_kses_post($abstract); ?></p>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-
-                <!-- WordPress Content -->
-                <?php if (get_the_content()): ?>
-                    <div class="wp-content">
-                        <h3>本文:</h3>
-                        <?php the_content(); ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-
-            <!-- External Links -->
-            <div class="external-links">
-                <?php 
-                $external_link_title = pods_field('external_link_title');
-                $external_link = pods_field('external_link');
-                
-                // Extract values if they're arrays
-                $title_value = is_array($external_link_title) ? (!empty($external_link_title[0]) ? $external_link_title[0] : '') : $external_link_title;
-                $link_value = is_array($external_link) ? (!empty($external_link[0]) ? $external_link[0] : '') : $external_link;
-                
-                if (!empty($title_value) || !empty($link_value)): ?>
-                    <div class="external-link-section">
-                        <h3>外部リンク:</h3>
-                        <?php if (!empty($title_value)): ?>
-                            <p class="link-title"><?php echo esc_html($title_value); ?></p>
-                        <?php endif; ?>
-                        
-                        <?php if (!empty($link_value)): ?>
-                            <a href="<?php echo esc_url($link_value); ?>" target="_blank" rel="noopener noreferrer" class="external-link-url">
-                                <?php echo esc_html($link_value); ?> <span class="external-icon">↗</span>
-                            </a>
-                        <?php endif; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-
-            <!-- Cover Image -->
-            <?php 
-            $cover_image = pods_field('cover_image');
-            if (!empty($cover_image)): ?>
-                <div class="cover-image">
-                    <h3>表紙:</h3>
-                    <div class="image-container">
-                        <?php if (is_array($cover_image)): ?>
-                            <img src="<?php echo esc_url($cover_image['guid']); ?>" alt="<?php echo esc_attr($cover_image['post_title']); ?>" />
+                <div class="col-12 col-lg-5">
+                    <figure class="art-cover ratio ratio-3x4">
+                        <?php if(!empty($cover_image)) : ?>
+                            <img src="<?php echo esc_url($cover_image['guid']); ?>" alt="<?php echo esc_attr($cover_image['post_title']); ?>" loading="lazy">
                         <?php else: ?>
-                            <img src="<?php echo esc_url($cover_image); ?>" alt="Cover Image" />
+                            <img src="<?= $cover_image_iss ? esc_url($cover_image_iss['url']) : ''; ?>" alt="<?= $cover_image_iss ? esc_url($cover_image_iss['title']) : ''; ?>" loading="lazy">
                         <?php endif; ?>
+                    </figure>
+                </div>
+
+                <!-- Content -->
+                <div class="col-12 col-lg-7">
+                    <!-- Display post title first -->
+                     <p class="art-section"><?php the_title(); ?></p>
+                    
+                    <?php 
+                    // Display main_title (repeater)
+                    if (!empty($articleDetail['main_title']) && is_array($articleDetail['main_title'])): 
+                        foreach ($articleDetail['main_title'] as $main_title): ?>
+                            <p class="art-section"><?php echo esc_html($main_title); ?></p>
+                        <?php endforeach;
+                    endif; 
+                    ?>
+
+                    <?php 
+                    // Display other_title (repeater) - each on new line
+                    if (!empty($articleDetail['other_title']) && is_array($articleDetail['other_title'])): 
+                        foreach ($articleDetail['other_title'] as $other_title): ?>
+                            <h2 class="art-title"><?php echo esc_html($other_title); ?></h2>
+                        <?php endforeach;
+                    elseif (!empty($articleDetail['other_title'])): ?>
+                        <h2 class="art-title"><?php echo esc_html($articleDetail['other_title']); ?></h2>
+                    <?php endif; ?>
+
+                    <ul class="art-meta">
+                        <?php 
+                        // Display group_author (repeater)
+                        if (!empty($articleDetail['group_author']) && is_array($articleDetail['group_author'])): 
+                            foreach ($articleDetail['group_author'] as $author): ?>
+                                <li><?php echo esc_html($author); ?></li>
+                            <?php endforeach;
+                        endif; 
+                        
+                        // Display volume and page info
+                        $vol_value = $extract_value($articleDetail['volume']);
+                        $start_page_value = $extract_value($articleDetail['start_page']);
+                        $end_page_value = $extract_value($articleDetail['end_page']);
+                        $pub_date_value = $extract_value($articleDetail['publication_date']);
+                        
+                        if (!empty($vol_value) || !empty($start_page_value) || !empty($end_page_value)):
+                            echo '<li>';
+                            if (!empty($vol_value)) echo 'Vol.' . esc_html($vol_value);
+                            if (!empty($pub_date_value)) echo ' (' . esc_html($pub_date_value) . ')';
+                            if (!empty($start_page_value) || !empty($end_page_value)) {
+                                echo ' pp. ';
+                                if (!empty($start_page_value)) echo esc_html($start_page_value);
+                                if (!empty($start_page_value) && !empty($end_page_value)) echo '–';
+                                if (!empty($end_page_value)) echo esc_html($end_page_value);
+                            }
+                            echo '</li>';
+                        endif;
+                        
+                        // Display resource_type
+                        $resource_type_value = $extract_value($articleDetail['resource_type']);
+                        if (!empty($resource_type_value)): ?>
+                            <li><?php echo esc_html($resource_type_value); ?></li>
+                        <?php endif; 
+                        
+                        // Display DOI
+                        $doi_value = $extract_value($articleDetail['doi']);
+                        if (!empty($doi_value)): ?>
+                            <li><a class="link-underline" href="https://doi.org/<?php echo esc_attr($doi_value); ?>" target="_blank" rel="noopener">DOI: <?php echo esc_html($doi_value); ?></a></li>
+                        <?php endif;
+                        
+                        // Display publication date
+                        if (!empty($articleDetail['content_description']) && is_array($articleDetail['content_description'])): ?>
+                            <?php foreach ($articleDetail['content_description'] as $description): ?>
+                            <li><?php echo wp_kses_post($description); ?></li>
+                             <?php endforeach; ?>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Abstract -->
+            <div class="row mt-5">
+                <div class="col-12 col-lg-12">                    
+                    <?php 
+                    // Display abstract (repeater)
+                    if (!empty($articleDetail['abstract']) && is_array($articleDetail['abstract'])): ?>
+                        <h3 class="art-block-label">Abstract</h3>
+                        <div class="art-abstract">
+                            <?php foreach ($articleDetail['abstract'] as $abstract): ?>
+                                <p><?php echo wp_kses_post($abstract); ?></p>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                    <div class="art-keywords mt-4">
+                        <div class="mb-2">Keyword</div>
+                        <ul class="jr-tagcloud justify-content-start ms-0">
+                            <?php 
+                            // Display keywords from taxonomy
+                            $keywords = get_the_terms(get_the_ID(), 'keywords_article');
+                            if ($keywords && !is_wp_error($keywords)): 
+                                foreach ($keywords as $keyword): ?>
+                                    <li>
+                                        <a href="<?php echo esc_url(get_term_link($keyword)); ?>">
+                                            ＃<?php echo esc_html($keyword->name); ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach;
+                            else: ?>
+                                <li>No keywords</li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+
+                    <div class="mt-5 text-center">
+                        <a href="index.php" class="btn btn-viewmore" id="btn-back-index" data-back="index.php">
+                            <span>Back to Index</span>
+                            <svg class="btn-circle" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="11.5" stroke="white" />
+                                <path d="M13.25 16.3692L12.375 15.4018L14.5938 13.0334H7V11.6991H14.5938L12.375 9.33067L13.25 8.36328L17 12.3663L13.25 16.3692Z" fill="white" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+</section>
+
+<section id="jr-search-dual" class="jr-search-dual" aria-labelledby="search2-title">
+    <div class="container-xxl text-center">
+        <h2 id="search2-title" class="jr-sec-title">Search</h2>
+
+        <div class="row g-5 justify-content-center mb-4">
+            <div class="col-12 col-lg-5">
+                <form class="jr-searchbar mx-auto" id="form-keyword" role="search" aria-label="Search by keyword">
+                    <div class="input-group">
+                        <input type="search" class="form-control" name="q" placeholder="Search any word" aria-label="Search any word">
+                        <button class="btn btn-outline-0 jr-searchbtn" type="submit" aria-label="Search">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="29" height="30" viewBox="0 0 29 30" fill="none">
+                                <path d="M26.7444 29.0215L16.5944 18.864C15.7889 19.5089 14.8625 20.0195 13.8153 20.3957C12.7681 20.7719 11.6537 20.96 10.4722 20.96C7.54537 20.96 5.06829 19.9456 3.04097 17.9168C1.01366 15.888 0 13.409 0 10.48C0 7.55098 1.01366 5.07205 3.04097 3.04323C5.06829 1.01441 7.54537 0 10.4722 0C13.3991 0 15.8762 1.01441 17.9035 3.04323C19.9308 5.07205 20.9444 7.55098 20.9444 10.48C20.9444 11.6624 20.7565 12.7775 20.3806 13.8255C20.0046 14.8735 19.4944 15.8006 18.85 16.6068L29 26.7643L26.7444 29.0215ZM10.4722 17.7354C12.4861 17.7354 14.1979 17.03 15.6076 15.6192C17.0174 14.2085 17.7222 12.4954 17.7222 10.48C17.7222 8.46462 17.0174 6.75154 15.6076 5.34077C14.1979 3.93 12.4861 3.22462 10.4722 3.22462C8.45833 3.22462 6.74653 3.93 5.33681 5.34077C3.92708 6.75154 3.22222 8.46462 3.22222 10.48C3.22222 12.4954 3.92708 14.2085 5.33681 15.6192C6.74653 17.03 8.45833 17.7354 10.4722 17.7354Z" fill="#817E7E" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <h3 class="jr-subtitle mt-4 mb-3">Keyword</h3>
+        <ul class="jr-tagcloud">
+            <?php 
+            // Get all keywords from taxonomy
+            $all_keywords = get_terms(array(
+                'taxonomy'   => 'keywords_article',
+                'hide_empty' => true, // Only show keywords that have articles
+                'orderby'    => 'count',
+                'order'      => 'DESC',
+            ));
+            
+            if (!empty($all_keywords) && !is_wp_error($all_keywords)): 
+                foreach ($all_keywords as $keyword): ?>
+                    <li>
+                        <a href="<?php echo esc_url(get_term_link($keyword)); ?>">
+                            #<?php echo esc_html($keyword->name); ?>
+                        </a>
+                    </li>
+                <?php endforeach;
+            else: ?>
+                <li><a href="#">No keywords available</a></li>
             <?php endif; ?>
-
-        </article>
-        
-    </main>
-</div>
-
-<style>
-/* Single Article Styles */
-.single-article {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-/* Article Header */
-.article-header {
-    border-bottom: 3px solid #2563eb;
-    padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.article-title {
-    font-size: 2rem;
-    color: #1f2937;
-    margin-bottom: 1rem;
-    line-height: 1.3;
-}
-
-.additional-titles {
-    margin-top: 1rem;
-}
-
-.additional-title {
-    font-size: 1.3rem;
-    color: #4b5563;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.other-titles {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: #f8fafc;
-    border-radius: 6px;
-    border-left: 4px solid #60a5fa;
-}
-
-.other-titles h3 {
-    margin-bottom: 0.75rem;
-    color: #374151;
-    font-size: 1.1rem;
-}
-
-.other-title {
-    margin: 0.5rem 0;
-    color: #6b7280;
-}
-
-/* Article Meta */
-.article-meta {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: #f9fafb;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-}
-
-.meta-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.meta-item {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.meta-label {
-    font-weight: 600;
-    color: #374151;
-    min-width: 120px;
-}
-
-.meta-value {
-    color: #6b7280;
-    flex: 1;
-}
-
-.authors .meta-value {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.author {
-    padding: 0.25rem 0.5rem;
-    background: #dbeafe;
-    border-radius: 4px;
-    font-size: 0.9rem;
-}
-
-.publication-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.publication-details span {
-    padding: 0.25rem 0;
-}
-
-/* Article Content */
-.article-content {
-    margin-bottom: 2rem;
-}
-
-.content-descriptions,
-.abstracts {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: #fefefe;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-}
-
-.content-descriptions h3,
-.abstracts h3 {
-    margin-bottom: 1rem;
-    color: #1f2937;
-    font-size: 1.25rem;
-    border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 0.5rem;
-}
-
-.content-description,
-.abstract {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: #f8fafc;
-    border-radius: 6px;
-    border-left: 4px solid #10b981;
-}
-
-.content-description:last-child,
-.abstract:last-child {
-    margin-bottom: 0;
-}
-
-.content-description strong,
-.abstract strong {
-    color: #059669;
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.wp-content {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-}
-
-.wp-content h3 {
-    margin-bottom: 1rem;
-    color: #1f2937;
-    border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 0.5rem;
-}
-
-/* External Links */
-.external-links {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: #fffbeb;
-    border: 1px solid #fbbf24;
-    border-radius: 8px;
-}
-
-.external-link-section h3 {
-    margin-bottom: 1rem;
-    color: #92400e;
-}
-
-.link-title {
-    font-weight: 600;
-    color: #78350f;
-    margin-bottom: 0.5rem;
-}
-
-.external-link-url {
-    color: #1d4ed8;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem 1rem;
-    background: #dbeafe;
-    border-radius: 6px;
-    transition: background-color 0.2s;
-}
-
-.external-link-url:hover {
-    background: #bfdbfe;
-    text-decoration: underline;
-}
-
-.external-icon {
-    font-size: 0.9rem;
-}
-
-/* Cover Image */
-.cover-image {
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.cover-image h3 {
-    margin-bottom: 1rem;
-    color: #1f2937;
-}
-
-.image-container {
-    max-width: 400px;
-    margin: 0 auto;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.image-container img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .single-article {
-        padding: 1rem;
-        margin: 1rem;
-    }
-    
-    .article-title {
-        font-size: 1.5rem;
-    }
-    
-    .meta-item {
-        flex-direction: column;
-    }
-    
-    .meta-label {
-        min-width: auto;
-        font-size: 0.9rem;
-    }
-    
-    .publication-details {
-        font-size: 0.9rem;
-    }
-}
-</style>
+        </ul>
+    </div>
+</section>
