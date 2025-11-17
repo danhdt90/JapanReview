@@ -14,6 +14,12 @@ jQuery(document).ready(function($) {
             $('#csv_file').on('change', this.handleFileChange.bind(this));
             $('#validate-csv').on('click', this.validateCsv.bind(this));
             $('#book-import-form').on('submit', this.handleImport.bind(this));
+            
+            // Reset file input khi click vào input (trước khi chọn file)
+            // Cho phép chọn lại cùng file sau khi sửa nội dung
+            $('#csv_file').on('click', function() {
+                this.value = '';
+            });
         },
         
         handleFileChange: function(e) {
@@ -207,7 +213,14 @@ jQuery(document).ready(function($) {
                 processData: false,
                 contentType: false,
                 success: this.handleImportSuccess.bind(this),
-                error: this.handleImportError.bind(this)
+                error: this.handleImportError.bind(this),
+                complete: function() {
+                    // Reset form sau khi import hoàn tất (thành công hoặc thất bại)
+                    // Cho phép chọn file mới hoặc chọn lại file đã sửa
+                    setTimeout(function() {
+                        $('#csv_file').val('');
+                    }, 100);
+                }
             });
         },
         
@@ -295,12 +308,24 @@ jQuery(document).ready(function($) {
         },
         
         resetForm: function() {
-            $('#csv_file').val('');
+            // Clear file input completely
+            var $fileInput = $('#csv_file');
+            $fileInput.val('');
+            
+            // Clear stored file reference
             this.csvFile = null;
             this.isValidated = false;
+            
+            // Reset UI state
             $('#import-books').prop('disabled', true);
             $('#validation-results').hide();
             $('#import-progress').hide();
+            
+            // Clear progress interval if exists
+            if (this.progressInterval) {
+                clearInterval(this.progressInterval);
+                this.progressInterval = null;
+            }
         }
     };
     
