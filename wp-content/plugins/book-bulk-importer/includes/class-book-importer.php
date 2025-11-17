@@ -12,7 +12,6 @@ class BookBulkImporter_BookImporter {
     
     private $log = array();
     private $imported_count = 0;
-    private $updated_count = 0;
     private $error_count = 0;
     
     /**
@@ -34,7 +33,24 @@ class BookBulkImporter_BookImporter {
         }
         
         foreach ($books as $index => $book_data) {
+            $row_number = $index + 1; // +1 for 1-based index (header row excluded from $books array)
+            
             try {
+                // PRE-VALIDATE before attempting import
+                $validation_result = $this->preValidateBookData($book_data, $row_number);
+                
+                if (!$validation_result['valid']) {
+                    // Skip this record - don't import
+                    $this->error_count++;
+                    $this->log[] = sprintf(
+                        'Row %d: ✗ Validation Failed - %s',
+                        $row_number,
+                        $validation_result['message']
+                    );
+                    continue; // Skip to next record
+                }
+                
+                // Proceed with import
                 $result = $this->importSingleBook($book_data, $update_existing, $dry_run);
                 
                 // Get title for logging
@@ -49,34 +65,25 @@ class BookBulkImporter_BookImporter {
                 }
                 
                 if ($result['success']) {
-                    if ($result['action'] === 'created') {
-                        $this->imported_count++;
-                        $this->log[] = sprintf(
-                            'Row %d: Created article "%s"', 
-                            $index + 2,
-                            $title
-                        );
-                    } else {
-                        $this->updated_count++;
-                        $this->log[] = sprintf(
-                            'Row %d: Updated article "%s"', 
-                            $index + 2,
-                            $title
-                        );
-                    }
+                    $this->imported_count++;
+                    $this->log[] = sprintf(
+                        'Row %d: ✓ Created article "%s"', 
+                        $row_number,
+                        $title
+                    );
                 } else {
                     $this->error_count++;
                     $this->log[] = sprintf(
-                        'Row %d: Error - %s', 
-                        $index + 2,
+                        'Row %d: ✗ Error - %s', 
+                        $row_number,
                         $result['message']
                     );
                 }
             } catch (Exception $e) {
                 $this->error_count++;
                 $this->log[] = sprintf(
-                    'Row %d: Exception - %s', 
-                    $index + 2,
+                    'Row %d: ✗ Exception - %s', 
+                    $row_number,
                     $e->getMessage()
                 );
             }
@@ -85,7 +92,6 @@ class BookBulkImporter_BookImporter {
         return array(
             'success' => $this->error_count === 0,
             'imported' => $this->imported_count,
-            'updated' => $this->updated_count,
             'errors' => $this->error_count,
             'log' => $this->log,
             'dry_run' => $dry_run,
@@ -569,6 +575,120 @@ class BookBulkImporter_BookImporter {
     }
     
     /**
+     * Pre-validate book data before import
+     * Returns array with 'valid' => bool and 'message' => string
+     */
+    private function preValidateBookData($book_data, $row_number) {
+        $errors = array();
+        
+        // Validate Volume - 書誌情報.巻
+        $volume = $this->parseSimpleJapaneseField($book_data, '書誌情報.巻');
+        if (!empty($volume)) {
+            $cleaned_volume = trim($volume);
+            // Remove non-numeric characters
+            $numeric_only = preg_replace('/[^0-9]/', '', $cleaned_volume);
+            
+            if ($cleaned_volume !== $numeric_only) {
+                $errors[] = sprintf(
+                    'Volume (書誌情報.巻) contains non-numeric characters: "%s"',
+                    $volume
+                );
+            } elseif (!empty($numeric_only) && (!is_numeric($numeric_only) || !filter_var($numeric_only, FILTER_VALIDATE_INT))) {
+                $errors[] = sprintf(
+                    'Volume (書誌情報.巻) must be a valid integer: "%s"',
+                    $volume
+                );
+            } elseif (!empty($numeric_only)) {
+                $int_value = (int) $numeric_only;
+                if ($int_value < 1 || $int_value > 999) {
+                    $errors[] = sprintf(
+                        'Volume (書誌情報.巻) must be between 1 and 999: "%s"',
+                        $volume
+                    );
+                }
+            }
+        }
+        
+        // Validate Start Page - 書誌情報.開始ページ
+        $start_page = $this->parseSimpleJapaneseField($book_data, '書誌情報.開始ページ');
+        if (!empty($start_page)) {
+            $cleaned_start_page = trim($start_page);
+            // Remove non-numeric characters
+            $numeric_only = preg_replace('/[^0-9]/', '', $cleaned_start_page);
+            
+            if ($cleaned_start_page !== $numeric_only) {
+                $errors[] = sprintf(
+                    'Start Page (書誌情報.開始ページ) contains non-numeric characters: "%s"',
+                    $start_page
+                );
+            } elseif (!empty($numeric_only) && (!is_numeric($numeric_only) || !filter_var($numeric_only, FILTER_VALIDATE_INT))) {
+                $errors[] = sprintf(
+                    'Start Page (書誌情報.開始ページ) must be a valid integer: "%s"',
+                    $start_page
+                );
+            }
+        }
+        
+        // Validate End Page - 書誌情報.終了ページ
+        $end_page = $this->parseSimpleJapaneseField($book_data, '書誌情報.終了ページ');
+        if (!empty($end_page)) {
+            $cleaned_end_page = trim($end_page);
+            // Remove non-numeric characters
+            $numeric_only = preg_replace('/[^0-9]/', '', $cleaned_end_page);
+            
+            if ($cleaned_end_page !== $numeric_only) {
+                $errors[] = sprintf(
+                    'End Page (書誌情報.終了ページ) contains non-numeric characters: "%s"',
+                    $end_page
+                );
+            } elseif (!empty($numeric_only) && (!is_numeric($numeric_only) || !filter_var($numeric_only, FILTER_VALIDATE_INT))) {
+                $errors[] = sprintf(
+                    'End Page (書誌情報.終了ページ) must be a valid integer: "%s"',
+                    $end_page
+                );
+            }
+        }
+        
+        // Validate Title (required)
+        $title = '';
+        if (!empty($book_data['title'])) {
+            $title = $book_data['title'];
+        } else {
+            $main_titles = $this->parseJapaneseRepeatableFields($book_data, 'タイトル', 'main_title');
+            if (!empty($main_titles)) {
+                $title = $main_titles[0];
+            }
+        }
+        
+        if (empty($title)) {
+            $errors[] = 'Title is required (either "title" or "タイトル[0].タイトル")';
+        }
+        
+        // Validate Date format if provided
+        $publication_date = $this->parseSimpleJapaneseField($book_data, '書誌情報.発行日.日付');
+        if (!empty($publication_date)) {
+            if (!$this->validateDate($publication_date)) {
+                $errors[] = sprintf(
+                    'Publication date (書誌情報.発行日.日付) must be in YYYY/MM/DD or YYYY-MM-DD format: "%s"',
+                    $publication_date
+                );
+            }
+        }
+        
+        if (!empty($errors)) {
+            return array(
+                'valid' => false,
+                'message' => implode('; ', $errors)
+            );
+        }
+        
+        return array(
+            'valid' => true,
+            'message' => ''
+        );
+    }
+    
+    /**
      * Validate integer field with range
      */
     private function validateInteger($value, $min = null, $max = null, $field_name = '', $required = false) {
@@ -581,11 +701,21 @@ class BookBulkImporter_BookImporter {
             return null;
         }
         
-        if (!is_numeric($value) || !filter_var($value, FILTER_VALIDATE_INT)) {
+        // Clean non-numeric characters (already validated in preValidateBookData)
+        $cleaned = preg_replace('/[^0-9]/', '', $value);
+        
+        if (empty($cleaned)) {
+            if ($required) {
+                throw new Exception("Field '$field_name' must be a valid integer");
+            }
+            return null;
+        }
+        
+        if (!is_numeric($cleaned) || !filter_var($cleaned, FILTER_VALIDATE_INT)) {
             throw new Exception("Field '$field_name' must be a valid integer");
         }
         
-        $int_value = (int) $value;
+        $int_value = (int) $cleaned;
         
         if ($min !== null && $int_value < $min) {
             throw new Exception("Field '$field_name' must be at least $min");
@@ -604,7 +734,6 @@ class BookBulkImporter_BookImporter {
     private function resetCounters() {
         $this->log = array();
         $this->imported_count = 0;
-        $this->updated_count = 0;
         $this->error_count = 0;
     }
     
@@ -614,17 +743,15 @@ class BookBulkImporter_BookImporter {
     private function generateSummaryMessage($dry_run) {
         if ($dry_run) {
             return sprintf(
-                'Validation completed. Would import %d articles, update %d articles. %d errors found.',
+                'Validation completed. Would import %d articles. %d errors found.',
                 $this->imported_count,
-                $this->updated_count,
                 $this->error_count
             );
         }
         
         return sprintf(
-            'Import completed. Imported %d articles, updated %d articles, %d errors.',
+            'Import completed. Imported %d articles, %d errors.',
             $this->imported_count,
-            $this->updated_count,
             $this->error_count
         );
     }
