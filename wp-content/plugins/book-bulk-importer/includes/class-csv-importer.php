@@ -251,7 +251,7 @@ class BookBulkImporter_CsvImporter {
         $error_rows = array();
         
         foreach ($data as $index => $row) {
-            $row_number = $index + 2;
+            $row_number = $index + 1; // Start from 1 instead of 2 (header already excluded from $data)
             $row_valid = true;
             $row_warnings = array();
             
