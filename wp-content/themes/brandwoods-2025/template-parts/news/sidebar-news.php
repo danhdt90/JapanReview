@@ -17,7 +17,7 @@
     <div class="news-side mb-5">
         <div class="news-side-title">
             <span class="dot" aria-hidden="true"></span>
-            <strong>すべて(Category)</strong>
+            <strong>ALL </strong>
         </div>
         <ul class="news-side-list" id="news-cats">
             <?php
@@ -39,7 +39,7 @@
     <div class="news-side">
         <div class="news-side-title">
             <span class="dot" aria-hidden="true"></span>
-            <strong>すべて(タグ)</strong>
+            <strong>ALL</strong>
         </div>
         <ul class="news-side-list" id="news-tags">
             <?php

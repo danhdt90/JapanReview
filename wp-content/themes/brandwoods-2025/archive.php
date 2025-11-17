@@ -2,7 +2,6 @@
 
 <?php 
     $post_type = get_post_type();
-    
     if($post_type == 'post') {
         get_template_part('template-parts/archive', 'news');
     } else {

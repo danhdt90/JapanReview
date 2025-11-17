@@ -66,7 +66,10 @@
                         <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="500">
                             <a href="<?= esc_url( home_url( '/news/' ) ); ?>" class="btn btn-viewmore">
                                 <span>View More</span>
-                                <span class="btn-circle" aria-hidden="true"><i class="bi bi-arrow-right-short"></i></span>
+                                <svg class="btn-circle" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="11.5" stroke="white" />
+                                    <path d="M13.25 16.3692L12.375 15.4018L14.5938 13.0334H7V11.6991H14.5938L12.375 9.33067L13.25 8.36328L17 12.3663L13.25 16.3692Z" fill="white" />
+                                </svg>
                             </a>
                         </div>
                     </div>
@@ -75,10 +78,9 @@
                 <!-- Illustrations -->
                 <img class="jr-news-ill jr-news-ill-left" src="<?= IMAGE_PATH; ?>/illust_people_left.png" alt="" aria-hidden="true">
                 <img class="jr-news-ill jr-news-ill-right" src="<?= IMAGE_PATH; ?>/illust_people_right.png" alt="" aria-hidden="true">
-
+                <img class="jr-news-ill jr-news-ill-top" src="<?= IMAGE_PATH; ?>/illust_people_top.png" alt="" aria-hidden="true">
+                <img class="illust-people-sp" src="<?= IMAGE_PATH; ?>/illust_people_sp.png" alt="" aria-hidden="true">
             </div>
         <?php
-    else :
-        echo '<p>No news found.</p>';
     endif;
 ?>

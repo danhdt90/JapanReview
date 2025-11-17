@@ -62,6 +62,4 @@
 <?php get_header(); ?>
     <?php get_template_part('/template-parts/components/breadcrumb', null , array('title' => get_the_title())) ?>
     <?php get_template_part('/template-parts/news/archive', 'news', (array('categories'=> $news_categories , 'tags'=> $news_tags , 'news_data' => $query))); ?>
-    <?php get_template_part('/template-parts/components/search', 'dual'); ?>
-    <?php get_template_part('/template-parts/components/contact', 'form'); ?>
 <?php get_footer(); ?>

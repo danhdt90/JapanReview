@@ -213,6 +213,15 @@
         
     endif;
 
+    function add_issues_pagination_rewrite() {
+        add_rewrite_rule(
+            '^issues/page/([0-9]+)/?',
+            'index.php?pagename=issues&paged=$matches[1]',
+            'top'
+        );
+    }
+    add_action('init', 'add_issues_pagination_rewrite');
+
     // Rewrite post/post-name => news/post-name
     function brandwoods_add_news_rewrite_rules() {
         add_rewrite_rule(

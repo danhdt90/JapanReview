@@ -23,7 +23,7 @@
 
 <section id="news-detail" class="news-detail py-7 py-lg-9" aria-labelledby="news-title">
     <div class="container-xxl">
-        <h1 id="news-title" class="jr-sec-title jr-sec-title-sub text-center mb-5">News</h1>
+        <h1 id="news-title" class="jr-sec-title jr-sec-title-sub mb-5">News</h1>
 
         <div class="row g-5">
             <!-- Sidebar -->
@@ -47,8 +47,6 @@
                     </h2>
                 </header>
 
-                <hr class="news-hr">
-
                 <article class="news-body">
                     <!-- News Content -->
                     <?= the_content(); ?>
@@ -57,7 +55,7 @@
                         $new_url = get_field('news_url');
                         if($new_url) :
                             ?>
-                                <p>URL: <a class="news-link" href="<?= $new_url; ?>" target="_blank" rel="noopener"><?= $new_url ?></a></p>
+                                <p><a class="news-link" href="<?= $new_url; ?>" target="_blank" rel="noopener">URL: <?= $new_url ?></a></p>
                             <?php
                         endif
                      ?>
@@ -66,7 +64,7 @@
                 <div class="news-tags mt-4">
                     <?php $tags = get_the_terms(get_the_ID(), 'post_tag'); ?>
                     <?php if ($tags && !is_wp_error($tags)) : ?>
-                    <div class="mb-2 fw-medium text-muted">タグ登録：</div>
+                    <div class="mb-2 text-muted">Tag: </div>
                         <ul class="jr-tagcloud justify-content-start ms-0">
                             <?php foreach ($tags as $ctag) : ?>
                                 <li><a href="<?= esc_url( home_url( '/news/' ) ); ?>?tag=<?php echo esc_attr($ctag->slug);?>">#<?= $ctag->name; ?></a></li>
@@ -76,8 +74,12 @@
                 </div>
 
                 <div class="mt-5 text-center">
-                    <a href="<?= esc_url( home_url( '/news/' ) ); ?>" class="btn btn-viewmore black" id="btn-news-back">
+                    <a href="<?= esc_url( home_url( '/news/' ) ); ?>" class="btn btn-viewmore" id="btn-news-back" data-back="<?= esc_url( home_url( '/news/' ) ); ?>">
                         <span>Back to Index</span>
+                        <svg class="btn-circle" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="11.5" stroke="white" />
+                            <path d="M13.25 16.3692L12.375 15.4018L14.5938 13.0334H7V11.6991H14.5938L12.375 9.33067L13.25 8.36328L17 12.3663L13.25 16.3692Z" fill="white" />
+                        </svg>
                     </a>
                 </div>
             </div>
