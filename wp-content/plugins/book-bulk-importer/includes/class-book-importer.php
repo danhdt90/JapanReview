@@ -307,8 +307,75 @@ class BookBulkImporter_BookImporter {
                 $this->saveSimpleField($post_id, 'end_page', $validated_end_page);
             }
             
+            // === TAXONOMIES ===
+            
+            // Keywords - キーワード[0].主題, キーワード[1].主題, etc.
+            $keywords = array();
+            $pattern = '/^キーワード\[(\d+)\]\.主題$/u';
+            foreach ($book_data as $header => $value) {
+                if (preg_match($pattern, $header, $matches)) {
+                    $index = (int) $matches[1];
+                    $cleaned_value = trim($value);
+                    if (!empty($cleaned_value)) {
+                        $keywords[$index] = $cleaned_value;
+                    }
+                }
+            }
+            if (!empty($keywords)) {
+                ksort($keywords);
+                $this->saveKeywordsTaxonomy($post_id, array_values($keywords));
+            }
+            
         } catch (Exception $e) {
             throw $e;
+        }
+    }
+    
+    /**
+     * Save keywords to taxonomy
+     */
+    private function saveKeywordsTaxonomy($post_id, $keywords) {
+        if (empty($keywords) || !is_array($keywords)) {
+            return;
+        }
+        
+        $term_ids = array();
+        
+        foreach ($keywords as $keyword) {
+            // Skip empty keywords
+            $keyword = trim($keyword);
+            if (empty($keyword)) {
+                continue;
+            }
+            
+            // Check if term exists
+            $term = get_term_by('name', $keyword, 'keywords_article');
+            
+            if (!$term) {
+                // Create new term
+                $result = wp_insert_term($keyword, 'keywords_article');
+                
+                if (is_wp_error($result)) {
+                    // If term already exists (race condition), get it
+                    if ($result->get_error_code() === 'term_exists') {
+                        $term_id = $result->get_error_data();
+                    } else {
+                        // Log error but continue with other keywords
+                        continue;
+                    }
+                } else {
+                    $term_id = $result['term_id'];
+                }
+            } else {
+                $term_id = $term->term_id;
+            }
+            
+            $term_ids[] = (int) $term_id;
+        }
+        
+        // Assign all keywords to the post
+        if (!empty($term_ids)) {
+            wp_set_object_terms($post_id, $term_ids, 'keywords_article', false);
         }
     }
     

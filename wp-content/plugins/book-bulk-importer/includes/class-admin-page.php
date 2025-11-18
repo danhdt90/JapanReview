@@ -41,9 +41,9 @@ class BookBulkImporter_AdminPage {
                     <div class="example-csv">
                         <h3><?php _e('Example CSV Content:', 'book-bulk-importer'); ?></h3>
                         <div style="overflow-x: auto; font-family: monospace; background: #f5f5f5; padding: 10px; border: 1px solid #ddd;">
-                            <div>タイトル[0].タイトル,その他のタイトル[0].その他のタイトル,著者[0].作成者姓名.姓名,資源タイプ.資源タイプ,ID登録.ID登録,内容記述[0].内容記述,書誌情報.巻,書誌情報.発行日.日付,書誌情報.開始ページ,書誌情報.終了ページ,抄録[0].内容記述</div>
-                            <div>"Sample Article Title","Alternative Title","Author Name","Article","10.1000/sample","Content description",1,2024/01/15,1,200,"Abstract content"</div>
-                            <div>"Another Article","Second Alt Title","Another Author","Article","10.1000/sample2","Another description",2,2024/02/20,5,150,"Another abstract"</div>
+                            <div>タイトル[0].タイトル,その他のタイトル[0].その他のタイトル,著者[0].作成者姓名.姓名,資源タイプ.資源タイプ,ID登録.ID登録,内容記述[0].内容記述,書誌情報.巻,書誌情報.発行日.日付,書誌情報.開始ページ,書誌情報.終了ページ,抄録[0].内容記述,キーワード[0].主題,キーワード[1].主題,キーワード[2].主題</div>
+                            <div>"Sample Article Title","Alternative Title","Author Name","Article","10.1000/sample","Content description",1,2024/01/15,1,200,"Abstract content","Japan","History","Culture"</div>
+                            <div>"Another Article","Second Alt Title","Another Author","Article","10.1000/sample2","Another description",2,2024/02/20,5,150,"Another abstract","Economics","Policy","Research"</div>
                         </div>
                         <div style="margin-top: 15px;">
                             <a href="#" class="button download-sample-csv" data-format="indexed"><?php _e('Download Sample CSV', 'book-bulk-importer'); ?></a>
