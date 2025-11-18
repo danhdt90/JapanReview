@@ -90,81 +90,108 @@ class BookBulkImporter_CsvImporter {
      * Parse CSV file
      */
     public function parseFile($file_path, $validation_mode = false) {
-        $handle = fopen($file_path, 'r');
+        if (!file_exists($file_path)) {
+            return array(
+                'success' => false,
+                'message' => 'File not found'
+            );
+        }
         
+        // Read file content and handle encoding
+        $content = file_get_contents($file_path);
+        
+        // Remove BOM if present
+        $content = preg_replace('/^\xEF\xBB\xBF/', '', $content);
+        
+        // Detect and convert encoding
+        $encoding = mb_detect_encoding($content, ['UTF-8', 'SJIS', 'EUC-JP', 'ASCII'], true);
+        if ($encoding && $encoding !== 'UTF-8') {
+            $content = mb_convert_encoding($content, 'UTF-8', $encoding);
+        }
+        
+        // Save back cleaned content
+        file_put_contents($file_path, $content);
+        
+        // Open file
+        $handle = fopen($file_path, 'r');
         if (!$handle) {
             return array(
                 'success' => false,
-                'message' => 'Cannot open CSV file'
+                'message' => 'Cannot open file'
             );
         }
         
         $data = array();
         $headers = array();
         $row_number = 0;
+        $is_header_set = false;
         
-        try {
-            while (($row = fgetcsv($handle, 1000, ',')) !== FALSE) {
-                $row_number++;
-                
-                // First row should be headers (preserve original case for Japanese)
-                if ($row_number === 1) {
-                    $headers = array_map(function($header) {
-                        // Remove UTF-8 BOM if present
-                        $header = trim($header);
-                        if (substr($header, 0, 3) === "\xEF\xBB\xBF") {
-                            $header = substr($header, 3);
-                        }
-                        // Remove quotes if present
-                        $header = trim($header, '"');
-                        return $header;
-                    }, $row);
-                    
-                    // Don't convert to lowercase for Japanese fields
-                    continue;
-                }
-                
-                // Skip empty rows
-                if (empty(array_filter($row))) {
-                    continue;
-                }
-                
-                // Map row data to headers
-                $row_data = array();
-                foreach ($headers as $index => $header) {
-                    $row_data[$header] = isset($row[$index]) ? trim($row[$index]) : '';
-                }
-                
-                $data[] = $row_data;
-                
-                // In validation mode, limit to first 100 rows for performance
-                if ($validation_mode && count($data) >= 100) {
-                    break;
-                }
+        while (($row = fgetcsv($handle, 0, ',', '"', '"')) !== false) {
+            $row_number++;
+            
+            // Skip completely empty rows
+            if (empty(array_filter($row, function($value) {
+                return trim($value) !== '';
+            }))) {
+                continue;
             }
             
-            fclose($handle);
-            
-            if (empty($headers)) {
-                return array(
-                    'success' => false,
-                    'message' => 'CSV file appears to be empty or invalid'
-                );
+            // First non-empty row is headers
+            if (!$is_header_set) {
+                $headers = array_map('trim', $row);
+                $is_header_set = true;
+                
+                // Debug: Log headers
+                error_log('CSV Headers: ' . print_r($headers, true));
+                
+                continue; // Skip to next row
             }
             
-            return array(
-                'success' => true,
-                'data' => $data,
-                'headers' => $headers
-            );
+            // This is a data row
+            $row_data = array();
+            foreach ($headers as $index => $header) {
+                $value = isset($row[$index]) ? trim($row[$index]) : '';
+                $row_data[$header] = $value;
+            }
             
-        } catch (Exception $e) {
-            fclose($handle);
+            // Debug: Log first few data rows
+            if ($row_number <= 5) {
+                error_log('CSV Row ' . $row_number . ': ' . print_r($row_data, true));
+            }
+            
+            $data[] = $row_data;
+        }
+        
+        fclose($handle);
+        
+        if (empty($headers)) {
             return array(
                 'success' => false,
-                'message' => 'Error parsing CSV: ' . $e->getMessage()
+                'message' => 'No headers found in CSV file'
             );
         }
+        
+        if (empty($data)) {
+            return array(
+                'success' => false,
+                'message' => 'No data rows found in CSV file'
+            );
+        }
+        
+        // Validate structure if not in validation mode
+        $validation = array('valid' => true, 'errors' => array(), 'warnings' => array());
+        if (!$validation_mode) {
+            $validation = $this->validateData($data);
+        }
+        
+        return array(
+            'success' => true,
+            'data' => $data,
+            'headers' => $headers,
+            'row_count' => count($data),
+            'validation_details' => $validation,
+            'message' => sprintf('Successfully parsed %d rows', count($data))
+        );
     }
     
     /**
