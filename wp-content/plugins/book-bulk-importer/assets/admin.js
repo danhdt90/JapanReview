@@ -14,9 +14,7 @@ jQuery(document).ready(function($) {
             $('#csv_file').on('change', this.handleFileChange.bind(this));
             $('#validate-csv').on('click', this.validateCsv.bind(this));
             $('#book-import-form').on('submit', this.handleImport.bind(this));
-            
-            // Reset file input khi click vào input (trước khi chọn file)
-            // Cho phép chọn lại cùng file sau khi sửa nội dung
+        
             $('#csv_file').on('click', function() {
                 this.value = '';
             });

@@ -251,7 +251,7 @@ class BookBulkImporter_CsvImporter {
         $error_rows = array();
         
         foreach ($data as $index => $row) {
-            $row_number = $index + 1; // Start from 1 instead of 2 (header already excluded from $data)
+            $row_number = $index + 1; 
             $row_valid = true;
             $row_warnings = array();
             
@@ -376,7 +376,10 @@ class BookBulkImporter_CsvImporter {
             '書誌情報.発行日.日付',
             '書誌情報.開始ページ',
             '書誌情報.終了ページ',
-            '抄録[0].内容記述'
+            '抄録[0].内容記述',
+            'キーワード[0].主題',
+            'キーワード[1].主題',
+            'キーワード[2].主題'
         );
         
         $sample_rows = array(
@@ -392,7 +395,10 @@ class BookBulkImporter_CsvImporter {
                 '2024/01/15',
                 '1',
                 '200',
-                '抄録のサンプル内容1'
+                '抄録のサンプル内容1',
+                '日本',
+                '歴史',
+                '文化'
             ),
             array(
                 'サンプル書籍タイトル2',
@@ -406,7 +412,10 @@ class BookBulkImporter_CsvImporter {
                 '2024/02/20',
                 '5',
                 '150',
-                '抄録のサンプル内容2'
+                '抄録のサンプル内容2',
+                '経済',
+                '政策',
+                '研究'
             ),
             array(
                 'サンプル書籍タイトル3',
@@ -420,7 +429,10 @@ class BookBulkImporter_CsvImporter {
                 '2024/03/10',
                 '10',
                 '50',
-                '抄録のサンプル内容3'
+                '抄録のサンプル内容3',
+                '教育',
+                '社会',
+                '開発'
             )
         );
         
