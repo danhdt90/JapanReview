@@ -311,3 +311,9 @@
         margin-right: 0;
     }
 }
+
+.preview-table{
+     display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}

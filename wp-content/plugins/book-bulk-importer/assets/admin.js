@@ -135,7 +135,7 @@ jQuery(document).ready(function($) {
                 
                 // Show preview
                 if (data.preview && data.preview.length > 0) {
-                    html += '<h4>Data Preview (first 5 rows):</h4>';
+                    html += '<h4>Data Preview (first 20 rows):</h4>';
                     html += this.generatePreviewTable(data.headers, data.preview);
                 }
                 

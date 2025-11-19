@@ -67,15 +67,6 @@ class BookBulkImporter_AdminPage {
                                     <p class="description"><?php _e('Select a CSV file to import articles.', 'book-bulk-importer'); ?></p>
                                 </td>
                             </tr>
-                            <tr>
-                                <!-- <th scope="row">
-                                    <label for="dry_run"><?php _e('Test Run', 'book-bulk-importer'); ?></label>
-                                </th>
-                                <td>
-                                    <input type="checkbox" id="dry_run" name="dry_run" value="1" />
-                                    <label for="dry_run"><?php _e('Perform a test run (validate data without importing)', 'book-bulk-importer'); ?></label>
-                                </td> -->
-                            </tr>
                         </table>
                         
                         <p class="submit">
