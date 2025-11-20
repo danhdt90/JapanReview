@@ -169,10 +169,6 @@ if ($taxonomy === 'article_genre') {
                         ); 
                         ?>
                     </p>
-                    <a href="<?php echo esc_url(get_post_type_archive_link('article')); ?>" 
-                       class="btn btn-primary">
-                        <?php _e('View All Articles', 'brandwoods2025'); ?>
-                    </a>
                 </div>
 
                 <?php endif; ?>

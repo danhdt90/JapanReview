@@ -144,9 +144,6 @@
             <section class="no-articles-found">
                 <h2><?php _e( 'No Articles Found', 'twentytwentyfive' ); ?></h2>
                 <p><?php _e( 'Sorry, no articles were found matching your criteria.', 'twentytwentyfive' ); ?></p>
-                <a href="<?php echo esc_url( get_post_type_archive_link( 'article' ) ); ?>" class="back-link">
-                    <?php _e( 'View All Articles', 'twentytwentyfive' ); ?>
-                </a>
             </section>
 
         <?php endif; ?>
