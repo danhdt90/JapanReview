@@ -88,12 +88,22 @@
 
             <!-- Quick actions -->
             <div class="d-flex flex-column flex-md-row justify-content-center gap-4 gap-md-3 gap-lg-5 mb-5" data-aos-delay="200">
-                <a href="#" class="btn jr-pill jr-pill-cranberry">
+                <?php 
+                // Get Early Access term link
+                $early_access_term = get_term_by('slug', 'early-access', 'article_early_access');
+                $early_access_link = $early_access_term ? get_term_link($early_access_term) : '#';
+                ?>
+                <a href="<?php echo esc_url($early_access_link); ?>" class="btn jr-pill jr-pill-cranberry">
                 <span>Early Access Articles</span>
                 <span class="btn-circle" aria-hidden="true"><i class="bi bi-arrow-right-short"></i></span>
                 </a>
 
-                <a href="#" class="btn jr-pill jr-pill-navy">
+                <?php 
+                // Get Special Issue term link
+                $special_issue_term = get_term_by('slug', 'special-issue', 'issue_special');
+                $special_issue_link = $special_issue_term ? get_term_link($special_issue_term) : '#';
+                ?>
+                <a href="<?php echo esc_url($special_issue_link); ?>" class="btn jr-pill jr-pill-navy">
                 <span>Special Issues</span>
                 <span class="btn-circle" aria-hidden="true"><i class="bi bi-arrow-right-short"></i></span>
                 </a>
@@ -102,33 +112,51 @@
             <!-- Year of Publication -->
             <h3 class="jr-subtitle">Year of Publication</h3>
             <ul class="jr-tagcloud year-group">
-                <li><a href="#">#2025</a></li>
-                <li><a href="#">#2024</a></li>
-                <li><a href="#">#2023</a></li>
-                <li><a href="#">#2022</a></li>
-                <li><a href="#">#2021</a></li>
-                <li><a href="#">#2020</a></li>
-                <li><a href="#">#2015</a></li>
-                <li><a href="#">#2014</a></li>
-                <li><a href="#">#2013</a></li>
-                <li><a href="#">#2012</a></li>
-                <li><a href="#">#2011</a></li>
-                <li><a href="#">#2010</a></li>
+                <?php 
+                // Get all publication years from taxonomy
+                $all_years = get_terms(array(
+                    'taxonomy'   => 'article_year',
+                    'hide_empty' => true,
+                    'orderby'    => 'name',
+                    'order'      => 'DESC', // Newest first
+                ));
+                
+                if (!empty($all_years) && !is_wp_error($all_years)): 
+                    foreach ($all_years as $year): ?>
+                        <li>
+                            <a href="<?php echo esc_url(get_term_link($year)); ?>">
+                                #<?php echo esc_html($year->name); ?>
+                            </a>
+                        </li>
+                    <?php endforeach;
+                else: ?>
+                    <li><a href="#">No years available</a></li>
+                <?php endif; ?>
             </ul>
 
             <!-- Type of Publication -->
             <h3 class="jr-subtitle">Type of Publication</h3>
             <ul class="jr-tagcloud">
-                <li><a href="#">#journal article</a></li>
-                <li><a href="#">#review</a></li>
-                <li><a href="#">#research note</a></li>
-                <li><a href="#">#book review</a></li>
-                <li><a href="#">#editorial</a></li>
-                <li><a href="#">#essay</a></li>
-                <li><a href="#">#translation</a></li>
-                <li><a href="#">#interview</a></li>
-                <li><a href="#">#obituary</a></li>
-                <li><a href="#">#special issue</a></li>
+                <?php 
+                // Get all genres from taxonomy
+                $all_genres = get_terms(array(
+                    'taxonomy'   => 'article_genre',
+                    'hide_empty' => true, // Only show genres that have articles
+                    'orderby'    => 'name',
+                    'order'      => 'ASC',
+                ));
+                
+                if (!empty($all_genres) && !is_wp_error($all_genres)): 
+                    foreach ($all_genres as $genre): ?>
+                        <li>
+                            <a href="<?php echo esc_url(get_term_link($genre)); ?>">
+                                #<?php echo esc_html($genre->name); ?>
+                            </a>
+                        </li>
+                    <?php endforeach;
+                else: ?>
+                    <li><a href="#">No genres available</a></li>
+                <?php endif; ?>
             </ul>
 
             <!-- Keyword -->

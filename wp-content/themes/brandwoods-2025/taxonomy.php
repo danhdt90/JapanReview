@@ -144,16 +144,10 @@ if ($taxonomy === 'article_genre') {
                 ?>
 
                 <!-- Pagination -->
-                <nav class="jr-pagination mt-5" aria-label="Articles pagination">
-                    <?php
-                    the_posts_pagination(array(
-                        'mid_size'  => 2,
-                        'prev_text' => __('← Previous', 'brandwoods2025'),
-                        'next_text' => __('Next →', 'brandwoods2025'),
-                        'before_page_number' => '<span class="screen-reader-text">Page </span>',
-                    ));
-                    ?>
-                </nav>
+                <?php 
+                global $wp_query;
+                brandwoods_pagination($wp_query); 
+                ?>
 
                 <?php else : ?>
 
@@ -169,10 +163,6 @@ if ($taxonomy === 'article_genre') {
                         ); 
                         ?>
                     </p>
-                    <a href="<?php echo esc_url(get_post_type_archive_link('article')); ?>" 
-                       class="btn btn-primary">
-                        <?php _e('View All Articles', 'brandwoods2025'); ?>
-                    </a>
                 </div>
 
                 <?php endif; ?>

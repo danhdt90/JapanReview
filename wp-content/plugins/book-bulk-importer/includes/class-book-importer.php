@@ -262,11 +262,18 @@ class BookBulkImporter_BookImporter {
             // === SIMPLE FIELDS ===
             
             // Resource Type - 資源タイプ.資源タイプ
+            // Save to taxonomy 'article_genre' instead of meta field
             $resource_type = $this->parseSimpleJapaneseField($book_data, '資源タイプ.資源タイプ');
             if (!empty($resource_type)) {
-                $validated_resource_type = $this->validateString($resource_type, 255, 'resource_type', true);
-                $this->saveSimpleField($post_id, 'resource_type', $validated_resource_type);
+                $this->saveGenreTaxonomy($post_id, $resource_type);
             }
+            
+            // Old implementation - saved as meta field (commented out)
+            // $resource_type = $this->parseSimpleJapaneseField($book_data, '資源タイプ.資源タイプ');
+            // if (!empty($resource_type)) {
+            //     $validated_resource_type = $this->validateString($resource_type, 255, 'resource_type', true);
+            //     $this->saveSimpleField($post_id, 'resource_type', $validated_resource_type);
+            // }
             
             // DOI - ID登録.ID登録
             $doi = $this->parseSimpleJapaneseField($book_data, 'ID登録.ID登録');
@@ -288,6 +295,9 @@ class BookBulkImporter_BookImporter {
                 $validated_date = $this->validateDate($publication_date);
                 if ($validated_date) {
                     $this->saveSimpleField($post_id, 'publication_date', $validated_date);
+                    
+                    // Save year to taxonomy
+                    $this->savePublicationYearTaxonomy($post_id, $validated_date);
                 } else {
                     throw new Exception('Publication date must be in YYYY/MM/DD format');
                 }
@@ -306,8 +316,6 @@ class BookBulkImporter_BookImporter {
                 $validated_end_page = $this->validateInteger($end_page, null, null, 'end_page', true);
                 $this->saveSimpleField($post_id, 'end_page', $validated_end_page);
             }
-            
-            // === TAXONOMIES ===
             
             // Keywords - キーワード[0].主題, キーワード[1].主題, etc.
             $keywords = array();
@@ -376,6 +384,94 @@ class BookBulkImporter_BookImporter {
         // Assign all keywords to the post
         if (!empty($term_ids)) {
             wp_set_object_terms($post_id, $term_ids, 'keywords_article', false);
+        }
+    }
+    
+    /**
+     * Save genre to article_genre taxonomy (single selection)
+     */
+    private function saveGenreTaxonomy($post_id, $genre_name) {
+        if (empty($genre_name)) {
+            return;
+        }
+        
+        $genre_name = trim($genre_name);
+        
+        // Check if term exists
+        $term = get_term_by('name', $genre_name, 'article_genre');
+        
+        if (!$term) {
+            // Create new term
+            $result = wp_insert_term($genre_name, 'article_genre');
+            
+            if (is_wp_error($result)) {
+                // If term already exists (race condition), get it
+                if ($result->get_error_code() === 'term_exists') {
+                    $term_id = $result->get_error_data();
+                } else {
+                    // Log error and skip
+                    return;
+                }
+            } else {
+                $term_id = $result['term_id'];
+            }
+        } else {
+            $term_id = $term->term_id;
+        }
+        
+        // Assign genre to the post (replace any existing genre - single selection)
+        if (!empty($term_id)) {
+            wp_set_object_terms($post_id, array((int) $term_id), 'article_genre', false);
+        }
+    }
+    
+    /**
+     * Save publication year to article_year taxonomy
+     */
+    private function savePublicationYearTaxonomy($post_id, $publication_date) {
+        if (empty($publication_date)) {
+            return;
+        }
+        
+        // Extract year from date
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $publication_date);
+        if (!$date) {
+            // Try other formats
+            $date = DateTime::createFromFormat('Y-m-d', $publication_date);
+            if (!$date) {
+                return;
+            }
+        }
+        
+        $year = $date->format('Y');
+        
+        // Check if term exists
+        $term = get_term_by('name', $year, 'article_year');
+        
+        if (!$term) {
+            // Create new term
+            $result = wp_insert_term($year, 'article_year', array(
+                'slug' => $year
+            ));
+            
+            if (is_wp_error($result)) {
+                // If term already exists (race condition), get it
+                if ($result->get_error_code() === 'term_exists') {
+                    $term_id = $result->get_error_data();
+                } else {
+                    // Log error and skip
+                    return;
+                }
+            } else {
+                $term_id = $result['term_id'];
+            }
+        } else {
+            $term_id = $term->term_id;
+        }
+        
+        // Assign year to the post
+        if (!empty($term_id)) {
+            wp_set_object_terms($post_id, array((int) $term_id), 'article_year', false);
         }
     }
     

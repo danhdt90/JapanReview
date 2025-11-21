@@ -10,15 +10,25 @@
         }
         return $field;
     };
-
+    
+    // Extract volume value
     $volume_value = $extract_value($volume);
     $cover_image_iss = '';
-    $issue = get_posts([
-        'post_type'      => 'issue',
-        'posts_per_page' => 1,
-        'meta_key'       => 'volume',
-        'meta_value'     => $volume,
-    ]);
+    // Query issue by volume (ACF field)
+    if (!empty($volume_value)) {
+        $issue = get_posts([
+            'post_type'      => 'issue',
+            'posts_per_page' => 1,
+            'post_status'    => 'publish',
+            'posts_per_page'    => -1,
+            'meta_key'      => 'volume',
+            'meta_value'    => $volume_value
+        ]);
+        if (!empty($issue)) {
+            $issue_id = $issue[0]->ID;
+            $cover_image_iss = get_field('cover_image', $issue_id);
+        }
+    }
     
     $articleDetail = [
         'main_title' => pods_field('main_title'), // Repeater field (array)
@@ -33,10 +43,6 @@
         'end_page' => pods_field('end_page'), // Single field
         'abstract' => pods_field('abstract'), // Repeater field (array)
     ];
-    if (!empty($issue)) {
-        $issue_id = $issue[0]->ID;
-        $cover_image_iss = get_field('cover_image', $issue_id);
-    }
 
 ?>
 
@@ -59,14 +65,14 @@
         <div class="container">
             <div class="row g-5">
                 <!-- Cover -->
-                <?php $cover_image = pods_field('cover_image'); ?>
-                
                 <div class="col-12 col-lg-5">
                     <figure class="art-cover ratio ratio-3x4">
-                        <?php if(!empty($cover_image)) : ?>
-                            <img src="<?php echo esc_url($cover_image['guid']); ?>" alt="<?php echo esc_attr($cover_image['post_title']); ?>" loading="lazy">
+                        <?php if(has_post_thumbnail()) : ?>
+                            <?php the_post_thumbnail('full', ['alt' => get_the_title(), 'loading' => 'lazy']); ?>
+                        <?php elseif($cover_image_iss): ?>
+                            <img src="<?= esc_url($cover_image_iss['url']); ?>" alt="<?= esc_attr($cover_image_iss['title']); ?>" loading="lazy">
                         <?php else: ?>
-                            <img src="<?= $cover_image_iss ? esc_url($cover_image_iss['url']) : ''; ?>" alt="<?= $cover_image_iss ? esc_url($cover_image_iss['title']) : ''; ?>" loading="lazy">
+                            <img src="<?= get_template_directory_uri(); ?>/assets/images/no-image.jpg" alt="No image available" loading="lazy">
                         <?php endif; ?>
                     </figure>
                 </div>
@@ -181,7 +187,7 @@
                     </div>
 
                     <div class="mt-5 text-center">
-                        <a href="index.php" class="btn btn-viewmore" id="btn-back-index" data-back="index.php">
+                        <a href="<?php echo esc_url( home_url('/articles') ); ?>" class="btn btn-viewmore" id="btn-back-index" data-back="<?php echo esc_attr( home_url('/articles') ); ?>">
                             <span>Back to Index</span>
                             <svg class="btn-circle" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="12" cy="12" r="11.5" stroke="white" />

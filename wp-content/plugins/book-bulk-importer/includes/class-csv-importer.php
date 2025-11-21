@@ -77,7 +77,7 @@ class BookBulkImporter_CsvImporter {
             'message' => 'CSV file is valid',
             'headers' => $headers,
             'row_count' => count($data),
-            'preview' => array_slice($data, 0, 5), // Show first 5 rows as preview
+            'preview' => array_slice($data, 0, 20), // Show first 20 rows as preview
             'validation_details' => array(
                 'total_rows' => count($data),
                 'valid_rows' => $data_validation['valid_count'],
