@@ -148,18 +148,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ========== SEARCH FORM HANDLER ==========
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('#jr-search .jr-searchbar');
-    if (!form) return;
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const q = form.querySelector('input[type="search"]')?.value?.trim() || '';
-        if (q) {
-            // Điều hướng tới trang list (ví dụ):
-            window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
-        }
-    });
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     const form = document.querySelector('#jr-search .jr-searchbar');
+//     if (!form) return;
+//     form.addEventListener('submit', (e) => {
+//         e.preventDefault();
+//         const q = form.querySelector('input[type="search"]')?.value?.trim() || '';
+//         if (q) {
+//             // Điều hướng tới trang list (ví dụ):
+//             window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
+//         }
+//     });
+// });
 
 // ========== BACK TO TOP BUTTON ==========
 document.addEventListener('DOMContentLoaded', () => {
@@ -267,15 +267,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const formKeyword = document.getElementById('form-keyword');
     const formIssue = document.getElementById('form-issue');
 
-    if (formKeyword) {
-        formKeyword.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const q = formKeyword.q.value.trim();
-            if (!q) return;
-            // Điều hướng đến trang kết quả tìm theo từ khóa
-            window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
-        });
-    }
+    // if (formKeyword) {
+    //     formKeyword.addEventListener('submit', (e) => {
+    //         e.preventDefault();
+    //         const q = formKeyword.q.value.trim();
+    //         if (!q) return;
+    //         // Điều hướng đến trang kết quả tìm theo từ khóa
+    //         window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
+    //     });
+    // }
 
     if (formIssue) {
         formIssue.addEventListener('submit', (e) => {
@@ -290,13 +290,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Optional: click vào tag cloud -> tìm kiếm theo keyword
-    document.querySelectorAll('#jr-search-dual .jr-tagcloud a').forEach(a => {
-        a.addEventListener('click', (e) => {
-            e.preventDefault();
-            const kw = a.textContent.replace(/^#\s*/, '').trim();
-            window.location.href = `/search.html?q=${encodeURIComponent(kw)}`;
-        });
-    });
+    // document.querySelectorAll('#jr-search-dual .jr-tagcloud a').forEach(a => {
+    //     a.addEventListener('click', (e) => {
+    //         e.preventDefault();
+    //         const kw = a.textContent.replace(/^#\s*/, '').trim();
+    //         window.location.href = `/search.html?q=${encodeURIComponent(kw)}`;
+    //     });
+    // });
 });
 // BE COMMENT : MANUAL ACTIVE CLASS REMOVAL 
 // Back to index & đánh dấu sidebar theo query
@@ -385,15 +385,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // (tuỳ chọn) Submit search
-    const form = overlay.querySelector('form.jr-searchbar');
-    form?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const fd = new FormData(form);
-        const q = (fd.get('q') || '').toString().trim();
-        if (!q) return;
-        // TODO: đổi URL search thật của bạn
-        window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
-    });
+    // const form = overlay.querySelector('form.jr-searchbar');
+    // form?.addEventListener('submit', (e) => {
+    //     e.preventDefault();
+    //     const fd = new FormData(form);
+    //     const q = (fd.get('q') || '').toString().trim();
+    //     if (!q) return;
+    //     window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
+    // });
 });
 
 
