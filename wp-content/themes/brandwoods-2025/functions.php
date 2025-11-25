@@ -267,4 +267,69 @@
         return $valid;
     }, 10, 4);
 
+    /**
+     * Improve search for Japanese characters using Pods API
+     */
+    function brandwoods_custom_search_query($query) {
+        // Only modify main search query on frontend
+        if (!is_admin() && $query->is_main_query() && $query->is_search()) {
+            $search_term = $query->get('s');
+            
+            if (!empty($search_term)) {
+                // Remove default search behavior
+                $query->set('s', '');
+                
+                // Search using Pods with better Japanese support
+                $pods = pods('article', [
+                    'limit' => -1,
+                    'where' => sprintf(
+                        "t.post_title LIKE '%%%s%%' OR 
+                        main_title.meta_value LIKE '%%%s%%' OR 
+                        other_title.meta_value LIKE '%%%s%%' OR 
+                        group_author.meta_value LIKE '%%%s%%' OR 
+                        abstract.meta_value LIKE '%%%s%%'",
+                        $GLOBALS['wpdb']->esc_like($search_term),
+                        $GLOBALS['wpdb']->esc_like($search_term),
+                        $GLOBALS['wpdb']->esc_like($search_term),
+                        $GLOBALS['wpdb']->esc_like($search_term),
+                        $GLOBALS['wpdb']->esc_like($search_term)
+                    ),
+                    'orderby' => 't.post_date DESC'
+                ]);
+                
+                // Get post IDs from Pods result
+                $post_ids = [];
+                if ($pods->total() > 0) {
+                    while ($pods->fetch()) {
+                        $post_ids[] = $pods->id();
+                    }
+                }
+                
+                // If we found posts, set them as the search result
+                if (!empty($post_ids)) {
+                    $query->set('post__in', $post_ids);
+                    $query->set('orderby', 'post__in');
+                } else {
+                    // No results found, set impossible condition
+                    $query->set('post__in', [0]);
+                }
+                
+                // Store search term for highlighting
+                $query->set('search_term', $search_term);
+            }
+        }
+        
+        return $query;
+    }
+    add_action('pre_get_posts', 'brandwoods_custom_search_query');
+
+    /**
+     * Get search term from query for highlighting
+     */
+    function brandwoods_get_search_term() {
+        global $wp_query;
+        $search_term = $wp_query->get('search_term');
+        return !empty($search_term) ? $search_term : get_search_query();
+    }
+
 ?>
