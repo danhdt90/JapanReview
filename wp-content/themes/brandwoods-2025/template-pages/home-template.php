@@ -49,9 +49,9 @@
       <h2 id="search-title" class="jr-sec-title" data-aos="fade-up">Search</h2>
 
       <!-- Search box -->
-      <form class="jr-searchbar mx-auto" role="search" aria-label="Search articles" data-aos="fade-up" data-aos-delay="100">
+      <form class="jr-searchbar mx-auto" role="search" aria-label="Search articles" data-aos="fade-up" data-aos-delay="100" method="get" action="<?php echo esc_url(home_url('/')); ?>">
         <div class="input-group">
-          <input type="search" class="form-control" placeholder="Search any word" aria-label="Search any word">
+          <input type="search" class="form-control" name="s" value="<?php echo get_search_query(); ?>" placeholder="Search any word" aria-label="Search any word">
           <button class="btn btn-outline-0 jr-searchbtn" type="submit" aria-label="Search">
             <i class="bi bi-search"></i>
           </button>
