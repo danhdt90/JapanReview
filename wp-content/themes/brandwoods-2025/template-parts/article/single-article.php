@@ -31,17 +31,19 @@
     }
     
     $articleDetail = [
-        'main_title' => pods_field('main_title'), // Repeater field (array)
-        'other_title' => pods_field('other_title'), // Repeater field (array)
-        'group_author' => pods_field('group_author'), // Repeater field (array)
-        'resource_type' => pods_field('resource_type'), // Single field
-        'doi' => pods_field('doi'), // Single field
-        'content_description' => pods_field('content_description'), // Repeater field (array)
-        'volume' => pods_field('volume'), // Single field
-        'publication_date' => pods_field('publication_date'), // Single field
-        'start_page' => pods_field('start_page'), // Single field
-        'end_page' => pods_field('end_page'), // Single field
+        'main_title' => pods_field('main_title'),
+        'other_title' => pods_field('other_title'),
+        'group_author' => pods_field('group_author'),
+        'resource_type' => pods_field('resource_type'), 
+        'doi' => pods_field('doi'), 
+        'content_description' => pods_field('content_description'),
+        'volume' => pods_field('volume'), 
+        'publication_date' => pods_field('publication_date'), 
+        'start_page' => pods_field('start_page'), 
+        'end_page' => pods_field('end_page'), 
         'abstract' => pods_field('abstract'), // Repeater field (array)
+        'external_link_title' => pods_field('external_link_title'), 
+        'external_link' => pods_field('external_link'), 
     ];
 
 ?>
@@ -138,7 +140,7 @@
                         // Display DOI
                         $doi_value = $extract_value($articleDetail['doi']);
                         if (!empty($doi_value)): ?>
-                            <li><a class="link-underline" href="https://doi.org/<?php echo esc_attr($doi_value); ?>" target="_blank" rel="noopener">DOI: <?php echo esc_html($doi_value); ?></a></li>
+                            <li><span class="link-underline" target="_blank" rel="noopener">DOI: <?php echo esc_html($doi_value); ?></span></li>
                         <?php endif;
                         
                         // Display publication date
@@ -146,6 +148,17 @@
                             <?php foreach ($articleDetail['content_description'] as $description): ?>
                             <li><?php echo wp_kses_post($description); ?></li>
                              <?php endforeach; ?>
+                        <?php endif; ?>
+                        <?php
+                        // Display external link if both title and link are available
+                        $external_link_title = $extract_value($articleDetail['external_link_title']);
+                        $external_link = $extract_value($articleDetail['external_link']);
+                        if (!empty($external_link_title) && !empty($external_link)): ?>
+                            <li>
+                                <a href="<?php echo esc_url($external_link); ?>" target="_blank" rel="noopener" class="  font-weight-bold " style="font-weight:600;text;text-decoration: none;">
+                                    <?php echo esc_html($external_link_title); ?>
+                                </a>
+                            </li>
                         <?php endif; ?>
                     </ul>
                 </div>
