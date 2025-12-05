@@ -154,19 +154,25 @@ section {
   -webkit-backdrop-filter: blur(var(--hdr-blur));
           backdrop-filter: blur(var(--hdr-blur));
   box-shadow: 0 10px 28px rgba(0, 0, 0, calc(0.12 * var(--hdr-elev)));
-  transform: translateY(var(--hdr-y));
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  will-change: transform, backdrop-filter, box-shadow, background-color;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease;
 }
 .jr-header .navbar {
   padding-top: var(--hdr-pad);
   padding-bottom: var(--hdr-pad);
-  transition: padding 0.25s ease;
 }
 .jr-header .jr-brand__logo {
   transform: scale(var(--logo-scale));
   transform-origin: left center;
   transition: transform 0.25s ease;
+}
+
+/* Khi thu nhỏ */
+.jr-header.is-compact {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+.jr-header.is-compact .navbar {
+  padding-top: 0.94rem;
+  padding-bottom: 0.94rem;
 }
 
 /* tôn trọng user giảm chuyển động */
@@ -363,11 +369,18 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  backface-visibility: hidden;
+  transform: translateZ(0);
   /* lớp tranh mực tàu mờ */
   /* Typography */
   /* Bóng chữ rất nhẹ để giống in trên giấy */
   /* Tạo viền mờ xung quanh để giống tờ giấy cũ */
   box-shadow: inset 0 20px 40px rgba(0, 0, 0, 0.05), inset 0 -20px 40px rgba(0, 0, 0, 0.05);
+}
+.jr-intro * {
+  /* tránh transition transform/line-height không cần thiết */
+  transition-property: color, background-color, box-shadow;
 }
 .jr-intro::after {
   content: "";
@@ -665,6 +678,8 @@ section {
   color: #9B003F;
   margin-bottom: 10px;
   font-weight: 400;
+  display: flex;
+  align-items: flex-end;
 }
 .jr-news .news-meta .bullet {
   margin-inline: 0.5rem;
@@ -1704,7 +1719,7 @@ section {
 /* tái dùng style từ trang list */
 .news-row-head {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.75rem;
   color: #6b7280;
   font-size: 0.95rem;
