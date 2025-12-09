@@ -275,25 +275,42 @@
         if (!is_admin() && $query->is_main_query() && $query->is_search()) {
             $search_term = $query->get('s');
             
+            // Sanitize input to prevent XSS and other attacks
+            $search_term = sanitize_text_field($search_term);
+            
+            // Validate and limit search term length
+            if (strlen($search_term) > 200) {
+                $search_term = substr($search_term, 0, 200);
+            }
+            
             if (!empty($search_term)) {
                 // Remove default search behavior
                 $query->set('s', '');
                 
+                // Escape search term for SQL LIKE query to prevent SQL injection
+                global $wpdb;
+                $escaped_term = $wpdb->esc_like($search_term);
+                $like_term = '%' . $escaped_term . '%';
+                
+                // Use wpdb->prepare() for additional SQL injection protection
+                $where_clause = $wpdb->prepare(
+                    "t.post_title LIKE %s OR 
+                    main_title.meta_value LIKE %s OR 
+                    other_title.meta_value LIKE %s OR 
+                    group_author.meta_value LIKE %s OR 
+                    abstract.meta_value LIKE %s",
+                    $like_term,
+                    $like_term,
+                    $like_term,
+                    $like_term,
+                    $like_term
+                );
+                
                 // Search using Pods with better Japanese support
+                // Limit results to prevent DoS attacks (max 1000 posts)
                 $pods = pods('article', [
-                    'limit' => -1,
-                    'where' => sprintf(
-                        "t.post_title LIKE '%%%s%%' OR 
-                        main_title.meta_value LIKE '%%%s%%' OR 
-                        other_title.meta_value LIKE '%%%s%%' OR 
-                        group_author.meta_value LIKE '%%%s%%' OR 
-                        abstract.meta_value LIKE '%%%s%%'",
-                        $GLOBALS['wpdb']->esc_like($search_term),
-                        $GLOBALS['wpdb']->esc_like($search_term),
-                        $GLOBALS['wpdb']->esc_like($search_term),
-                        $GLOBALS['wpdb']->esc_like($search_term),
-                        $GLOBALS['wpdb']->esc_like($search_term)
-                    ),
+                    'limit' => 1000,
+                    'where' => $where_clause,
                     'orderby' => 't.post_date DESC'
                 ]);
                 
@@ -301,7 +318,11 @@
                 $post_ids = [];
                 if ($pods->total() > 0) {
                     while ($pods->fetch()) {
-                        $post_ids[] = $pods->id();
+                        $post_id = $pods->id();
+                        // Validate post ID is a positive integer
+                        if (is_numeric($post_id) && $post_id > 0) {
+                            $post_ids[] = absint($post_id);
+                        }
                     }
                 }
                 
@@ -325,11 +346,17 @@
 
     /**
      * Get search term from query for highlighting
+     * Returns escaped HTML to prevent XSS attacks
      */
-    function brandwoods_get_search_term() {
+    function brandwoods_get_search_term($escape = true) {
         global $wp_query;
         $search_term = $wp_query->get('search_term');
-        return !empty($search_term) ? $search_term : get_search_query();
+        if (empty($search_term)) {
+            $search_term = get_search_query();
+        }
+        
+        // Escape output to prevent XSS when displaying in HTML
+        return $escape ? esc_html($search_term) : $search_term;
     }
 
     
