@@ -51,6 +51,6 @@ jobs:
             cd "$APP_DIR"
             if [ -d "$APP_DIR/current" ] && [ ! -L "$APP_DIR/current" ]; then rm -rf "$APP_DIR/current"; fi
             ln -sfn "releases/$TS" current
-            # echo "==> Reload Nginx..."
-            # sudo systemctl reload nginx
-            echo "✅ Deploy thành công! Bản mới: $TS"
+            echo "==> Dọn dẹp các bản release cũ..."
+            cd "$APP_DIR/releases"
+            ls -1t | tail -n +6 | xargs -r rm -rf
