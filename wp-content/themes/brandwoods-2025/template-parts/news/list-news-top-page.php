@@ -26,7 +26,7 @@
 
                 <h2 id="news-title" class="jr-sec-title text-center" data-aos="fade-up">News</h2>
 
-                <div class="row justify-content-center">
+                <div class="row justify-content-center jr-news-list">
                     <div class="col-12 col-lg-6">
                         <!-- 1 item -->
                         <?php 
