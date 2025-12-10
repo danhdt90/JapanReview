@@ -1,4 +1,23 @@
 <?php
+
+    $article_posts = get_posts([
+        'post_type'      => 'article',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+    ]);
+
+    $article_volumes = [];
+
+    foreach ($article_posts as $id) {
+        $vol = get_post_meta($id, 'volume', true);
+    
+        if ($vol !== '' && $vol !== null) {
+            $article_volumes[] = $vol;
+        }
+    }
+
+    $article_volumes = array_unique($article_volumes);
+
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 
     $args = [
@@ -8,6 +27,24 @@
         'post_status'    => 'publish',
         'orderby'        => 'modified', // or date
         'order'          => 'DESC',
+
+        'meta_query' => [
+            'relation' => 'AND',
+
+            // Volume not empty
+            [
+                'key'     => 'volume',
+                'value'   => '',
+                'compare' => '!=',
+            ],
+
+            // Volume article = Volume Issuse
+            [
+                'key'     => 'volume',
+                'value'   => $article_volumes,
+                'compare' => 'IN',
+            ],
+        ],
 
         'no_found_rows'          => false,
         'cache_results'          => true,
