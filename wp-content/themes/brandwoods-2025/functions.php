@@ -332,4 +332,6 @@
         return !empty($search_term) ? $search_term : get_search_query();
     }
 
+    
+
 ?>
