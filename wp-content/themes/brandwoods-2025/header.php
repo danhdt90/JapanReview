@@ -136,24 +136,24 @@
             <h3 class="jr-subtitle">Type of Publication</h3>
             <ul class="jr-tagcloud">
                 <?php 
-                // Get all genres from taxonomy
-                $all_genres = get_terms(array(
-                    'taxonomy'   => 'article_genre',
-                    'hide_empty' => true, // Only show genres that have articles
+                // Get all publication types from taxonomy
+                $all_publication_types = get_terms(array(
+                    'taxonomy'   => 'publication_type',
+                    'hide_empty' => true, // Only show publication types that have articles
                     'orderby'    => 'name',
                     'order'      => 'ASC',
                 ));
                 
-                if (!empty($all_genres) && !is_wp_error($all_genres)): 
-                    foreach ($all_genres as $genre): ?>
+                if (!empty($all_publication_types) && !is_wp_error($all_publication_types)): 
+                    foreach ($all_publication_types as $publication_type): ?>
                         <li>
-                            <a href="<?php echo esc_url(get_term_link($genre)); ?>">
-                                #<?php echo esc_html($genre->name); ?>
+                            <a href="<?php echo esc_url(get_term_link($publication_type)); ?>">
+                                #<?php echo esc_html($publication_type->name); ?>
                             </a>
                         </li>
                     <?php endforeach;
                 else: ?>
-                    <li><a href="#">No genres available</a></li>
+                    <li><a href="#">No publication types available</a></li>
                 <?php endif; ?>
             </ul>
 

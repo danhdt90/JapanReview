@@ -111,37 +111,37 @@
     endif;
     add_action( 'init', 'brandwoods_register_article_post_type', 0 );
 
-    // Register Custom Taxonomy for Articles: Genre
-    if ( ! function_exists( 'brandwoods_register_article_genre_taxonomy' ) ) :
+    // Register Custom Taxonomy for Articles: Publication Type
+    if ( ! function_exists( 'brandwoods_register_publication_type_taxonomy' ) ) :
         /**
-         * Register Article Genre Taxonomy
+         * Register Article Publication Type Taxonomy
          *
          * @since Brandwoods 2025
          *
          * @return void
          */
-        function brandwoods_register_article_genre_taxonomy() {
+        function brandwoods_register_publication_type_taxonomy() {
             $labels = array(
-                'name'                       => _x( 'Genres', 'Taxonomy General Name', 'brandwoods2025' ),
-                'singular_name'              => _x( 'Genre', 'Taxonomy Singular Name', 'brandwoods2025' ),
-                'menu_name'                  => __( 'Genres', 'brandwoods2025' ),
-                'all_items'                  => __( 'All Genres', 'brandwoods2025' ),
-                'parent_item'                => __( 'Parent Genre', 'brandwoods2025' ),
-                'parent_item_colon'          => __( 'Parent Genre:', 'brandwoods2025' ),
-                'new_item_name'              => __( 'New Genre Name', 'brandwoods2025' ),
-                'add_new_item'               => __( 'Add New Genre', 'brandwoods2025' ),
-                'edit_item'                  => __( 'Edit Genre', 'brandwoods2025' ),
-                'update_item'                => __( 'Update Genre', 'brandwoods2025' ),
-                'view_item'                  => __( 'View Genre', 'brandwoods2025' ),
-                'separate_items_with_commas' => __( 'Separate genres with commas', 'brandwoods2025' ),
-                'add_or_remove_items'        => __( 'Add or remove genres', 'brandwoods2025' ),
+                'name'                       => _x( 'Publication Types', 'Taxonomy General Name', 'brandwoods2025' ),
+                'singular_name'              => _x( 'Publication Type', 'Taxonomy Singular Name', 'brandwoods2025' ),
+                'menu_name'                  => __( 'Publication Types', 'brandwoods2025' ),
+                'all_items'                  => __( 'All Publication Types', 'brandwoods2025' ),
+                'parent_item'                => __( 'Parent Publication Type', 'brandwoods2025' ),
+                'parent_item_colon'          => __( 'Parent Publication Type:', 'brandwoods2025' ),
+                'new_item_name'              => __( 'New Publication Type Name', 'brandwoods2025' ),
+                'add_new_item'               => __( 'Add New Publication Type', 'brandwoods2025' ),
+                'edit_item'                  => __( 'Edit Publication Type', 'brandwoods2025' ),
+                'update_item'                => __( 'Update Publication Type', 'brandwoods2025' ),
+                'view_item'                  => __( 'View Publication Type', 'brandwoods2025' ),
+                'separate_items_with_commas' => __( 'Separate publication types with commas', 'brandwoods2025' ),
+                'add_or_remove_items'        => __( 'Add or remove publication types', 'brandwoods2025' ),
                 'choose_from_most_used'      => __( 'Choose from the most used', 'brandwoods2025' ),
-                'popular_items'              => __( 'Popular Genres', 'brandwoods2025' ),
-                'search_items'               => __( 'Search Genres', 'brandwoods2025' ),
+                'popular_items'              => __( 'Popular Publication Types', 'brandwoods2025' ),
+                'search_items'               => __( 'Search Publication Types', 'brandwoods2025' ),
                 'not_found'                  => __( 'Not Found', 'brandwoods2025' ),
-                'no_terms'                   => __( 'No genres', 'brandwoods2025' ),
-                'items_list'                 => __( 'Genres list', 'brandwoods2025' ),
-                'items_list_navigation'      => __( 'Genres list navigation', 'brandwoods2025' ),
+                'no_terms'                   => __( 'No publication types', 'brandwoods2025' ),
+                'items_list'                 => __( 'Publication Types list', 'brandwoods2025' ),
+                'items_list_navigation'      => __( 'Publication Types list navigation', 'brandwoods2025' ),
             );
 
             $args = array(
@@ -153,38 +153,38 @@
                 'show_in_nav_menus'          => true,
                 'show_tagcloud'              => false,
                 'show_in_rest'               => true,
-                'rest_base'                  => 'article-genres',
+                'rest_base'                  => 'publication-types',
                 'rest_controller_class'      => 'WP_REST_Terms_Controller',
                 'rewrite'                    => array(
-                    'slug'       => 'article-genre',
+                    'slug'       => 'publication-type',
                     'with_front' => false,
                 ),
             );
 
-            register_taxonomy( 'article_genre', array( 'article' ), $args );
+            register_taxonomy( 'publication_type', array( 'article' ), $args );
         }
     endif;
-    add_action( 'init', 'brandwoods_register_article_genre_taxonomy', 0 );
+    add_action( 'init', 'brandwoods_register_publication_type_taxonomy', 0 );
 
-    // Custom meta box for Genre taxonomy (radio buttons - single selection)
-    if ( ! function_exists( 'brandwoods_article_genre_radio_meta_box' ) ) :
+    // Custom meta box for Publication Type taxonomy (radio buttons - single selection)
+    if ( ! function_exists( 'brandwoods_publication_type_radio_meta_box' ) ) :
         /**
-         * Custom meta box for Genre taxonomy with radio buttons
+         * Custom meta box for Publication Type taxonomy with radio buttons
          *
          * @since Brandwoods 2025
          *
          * @param WP_Post $post The post object.
          * @return void
          */
-        function brandwoods_article_genre_radio_meta_box( $post ) {
-            $taxonomy = 'article_genre';
+        function brandwoods_publication_type_radio_meta_box( $post ) {
+            $taxonomy = 'publication_type';
             $terms = get_terms( array(
                 'taxonomy'   => $taxonomy,
                 'hide_empty' => false,
             ) );
 
             if ( empty( $terms ) || is_wp_error( $terms ) ) {
-                echo '<p>' . __( 'No genres available.', 'brandwoods2025' ) . '</p>';
+                echo '<p>' . __( 'No publication types available.', 'brandwoods2025' ) . '</p>';
                 return;
             }
 
@@ -195,7 +195,7 @@
             echo '<input type="hidden" name="tax_input[' . esc_attr( $taxonomy ) . '][]" value="0" />';
             
             foreach ( $terms as $term ) {
-                $id = 'genre-' . $term->term_id;
+                $id = 'publication-type-' . $term->term_id;
                 echo '<label for="' . esc_attr( $id ) . '" class="selectit">';
                 echo '<input type="radio" id="' . esc_attr( $id ) . '" name="tax_input[' . esc_attr( $taxonomy ) . '][]" value="' . esc_attr( $term->term_id ) . '" ' . checked( $current_term_id, $term->term_id, false ) . ' /> ';
                 echo esc_html( $term->name );
@@ -207,27 +207,27 @@
     endif;
 
     // Replace the default meta box with custom radio button meta box
-    if ( ! function_exists( 'brandwoods_replace_genre_meta_box' ) ) :
+    if ( ! function_exists( 'brandwoods_replace_publication_type_meta_box' ) ) :
         /**
-         * Replace the default genre meta box with custom radio button version
+         * Replace the default publication type meta box with custom radio button version
          *
          * @since Brandwoods 2025
          *
          * @return void
          */
-        function brandwoods_replace_genre_meta_box() {
-            remove_meta_box( 'article_genrediv', 'article', 'side' );
+        function brandwoods_replace_publication_type_meta_box() {
+            remove_meta_box( 'publication_typediv', 'article', 'side' );
             add_meta_box(
-                'article_genre_radio',
-                __( 'Genre', 'brandwoods2025' ),
-                'brandwoods_article_genre_radio_meta_box',
+                'publication_type_radio',
+                __( 'Publication Type', 'brandwoods2025' ),
+                'brandwoods_publication_type_radio_meta_box',
                 'article',
                 'side',
                 'default'
             );
         }
     endif;
-    add_action( 'add_meta_boxes', 'brandwoods_replace_genre_meta_box' );
+    add_action( 'add_meta_boxes', 'brandwoods_replace_publication_type_meta_box' );
 
     // Register Custom Taxonomy for Articles: Keywords
     if ( ! function_exists( 'brandwoods_register_article_keywords_taxonomy' ) ) :
@@ -555,7 +555,7 @@
     // Flush rewrite rules on theme activation
     function brandwoods_flush_rewrite_rules() {
         brandwoods_register_article_post_type();
-        brandwoods_register_article_genre_taxonomy();
+        brandwoods_register_publication_type_taxonomy();
         brandwoods_register_article_keywords_taxonomy();
         brandwoods_register_article_year_taxonomy();
         brandwoods_register_article_early_access_taxonomy();

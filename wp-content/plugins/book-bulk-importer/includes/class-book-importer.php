@@ -262,7 +262,7 @@ class BookBulkImporter_BookImporter {
             // === SIMPLE FIELDS ===
             
             // Resource Type - 資源タイプ.資源タイプ
-            // Save to taxonomy 'article_genre' instead of meta field
+            // Save to taxonomy 'publication_type' instead of meta field
             $resource_type = $this->parseSimpleJapaneseField($book_data, '資源タイプ.資源タイプ');
             if (!empty($resource_type)) {
                 $this->saveGenreTaxonomy($post_id, $resource_type);
@@ -388,7 +388,7 @@ class BookBulkImporter_BookImporter {
     }
     
     /**
-     * Save genre to article_genre taxonomy (single selection)
+     * Save publication type to publication_type taxonomy (single selection)
      */
     private function saveGenreTaxonomy($post_id, $genre_name) {
         if (empty($genre_name)) {
@@ -398,11 +398,11 @@ class BookBulkImporter_BookImporter {
         $genre_name = trim($genre_name);
         
         // Check if term exists
-        $term = get_term_by('name', $genre_name, 'article_genre');
+        $term = get_term_by('name', $genre_name, 'publication_type');
         
         if (!$term) {
             // Create new term
-            $result = wp_insert_term($genre_name, 'article_genre');
+            $result = wp_insert_term($genre_name, 'publication_type');
             
             if (is_wp_error($result)) {
                 // If term already exists (race condition), get it
@@ -419,9 +419,9 @@ class BookBulkImporter_BookImporter {
             $term_id = $term->term_id;
         }
         
-        // Assign genre to the post (replace any existing genre - single selection)
+        // Assign publication type to the post (replace any existing type - single selection)
         if (!empty($term_id)) {
-            wp_set_object_terms($post_id, array((int) $term_id), 'article_genre', false);
+            wp_set_object_terms($post_id, array((int) $term_id), 'publication_type', false);
         }
     }
     

@@ -34,7 +34,7 @@
         'main_title' => pods_field('main_title'),
         'other_title' => pods_field('other_title'),
         'group_author' => pods_field('group_author'),
-        'resource_type' => pods_field('resource_type'), 
+        // 'resource_type' => pods_field('resource_type'), 
         'doi' => pods_field('doi'), 
         'content_description' => pods_field('content_description'),
         'volume' => pods_field('volume'), 
@@ -142,6 +142,8 @@
                         if (!empty($doi_value)): ?>
                             <li><span class="link-underline" target="_blank" rel="noopener">DOI: <?php echo esc_html($doi_value); ?></span></li>
                         <?php endif;
+                        
+                        // Display public 
                         
                         // Display publication date
                         if (!empty($articleDetail['content_description']) && is_array($articleDetail['content_description'])): ?>

@@ -21,8 +21,8 @@ $term_description = $term->description;
 // Determine taxonomy type for display
 $taxonomy_label = '';
 $taxonomy_icon = '';
-if ($taxonomy === 'article_genre') {
-    $taxonomy_label = __('Genre', 'brandwoods2025');
+if ($taxonomy === 'publication_type') {
+    $taxonomy_label = __('Publication Type', 'brandwoods2025');
 } elseif ($taxonomy === 'keywords_article') {
     $taxonomy_label = __('Keyword', 'brandwoods2025');
 }
@@ -102,20 +102,20 @@ if ($taxonomy === 'article_genre') {
                                 </ul>
                                 
                                 <?php 
-                                // Show genres or keywords based on current taxonomy
+                                // Show publication types or keywords based on current taxonomy
                                 if ($taxonomy === 'keywords_article') :
-                                    $post_genres = get_the_terms(get_the_ID(), 'article_genre');
-                                    if ($post_genres && !is_wp_error($post_genres)) : ?>
+                                    $post_publication_types = get_the_terms(get_the_ID(), 'publication_type');
+                                    if ($post_publication_types && !is_wp_error($post_publication_types)) : ?>
                                         <div class="art-tags mt-2">
-                                            <?php foreach ($post_genres as $genre) : ?>
-                                                <a href="<?php echo esc_url(get_term_link($genre)); ?>" 
+                                            <?php foreach ($post_publication_types as $publication_type) : ?>
+                                                <a href="<?php echo esc_url(get_term_link($publication_type)); ?>" 
                                                    class="art-tag">
-                                                    <?php echo esc_html($genre->name); ?>
+                                                    <?php echo esc_html($publication_type->name); ?>
                                                 </a>
                                             <?php endforeach; ?>
                                         </div>
                                     <?php endif;
-                                elseif ($taxonomy === 'article_genre') :
+                                elseif ($taxonomy === 'publication_type') :
                                     $post_keywords = get_the_terms(get_the_ID(), 'keywords_article');
                                     if ($post_keywords && !is_wp_error($post_keywords)) : ?>
                                         <div class="art-tags mt-2">
