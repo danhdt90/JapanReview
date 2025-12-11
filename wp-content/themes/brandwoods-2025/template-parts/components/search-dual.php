@@ -1,10 +1,10 @@
 <section id="jr-search-dual" class="jr-search-dual" aria-labelledby="search2-title">
     <div class="container-xxl text-center">
-        <h2 id="search2-title" class="jr-sec-title" data-aos="fade-up">Search</h2>
+        <h2 id="search2-title" class="jr-sec-title">Search</h2>
 
         <div class="row g-5 justify-content-center mb-4">
             <div class="col-12 col-lg-5">
-                <form class="jr-searchbar mx-auto" id="form-keyword" role="search" aria-label="Search by keyword" data-aos="fade-up" data-aos-delay="100" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+                <form class="jr-searchbar mx-auto" id="form-keyword" role="search" aria-label="Search by keyword" method="get" action="<?php echo esc_url(home_url('/')); ?>">
                     <div class="input-group">
                         <input type="search" class="form-control" name="s" value="<?php echo get_search_query(); ?>" placeholder="Search any word" aria-label="Search any word">
                         <button class="btn btn-outline-0 jr-searchbtn" type="submit" aria-label="Search">
@@ -17,8 +17,8 @@
             </div>
         </div>
 
-        <h3 class="jr-subtitle mt-4 mb-3" data-aos="fade-up" data-aos-delay="200">Keyword</h3>
-        <ul class="jr-tagcloud mb-0" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="jr-subtitle mt-4 mb-3">Keyword</h3>
+        <ul class="jr-tagcloud mb-0">
             <?php 
             // Get all keywords from taxonomy
             $all_keywords = get_terms(array(

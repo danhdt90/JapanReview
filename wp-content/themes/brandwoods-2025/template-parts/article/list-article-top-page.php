@@ -60,7 +60,7 @@
         ?>
             <div class="container-xxl position-relative">
 
-                <h2 id="articles-title" class="jr-sec-title text-center" data-aos="fade-up">Latest Articles</h2>
+                <h2 id="articles-title" class="jr-sec-title text-center">Latest Articles</h2>
 
                 <div class="row justify-content-center">
                     <div class="col-12 col-lg-9">
@@ -86,7 +86,7 @@
                             $start_page_value = $extract_value($start_page);
                             $end_page_value = $extract_value($end_page);
                         ?>
-                            <article class="art-item" data-aos="fade-up" data-aos-delay="100">
+                            <article class="art-item">
                                 <div class="row g-3 flex-nowrap">
                                     <!-- text -->
                                     <div class="col overflow-hidden">
@@ -121,7 +121,7 @@
                             wp_reset_postdata();
                         ?>
                         <!-- View more -->
-                        <div class="text-center mt-3" data-aos="fade-up" data-aos-delay="300">
+                        <div class="text-center mt-3">
                             <a href="<?= esc_url( home_url( '/articles/' ) ); ?>" class="btn btn-viewmore">
                                 <span>View More</span>
                                 <svg class="btn-circle" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
