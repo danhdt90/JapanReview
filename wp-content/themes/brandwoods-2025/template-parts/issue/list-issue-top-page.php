@@ -59,7 +59,7 @@
     if ($query->have_posts()) : 
         ?>
             <div class="container text-center">
-                <h2 id="issues-title" class="jr-sec-title" data-aos="fade-up">Latest Issues</h2>
+                <h2 id="issues-title" class="jr-sec-title">Latest Issues</h2>
 
                 <div class="row g-5 justify-content-center">
                 <!-- Issue 1 -->
@@ -67,7 +67,7 @@
                     while ($query->have_posts()) : $query->the_post();
                         ?>
                             <div class="col-10 col-sm-6 col-lg-4">
-                                <a class="issue-card" href="<?= get_the_permalink(); ?>" data-aos="fade-up" data-aos-delay="100">
+                                <a class="issue-card" href="<?= get_the_permalink(); ?>">
                                     <figure class="m-0">
                                         <div class="issue-cover ratio ratio-3x4">
                                             <img src="<?= get_field('cover_image')['url']; ?>" class="img-fluid" alt="<?= the_title(); ?>" loading="lazy">
@@ -81,7 +81,7 @@
                 ?>
                 <!-- View more -->
                 <div class="mt-5">
-                    <a href="<?= esc_url( home_url( '/issues/' ) ); ?>" class="btn btn-viewmore" data-aos="fade-up" data-aos-delay="400">
+                    <a href="<?= esc_url( home_url( '/issues/' ) ); ?>" class="btn btn-viewmore">
                         <span>View More</span>
                         <svg class="btn-circle" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="12" cy="12" r="11.5" stroke="white" />

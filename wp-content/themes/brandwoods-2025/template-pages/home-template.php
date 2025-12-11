@@ -46,10 +46,10 @@
 
   <section id="jr-search" class="jr-search" aria-labelledby="search-title">
     <div class="container-xxl text-center">
-      <h2 id="search-title" class="jr-sec-title" data-aos="fade-up">Search</h2>
+      <h2 id="search-title" class="jr-sec-title">Search</h2>
 
       <!-- Search box -->
-      <form class="jr-searchbar mx-auto" role="search" aria-label="Search articles" data-aos="fade-up" data-aos-delay="100" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+      <form class="jr-searchbar mx-auto" role="search" aria-label="Search articles" method="get" action="<?php echo esc_url(home_url('/')); ?>">
         <div class="input-group">
           <input type="search" class="form-control" name="s" value="<?php echo get_search_query(); ?>" placeholder="Search any word" aria-label="Search any word">
           <button class="btn btn-outline-0 jr-searchbtn" type="submit" aria-label="Search">
@@ -59,7 +59,7 @@
       </form>
 
       <!-- Quick actions -->
-      <div class="d-flex flex-column flex-md-row justify-content-center gap-4 gap-md-3 gap-lg-5" data-aos="fade-up" data-aos-delay="200">
+      <div class="d-flex flex-column flex-md-row justify-content-center gap-4 gap-md-3 gap-lg-5">
         <?php 
         // Get Early Access term link
         $early_access_term = get_term_by('slug', 'early-access', 'article_early_access');
@@ -82,8 +82,8 @@
       </div>
 
       <!-- Year of Publication -->
-      <h3 class="jr-subtitle" data-aos="fade-up">Year of Publication</h3>
-      <ul class="jr-tagcloud year-group" data-aos="fade-up">
+      <h3 class="jr-subtitle">Year of Publication</h3>
+      <ul class="jr-tagcloud year-group">
         <?php 
         // Get all publication years from taxonomy
         $all_years = get_terms(array(
@@ -107,8 +107,8 @@
       </ul>
 
       <!-- Type of Publication -->
-      <h3 class="jr-subtitle" data-aos="fade-up">Type of Publication</h3>
-      <ul class="jr-tagcloud" data-aos="fade-up">
+      <h3 class="jr-subtitle">Type of Publication</h3>
+      <ul class="jr-tagcloud">
         <?php 
         // Get all publication types from taxonomy
         $all_publication_types = get_terms(array(
@@ -132,8 +132,8 @@
       </ul>
 
       <!-- Keyword -->
-      <h3 class="jr-subtitle" data-aos="fade-up">Keyword</h3>
-      <ul class="jr-tagcloud" data-aos="fade-up">
+      <h3 class="jr-subtitle">Keyword</h3>
+      <ul class="jr-tagcloud">
         <?php 
         // Get all keywords from taxonomy
         $all_keywords = get_terms(array(

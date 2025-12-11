@@ -1,107 +1,124 @@
 // ===== SMOOTH HEADER ON SCROLL (RAF + LERP) =====
+// document.addEventListener('DOMContentLoaded', () => {
+//     const header = document.querySelector('.jr-header');
+//     if (!header) return;
+
+//     // Nội suy mượt
+//     const lerp = (a, b, t) => a + (b - a) * t;
+//     const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+
+//     // Trạng thái
+//     let lastY = window.scrollY;
+//     let targetCompact = 0;     // 0..1: mức “thu nhỏ” khi cuộn
+//     let currentCompact = 0;
+//     let targetHide = 0;        // 0..1: ẩn header khi cuộn xuống
+//     let currentHide = 0;
+//     let ticking = false;
+
+//     // Ngưỡng & tham số
+//     const COMPACT_START = 0;    // bắt đầu compact ngay khi lăn
+//     const COMPACT_RANGE = 140;  // cuộn ~140px đạt compact = 1
+//     const HIDE_THRESHOLD = 80;  // chỉ ẩn khi đã cuộn quá ngưỡng
+//     const SHOW_DELTA = 6;       // biên độ để nhận biết đang cuộn lên
+//     const EASE = 0.16;          // hệ số lerp (0.1..0.2 là mượt)
+
+//     function updateTargets() {
+//         const y = window.scrollY;
+
+//         // Mức compact 0..1
+//         targetCompact = clamp((y - COMPACT_START) / COMPACT_RANGE, 0, 1);
+
+//         // Ẩn/hiện khi cuộn
+//         const goingDown = y > lastY;
+//         if (y > HIDE_THRESHOLD && goingDown) {
+//             targetHide = 1; // ẩn
+//         } else if (!goingDown && (lastY - y > SHOW_DELTA)) {
+//             targetHide = 0; // hiện
+//         } else if (y <= HIDE_THRESHOLD) {
+//             targetHide = 0;
+//         }
+
+//         lastY = y;
+//     }
+
+//     function render() {
+//         // Nội suy mượt
+//         currentCompact = lerp(currentCompact, targetCompact, EASE);
+//         currentHide = lerp(currentHide, targetHide, EASE);
+
+//         // Map compact -> các biến CSS
+//         // compact=0: trong suốt, không blur, pad lớn, logo 1
+//         // compact=1: nền rõ, blur 8px, pad nhỏ, logo 0.92
+//         const blur = lerp(0, 6, currentCompact);     // nhẹ hơn để không đục màu vàng
+//         const elev = currentCompact;
+//         const pad = lerp(1.25, 0.94, currentCompact); // rem → 80 px → 70 px
+//         const scale = lerp(1, 0.92, currentCompact);
+//         const light = currentCompact; // dùng cho brightness
+
+//         // Hide translateY theo currentHide (0..1) -> 0..-100%
+//         const yHide = -100 * currentHide;
+
+//         header.style.setProperty('--hdr-blur', blur.toFixed(2) + 'px');
+//         header.style.setProperty('--hdr-elev', elev.toFixed(3));
+//         header.style.setProperty('--hdr-pad', pad.toFixed(2) + 'rem');
+//         header.style.setProperty('--logo-scale', scale.toFixed(3));
+//         header.style.setProperty('--hdr-bg-lightness', light.toFixed(3));
+//         header.style.setProperty('--hdr-y', yHide.toFixed(2) + '%');
+
+//         // Lặp đến khi gần tiệm cận mục tiêu
+//         const stillAnimating = (Math.abs(currentCompact - targetCompact) > 0.001) ||
+//             (Math.abs(currentHide - targetHide) > 0.001);
+//         if (stillAnimating) {
+//             requestAnimationFrame(render);
+//         } else {
+//             ticking = false;
+//         }
+//     }
+
+//     function onScroll() {
+//         updateTargets();
+//         if (!ticking) {
+//             ticking = true;
+//             requestAnimationFrame(render);
+//         }
+//     }
+
+//     // Khởi tạo theo vị trí hiện tại
+//     updateTargets();
+//     currentCompact = targetCompact;
+//     currentHide = targetHide;
+//     render();
+
+//     window.addEventListener('scroll', onScroll, { passive: true });
+
+//     // === Burger/Collapse aria (nếu còn dùng) ===
+//     const burger = document.querySelector('.jr-burger');
+//     const collapse = document.querySelector('#jrNav');
+//     if (burger && collapse) {
+//         collapse.addEventListener('shown.bs.collapse', () => burger.setAttribute('aria-expanded', 'true'));
+//         collapse.addEventListener('hidden.bs.collapse', () => burger.setAttribute('aria-expanded', 'false'));
+//         collapse.addEventListener('show.bs.collapse', () => { targetHide = 0; }); // mở menu thì hiện header
+//     }
+// });
+
+// ===== SIMPLE COMPACT HEADER (NO JITTER) =====
 document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('.jr-header');
     if (!header) return;
 
-    // Nội suy mượt
-    const lerp = (a, b, t) => a + (b - a) * t;
-    const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+    const NAV_COMPACT_OFFSET = 80; // bắt đầu thu nhỏ sau 80px
 
-    // Trạng thái
-    let lastY = window.scrollY;
-    let targetCompact = 0;     // 0..1: mức “thu nhỏ” khi cuộn
-    let currentCompact = 0;
-    let targetHide = 0;        // 0..1: ẩn header khi cuộn xuống
-    let currentHide = 0;
-    let ticking = false;
+    const onScroll = () => {
+        const y = window.scrollY || document.documentElement.scrollTop;
+        header.classList.toggle('is-compact', y > NAV_COMPACT_OFFSET);
+    };
 
-    // Ngưỡng & tham số
-    const COMPACT_START = 0;    // bắt đầu compact ngay khi lăn
-    const COMPACT_RANGE = 140;  // cuộn ~140px đạt compact = 1
-    const HIDE_THRESHOLD = 80;  // chỉ ẩn khi đã cuộn quá ngưỡng
-    const SHOW_DELTA = 6;       // biên độ để nhận biết đang cuộn lên
-    const EASE = 0.16;          // hệ số lerp (0.1..0.2 là mượt)
-
-    function updateTargets() {
-        const y = window.scrollY;
-
-        // Mức compact 0..1
-        targetCompact = clamp((y - COMPACT_START) / COMPACT_RANGE, 0, 1);
-
-        // Ẩn/hiện khi cuộn
-        const goingDown = y > lastY;
-        if (y > HIDE_THRESHOLD && goingDown) {
-            targetHide = 1; // ẩn
-        } else if (!goingDown && (lastY - y > SHOW_DELTA)) {
-            targetHide = 0; // hiện
-        } else if (y <= HIDE_THRESHOLD) {
-            targetHide = 0;
-        }
-
-        lastY = y;
-    }
-
-    function render() {
-        // Nội suy mượt
-        currentCompact = lerp(currentCompact, targetCompact, EASE);
-        currentHide = lerp(currentHide, targetHide, EASE);
-
-        // Map compact -> các biến CSS
-        // compact=0: trong suốt, không blur, pad lớn, logo 1
-        // compact=1: nền rõ, blur 8px, pad nhỏ, logo 0.92
-        const blur = lerp(0, 6, currentCompact);     // nhẹ hơn để không đục màu vàng
-        const elev = currentCompact;
-        const pad = lerp(1.25, 0.94, currentCompact); // rem → 80 px → 70 px
-        const scale = lerp(1, 0.92, currentCompact);
-        const light = currentCompact; // dùng cho brightness
-
-        // Hide translateY theo currentHide (0..1) -> 0..-100%
-        const yHide = -100 * currentHide;
-
-        header.style.setProperty('--hdr-blur', blur.toFixed(2) + 'px');
-        header.style.setProperty('--hdr-elev', elev.toFixed(3));
-        header.style.setProperty('--hdr-pad', pad.toFixed(2) + 'rem');
-        header.style.setProperty('--logo-scale', scale.toFixed(3));
-        header.style.setProperty('--hdr-bg-lightness', light.toFixed(3));
-        header.style.setProperty('--hdr-y', yHide.toFixed(2) + '%');
-
-        // Lặp đến khi gần tiệm cận mục tiêu
-        const stillAnimating = (Math.abs(currentCompact - targetCompact) > 0.001) ||
-            (Math.abs(currentHide - targetHide) > 0.001);
-        if (stillAnimating) {
-            requestAnimationFrame(render);
-        } else {
-            ticking = false;
-        }
-    }
-
-    function onScroll() {
-        updateTargets();
-        if (!ticking) {
-            ticking = true;
-            requestAnimationFrame(render);
-        }
-    }
-
-    // Khởi tạo theo vị trí hiện tại
-    updateTargets();
-    currentCompact = targetCompact;
-    currentHide = targetHide;
-    render();
-
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-
-    // === Burger/Collapse aria (nếu còn dùng) ===
-    const burger = document.querySelector('.jr-burger');
-    const collapse = document.querySelector('#jrNav');
-    if (burger && collapse) {
-        collapse.addEventListener('shown.bs.collapse', () => burger.setAttribute('aria-expanded', 'true'));
-        collapse.addEventListener('hidden.bs.collapse', () => burger.setAttribute('aria-expanded', 'false'));
-        collapse.addEventListener('show.bs.collapse', () => { targetHide = 0; }); // mở menu thì hiện header
-    }
 });
 
-// BE COMMENT : MANUAL ACTIVE CLASS REMOVAL 
+
+
 // ===== ACTIVE MENU BY URL =====
 // document.addEventListener('DOMContentLoaded', () => {
 //     const navLinks = document.querySelectorAll('.jr-nav .nav-link');
@@ -121,45 +138,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ========== INTRO ANIMATION ==========
-document.addEventListener('DOMContentLoaded', () => {
-    const blocks = document.querySelectorAll('#jr-intro .jr-intro__title, #jr-intro .jr-intro__lead, #jr-intro .jr-intro__text');
+// document.addEventListener('DOMContentLoaded', () => {
+//     const blocks = document.querySelectorAll('#jr-intro .jr-intro__title, #jr-intro .jr-intro__lead, #jr-intro .jr-intro__text');
 
-    // Set trạng thái ban đầu
-    blocks.forEach(el => {
-        el.style.opacity = 0;
-        el.style.transform = 'translateY(16px)';
-        el.style.transition = 'opacity .6s ease, transform .6s ease';
-    });
+//     // Set trạng thái ban đầu
+//     blocks.forEach(el => {
+//         el.style.opacity = 0;
+//         el.style.transform = 'translateY(16px)';
+//         el.style.transition = 'opacity .6s ease, transform .6s ease';
+//     });
 
-    const io = new IntersectionObserver(entries => {
-        entries.forEach((en, i) => {
-            if (en.isIntersecting) {
-                // trễ dần từng khối cho mượt
-                setTimeout(() => {
-                    en.target.style.opacity = 1;
-                    en.target.style.transform = 'none';
-                }, 120 * i);
-                io.unobserve(en.target);
-            }
-        });
-    }, { threshold: 0.2 });
+//     const io = new IntersectionObserver(entries => {
+//         entries.forEach((en, i) => {
+//             if (en.isIntersecting) {
+//                 // trễ dần từng khối cho mượt
+//                 setTimeout(() => {
+//                     en.target.style.opacity = 1;
+//                     en.target.style.transform = 'none';
+//                 }, 120 * i);
+//                 io.unobserve(en.target);
+//             }
+//         });
+//     }, { threshold: 0.2 });
 
-    blocks.forEach(el => io.observe(el));
-});
+//     blocks.forEach(el => io.observe(el));
+// });
 
 // ========== SEARCH FORM HANDLER ==========
-// document.addEventListener('DOMContentLoaded', () => {
-//     const form = document.querySelector('#jr-search .jr-searchbar');
-//     if (!form) return;
-//     form.addEventListener('submit', (e) => {
-//         e.preventDefault();
-//         const q = form.querySelector('input[type="search"]')?.value?.trim() || '';
-//         if (q) {
-//             // Điều hướng tới trang list (ví dụ):
-//             window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
-//         }
-//     });
-// });
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('#jr-search .jr-searchbar');
+    if (!form) return;
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const q = form.querySelector('input[type="search"]')?.value?.trim() || '';
+        if (q) {
+            // Điều hướng tới trang list (ví dụ):
+            window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
+        }
+    });
+});
 
 // ========== BACK TO TOP BUTTON ==========
 document.addEventListener('DOMContentLoaded', () => {
@@ -267,15 +284,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const formKeyword = document.getElementById('form-keyword');
     const formIssue = document.getElementById('form-issue');
 
-    // if (formKeyword) {
-    //     formKeyword.addEventListener('submit', (e) => {
-    //         e.preventDefault();
-    //         const q = formKeyword.q.value.trim();
-    //         if (!q) return;
-    //         // Điều hướng đến trang kết quả tìm theo từ khóa
-    //         window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
-    //     });
-    // }
+    if (formKeyword) {
+        formKeyword.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const q = formKeyword.q.value.trim();
+            if (!q) return;
+            // Điều hướng đến trang kết quả tìm theo từ khóa
+            window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
+        });
+    }
 
     if (formIssue) {
         formIssue.addEventListener('submit', (e) => {
@@ -290,39 +307,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Optional: click vào tag cloud -> tìm kiếm theo keyword
-    // document.querySelectorAll('#jr-search-dual .jr-tagcloud a').forEach(a => {
-    //     a.addEventListener('click', (e) => {
-    //         e.preventDefault();
-    //         const kw = a.textContent.replace(/^#\s*/, '').trim();
-    //         window.location.href = `/search.html?q=${encodeURIComponent(kw)}`;
-    //     });
-    // });
+    document.querySelectorAll('#jr-search-dual .jr-tagcloud a').forEach(a => {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const kw = a.textContent.replace(/^#\s*/, '').trim();
+            window.location.href = `/search.html?q=${encodeURIComponent(kw)}`;
+        });
+    });
 });
-// BE COMMENT : MANUAL ACTIVE CLASS REMOVAL 
-// Back to index & đánh dấu sidebar theo query
-// document.addEventListener('DOMContentLoaded', () => {
-//     // back
-//     const back = document.getElementById('btn-news-back');
-//     if (back) {
-//         back.addEventListener('click', (e) => {
-//             e.preventDefault();
-//             if (history.length > 1) history.back();
-//             else window.location.href = back.dataset.back || '/news.html';
-//         });
-//     }
 
-//     // active theo ?category=&tag=
-//     const url = new URL(location.href);
-//     const cat = url.searchParams.get('category') || '';
-//     const tag = url.searchParams.get('tag') || '';
-//     const setActive = (sel, attr, val) => {
-//         document.querySelectorAll(`${sel} a`).forEach(a => {
-//             a.classList.toggle('active', (a.dataset[attr] ?? '') === val);
-//         });
-//     };
-//     setActive('#news-cats', 'cat', cat);
-//     setActive('#news-tags', 'tag', tag);
-// });
+// Back to index & đánh dấu sidebar theo query
+document.addEventListener('DOMContentLoaded', () => {
+    // back
+    const back = document.getElementById('btn-news-back');
+    if (back) {
+        back.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (history.length > 1) history.back();
+            else window.location.href = back.dataset.back || '/news.html';
+        });
+    }
+
+    // active theo ?category=&tag=
+    const url = new URL(location.href);
+    const cat = url.searchParams.get('category') || '';
+    const tag = url.searchParams.get('tag') || '';
+    const setActive = (sel, attr, val) => {
+        document.querySelectorAll(`${sel} a`).forEach(a => {
+            a.classList.toggle('active', (a.dataset[attr] ?? '') === val);
+        });
+    };
+    setActive('#news-cats', 'cat', cat);
+    setActive('#news-tags', 'tag', tag);
+});
 
 
 // ===== SEARCH OVERLAY (CSS TRANSITION VERSION) =====
@@ -385,14 +402,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // (tuỳ chọn) Submit search
-    // const form = overlay.querySelector('form.jr-searchbar');
-    // form?.addEventListener('submit', (e) => {
-    //     e.preventDefault();
-    //     const fd = new FormData(form);
-    //     const q = (fd.get('q') || '').toString().trim();
-    //     if (!q) return;
-    //     window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
-    // });
+    const form = overlay.querySelector('form.jr-searchbar');
+    form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fd = new FormData(form);
+        const q = (fd.get('q') || '').toString().trim();
+        if (!q) return;
+        // TODO: đổi URL search thật của bạn
+        window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
+    });
 });
 
 

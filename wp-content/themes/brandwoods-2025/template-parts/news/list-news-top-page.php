@@ -24,7 +24,7 @@
         ?>
             <div class="container-xxl position-relative">
 
-                <h2 id="news-title" class="jr-sec-title text-center" data-aos="fade-up">News</h2>
+                <h2 id="news-title" class="jr-sec-title text-center">News</h2>
 
                 <div class="row justify-content-center jr-news-list">
                     <div class="col-12 col-lg-6">
@@ -34,7 +34,7 @@
                             $categories = get_the_terms(get_the_ID(), 'category');
                             $post_tag = get_the_terms(get_the_ID(), 'post_tag');
                                 ?>
-                                    <article class="news-item" data-aos="fade-up" data-aos-delay="100">
+                                    <article class="news-item">
                                         <div class="news-meta">
                                             <time datetime="2025-10-01"><?= get_the_date('Y.m.d'); ?></time>
                                             <?php if ($categories && !is_wp_error($categories)) : ?>
@@ -63,7 +63,7 @@
                             wp_reset_postdata();
                         ?>
                         <!-- View more -->
-                        <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="500">
+                        <div class="text-center mt-4">
                             <a href="<?= esc_url( home_url( '/news/' ) ); ?>" class="btn btn-viewmore">
                                 <span>View More</span>
                                 <svg class="btn-circle" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
