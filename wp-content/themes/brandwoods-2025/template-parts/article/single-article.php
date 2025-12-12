@@ -1,6 +1,6 @@
 <?php
-    $desktoop_banenr = get_field('desktop_banner');
-    $mobile_banner = get_field('mobile_banner');
+    $desktoop_banenr = IMAGE_PATH . '/img-about.jpg';
+    $mobile_banner = IMAGE_PATH . '/img-about-sp.jpg';
     $volume = pods_field('volume');
 
     // Helper function to extract value from array or string
@@ -56,10 +56,10 @@
     <!-- figure ra ngoài container -->
     <figure class="about-hero__figure">
         <?php if($desktoop_banenr) : ?>
-            <img src="<?= $desktoop_banenr['url'] ?>" alt="About artwork" class="about-hero__img d-none d-md-block">
+            <img src="<?= $desktoop_banenr; ?>" alt="About artwork" class="about-hero__img d-none d-md-block">
         <?php endif; ?>
         <?php if($mobile_banner) : ?>
-            <img src="<?= $mobile_bannere ?>" alt="About artwork" class="about-hero__img d-block d-md-none">
+            <img src="<?= $mobile_banner; ?>" alt="About artwork" class="about-hero__img d-block d-md-none">
         <?php endif; ?>
     </figure>
 
