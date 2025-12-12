@@ -359,6 +359,166 @@
         return $escape ? esc_html($search_term) : $search_term;
     }
 
+    /**
+     * Filter search, taxonomy, and archive results to exclude articles with invalid volume
+     * - Exclude articles with volume = 0 or empty
+     * - Exclude articles where volume has no other issues with the same volume
+     */
+    add_action('pre_get_posts', 'brandwoods_filter_by_volume');
+
+    function brandwoods_filter_by_volume($query) {
+        // Only apply to main query on frontend for search, taxonomy, and archive pages
+        if (!is_admin() && $query->is_main_query() && ($query->is_search() || $query->is_tax() || $query->is_archive())) {
+            
+            // Add meta query to exclude empty or zero volumes
+            $meta_query = array(
+                'relation' => 'AND',
+                array(
+                    'key' => 'volume',
+                    'compare' => 'EXISTS'
+                ),
+                array(
+                    'key' => 'volume',
+                    'value' => '',
+                    'compare' => '!='
+                ),
+                array(
+                    'key' => 'volume',
+                    'value' => '0',
+                    'compare' => '!='
+                )
+            );
+            
+            // Get existing meta query if any
+            $existing_meta_query = $query->get('meta_query');
+            if (!empty($existing_meta_query)) {
+                $meta_query = array_merge(array($existing_meta_query), array($meta_query));
+            }
+            
+            $query->set('meta_query', $meta_query);
+            
+            // Add filter to check if volume has related issues
+            add_filter('posts_where', 'brandwoods_filter_volume_with_issues', 10, 2);
+        }
+    }
+
+    /**
+     * Check if volume has related issues (at least one other post with same volume)
+     */
+    function brandwoods_filter_volume_with_issues($where, $query) {
+        global $wpdb;
+        
+        if (!is_admin() && $query->is_main_query() && ($query->is_search() || $query->is_tax() || $query->is_archive())) {
+            // Only show posts where the volume exists in at least 2 posts (including itself)
+            $where .= " AND {$wpdb->posts}.ID IN (
+                SELECT pm1.post_id 
+                FROM {$wpdb->postmeta} pm1
+                WHERE pm1.meta_key = 'volume'
+                AND pm1.meta_value != ''
+                AND pm1.meta_value != '0'
+                AND (
+                    SELECT COUNT(DISTINCT pm2.post_id)
+                    FROM {$wpdb->postmeta} pm2
+                    WHERE pm2.meta_key = 'volume'
+                    AND pm2.meta_value = pm1.meta_value
+                ) > 1
+            )";
+            
+            // Remove this filter after it's been applied once
+            remove_filter('posts_where', 'brandwoods_filter_volume_with_issues', 10);
+        }
+        
+        return $where;
+    }
+
+    /**
+     * Hide default taxonomies (categories and tags) from admin menu
+     * Keep them visible for default Posts
+     */
+    // Commented out - keep categories and tags visible for Posts
+    // add_action('admin_menu', 'brandwoods_hide_default_taxonomies');
+    // function brandwoods_hide_default_taxonomies() {
+    //     remove_submenu_page('edit.php', 'edit-tags.php?taxonomy=category');
+    //     remove_submenu_page('edit.php', 'edit-tags.php?taxonomy=post_tag');
+    // }
+
+    /**
+     * Remove category and tag meta boxes from custom post types only
+     * Keep them for default Posts
+     */
+    add_action('admin_init', 'brandwoods_remove_taxonomy_metaboxes');
+
+    function brandwoods_remove_taxonomy_metaboxes() {
+        // Only remove from custom post types, NOT from default 'post'
+        $post_types = get_post_types(['public' => true, '_builtin' => false], 'names');
+        foreach ($post_types as $post_type) {
+            remove_meta_box('categorydiv', $post_type, 'side');
+            remove_meta_box('tagsdiv-post_tag', $post_type, 'side');
+        }
+    }
+
+    /**
+     * Hide categories and tags columns from post list
+     * Keep them visible for default Posts
+     */
+    // Commented out - keep columns visible for Posts
+    // add_filter('manage_posts_columns', 'brandwoods_remove_taxonomy_columns');
+    // add_filter('manage_pages_columns', 'brandwoods_remove_taxonomy_columns');
+    // function brandwoods_remove_taxonomy_columns($columns) {
+    //     unset($columns['categories']);
+    //     unset($columns['tags']);
+    //     return $columns;
+    // }
+
+    /**
+     * Remove quick edit option for categories and tags from custom post types only
+     */
+    add_action('admin_head', 'brandwoods_hide_quick_edit_taxonomies');
+
+    function brandwoods_hide_quick_edit_taxonomies() {
+        global $typenow;
+        
+        // Only hide for custom post types, not for default 'post'
+        if ($typenow && $typenow !== 'post') {
+            echo '<style>
+                .inline-edit-categories,
+                .inline-edit-tags {
+                    display: none !important;
+                }
+            </style>';
+        }
+    }
+
+    /**
+     * Filter for taxonomy issue queries - check if issue volume has related articles
+     */
+    function brandwoods_taxonomy_filter_issue_volume_with_articles($where, $query) {
+        global $wpdb;
+        
+        // Only show issues where the volume exists in at least one article
+        $where .= " AND {$wpdb->posts}.ID IN (
+            SELECT DISTINCT p.ID
+            FROM {$wpdb->posts} p
+            INNER JOIN {$wpdb->postmeta} pm_issue ON p.ID = pm_issue.post_id
+            WHERE p.post_type = 'issue'
+            AND pm_issue.meta_key = 'volume'
+            AND pm_issue.meta_value != ''
+            AND pm_issue.meta_value != '0'
+            AND EXISTS (
+                SELECT 1
+                FROM {$wpdb->posts} p2
+                INNER JOIN {$wpdb->postmeta} pm_article ON p2.ID = pm_article.post_id
+                WHERE p2.post_type = 'article'
+                AND pm_article.meta_key = 'volume'
+                AND pm_article.meta_value = pm_issue.meta_value
+                AND pm_article.meta_value != ''
+                AND pm_article.meta_value != '0'
+            )
+        )";
+        
+        return $where;
+    }
+
     
 
 ?>
