@@ -30,9 +30,32 @@ $query_args = array(
             'terms'    => $term->term_id,
         ),
     ),
+    'meta_query' => array(
+        'relation' => 'AND',
+        array(
+            'key' => 'volume',
+            'compare' => 'EXISTS'
+        ),
+        array(
+            'key' => 'volume',
+            'value' => '',
+            'compare' => '!='
+        ),
+        array(
+            'key' => 'volume',
+            'value' => '0',
+            'compare' => '!='
+        )
+    )
 );
 
+// Add filter to check if volume has related articles
+add_filter('posts_where', 'brandwoods_taxonomy_filter_issue_volume_with_articles', 10, 2);
+
 $issue_query = new WP_Query($query_args);
+
+// Remove filter after query
+remove_filter('posts_where', 'brandwoods_taxonomy_filter_issue_volume_with_articles', 10);
 ?>
 
 <section id="jr-about" class="jr-about pb-0" aria-labelledby="issues-title">

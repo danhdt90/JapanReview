@@ -67,13 +67,13 @@ if ($taxonomy === 'publication_type') {
                                     <?php 
                                     // Display authors
                                     if (!empty($articleDetail['group_author']) && is_array($articleDetail['group_author'])) {
+                                        echo '<li>';
                                         $authors = array_slice($articleDetail['group_author'], 0, 3);
-                                        foreach ($authors as $author) {
-                                            echo '<li>' . esc_html($author) . '</li>';
+                                        foreach ($authors as $index => $author) {
+                                            echo esc_html($author);
+                                            if ($index < count($authors) - 1) echo ', ';
                                         }
-                                        if (count($articleDetail['group_author']) > 3) {
-                                            echo '<li>et al.</li>';
-                                        }
+                                        echo '</li>';
                                     }
                                     
                                     // Display publication date

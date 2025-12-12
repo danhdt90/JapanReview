@@ -83,7 +83,6 @@
                 'description'           => __( 'A custom post type for articles', 'brandwoods2025' ),
                 'labels'                => $labels,
                 'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'revisions', 'author' ),
-                'taxonomies'            => array( 'category', 'post_tag' ),
                 'hierarchical'          => false,
                 'public'                => true,
                 'show_ui'               => true,

@@ -29,12 +29,11 @@
             $cover_image_iss = get_field('cover_image', $issue_id);
         }
     }
-    
+    $resource_type = get_the_terms(get_the_ID(), 'publication_type');
     $articleDetail = [
         'main_title' => pods_field('main_title'),
         'other_title' => pods_field('other_title'),
         'group_author' => pods_field('group_author'),
-        // 'resource_type' => pods_field('resource_type'), 
         'doi' => pods_field('doi'), 
         'content_description' => pods_field('content_description'),
         'volume' => pods_field('volume'), 
@@ -106,11 +105,9 @@
                     <ul class="art-meta">
                         <?php 
                         // Display group_author (repeater)
-                        if (!empty($articleDetail['group_author']) && is_array($articleDetail['group_author'])): 
-                            foreach ($articleDetail['group_author'] as $author): ?>
-                                <li><?php echo esc_html($author); ?></li>
-                            <?php endforeach;
-                        endif; 
+                        if (!empty($articleDetail['group_author']) && is_array($articleDetail['group_author'])): ?>
+                            <li><?php echo esc_html(implode(', ', $articleDetail['group_author'])); ?></li>
+                        <?php endif;
                         
                         // Display volume and page info
                         $vol_value = $extract_value($articleDetail['volume']);
@@ -120,7 +117,7 @@
                         
                         if (!empty($vol_value) || !empty($start_page_value) || !empty($end_page_value)):
                             echo '<li>';
-                            if (!empty($vol_value)) echo 'Vol.' . esc_html($vol_value);
+                            if (!empty($vol_value)) echo esc_html($vol_value) . '巻';
                             if (!empty($pub_date_value)) echo ' (' . esc_html($pub_date_value) . ')';
                             if (!empty($start_page_value) || !empty($end_page_value)) {
                                 echo ' pp. ';
@@ -132,18 +129,19 @@
                         endif;
                         
                         // Display resource_type
-                        $resource_type_value = $extract_value($articleDetail['resource_type']);
-                        if (!empty($resource_type_value)): ?>
-                            <li><?php echo esc_html($resource_type_value); ?></li>
-                        <?php endif; 
+                       if(!empty($resource_type) && !is_wp_error($resource_type)) :
+                            $types = array();
+                            foreach ($resource_type as $type) {
+                                $types[] = esc_html($type->name);
+                            }
+                            echo '<li>' . implode(', ', $types) . '</li>';
+                        endif;
                         
                         // Display DOI
                         $doi_value = $extract_value($articleDetail['doi']);
                         if (!empty($doi_value)): ?>
                             <li><span class="link-underline" target="_blank" rel="noopener">DOI: <?php echo esc_html($doi_value); ?></span></li>
                         <?php endif;
-                        
-                        // Display public 
                         
                         // Display publication date
                         if (!empty($articleDetail['content_description']) && is_array($articleDetail['content_description'])): ?>

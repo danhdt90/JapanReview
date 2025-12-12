@@ -20,25 +20,6 @@ $extract_value = function($field) {
     }
     return $field;
 };
-
-// Helper function to highlight search term (hỗ trợ tiếng Nhật)
-$highlight_text = function($text, $search) {
-    if (empty($search) || empty($text)) return $text;
-    
-    // Sử dụng mb_stripos để tìm vị trí (hỗ trợ multibyte)
-    $pos = mb_stripos($text, $search, 0, 'UTF-8');
-    
-    if ($pos !== false) {
-        $length = mb_strlen($search, 'UTF-8');
-        $before = mb_substr($text, 0, $pos, 'UTF-8');
-        $match = mb_substr($text, $pos, $length, 'UTF-8');
-        $after = mb_substr($text, $pos + $length, null, 'UTF-8');
-        
-        return $before . '<mark>' . $match . '</mark>' . $after;
-    }
-    
-    return $text;
-};
 ?>
 
 <section id="jr-about" class="jr-about pb-0" aria-labelledby="search-title">
@@ -50,9 +31,6 @@ $highlight_text = function($text, $search) {
                 Search Results
             <?php endif; ?>
         </h1>
-        <?php if (have_posts()) : ?>
-            <p class="text-center mt-3">Found <?php echo $wp_query->found_posts; ?> article<?php echo $wp_query->found_posts > 1 ? 's' : ''; ?></p>
-        <?php endif; ?>
     </div>
 </section>
 
@@ -84,41 +62,18 @@ $highlight_text = function($text, $search) {
                                 <div class="col overflow-hidden">
                                     <h3 class="art-title">
                                         <a href="<?php the_permalink(); ?>">
-                                            <?php echo $highlight_text(get_the_title(), $search_query); ?>
+                                            <?php the_title(); ?>
                                         </a>
                                     </h3>
 
-                                    <!-- Main Title (Pods field) -->
-                                    <?php if (!empty($main_title)) : 
-                                        if (is_array($main_title)) :
-                                            foreach ($main_title as $title) : ?>
-                                                <p class="art-subtitle"><?php echo $highlight_text($title, $search_query); ?></p>
-                                            <?php endforeach;
-                                        else : ?>
-                                            <p class="art-subtitle"><?php echo $highlight_text($main_title, $search_query); ?></p>
-                                        <?php endif;
-                                    endif; ?>
-
-                                    <!-- Other Title (Pods field) -->
-                                    <?php if (!empty($other_title)) : 
-                                        if (is_array($other_title)) :
-                                            foreach ($other_title as $title) : ?>
-                                                <p class="art-subtitle"><?php echo $highlight_text($title, $search_query); ?></p>
-                                            <?php endforeach;
-                                        else : ?>
-                                            <p class="art-subtitle"><?php echo $highlight_text($other_title, $search_query); ?></p>
-                                        <?php endif;
-                                    endif; ?>
+                                    
 
                                     <ul class="art-meta">
                                         <li>
                                             <?php 
-                                            // Display group_author with highlighting
+                                            // Display group_author
                                             if (!empty($group_author) && is_array($group_author)): 
-                                                $highlighted_authors = array_map(function($author) use ($highlight_text, $search_query) {
-                                                    return $highlight_text($author, $search_query);
-                                                }, $group_author);
-                                                echo implode(', ', $highlighted_authors);
+                                                echo esc_html(implode(', ', $group_author));
                                             endif;
                                             ?>
                                         </li>
@@ -126,11 +81,11 @@ $highlight_text = function($text, $search) {
                                             <li><?php echo esc_html($date_value); ?></li>
                                         <?php endif; ?>
                                         <?php if (!empty($volume_value)): ?>
-                                            <li>Vol.<?php echo esc_html($volume_value); ?></li>
+                                            <li><?php echo esc_html($volume_value); ?>巻</li>
                                         <?php endif; ?>
                                         <?php if (!empty($start_page_value) || !empty($end_page_value)): ?>
                                             <li>
-                                                pp. <?php if (!empty($start_page_value)): echo esc_html($start_page_value); endif; ?><?php if (!empty($start_page_value) && !empty($end_page_value)): echo '–'; endif; ?><?php if (!empty($end_page_value)): echo esc_html($end_page_value); endif; ?>
+                                               <?php if (!empty($start_page_value)): echo esc_html($start_page_value); endif; ?><?php if (!empty($start_page_value) && !empty($end_page_value)): echo '-'; endif; ?><?php if (!empty($end_page_value)): echo esc_html($end_page_value); endif; ?>
                                             </li>
                                         <?php endif; ?>
                                     </ul>
@@ -174,13 +129,6 @@ $highlight_text = function($text, $search) {
 <?php get_template_part('/template-parts/components/search', 'dual'); ?>
 
 <style>
-    mark {
-        background-color: #ffeb3b;
-        padding: 2px 4px;
-        border-radius: 2px;
-        font-weight: 600;
-    }
-    
     .art-subtitle {
         font-size: 0.95rem;
         color: #666;

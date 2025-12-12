@@ -2,22 +2,10 @@
     $desktop_banner = get_field('desktop_banner', 'option');
     $mobile_banner = get_field('mobile_banner', 'option');
 
-    $paged = get_query_var('paged') ?: (get_query_var('page') ?: 1);
-
-    $args = [
-        'post_type'      => 'article',
-        'posts_per_page' => 10,
-        'paged'          => $paged,
-        'post_status'    => 'publish',
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-        'no_found_rows'          => false,
-        'cache_results'          => true,
-        'update_post_term_cache' => true,
-        'update_post_meta_cache' => true,
-    ];
-
-    $query = new WP_Query($args);
+    // Sử dụng global $wp_query thay vì tạo WP_Query mới
+    // Filter brandwoods_filter_by_volume sẽ tự động được áp dụng
+    global $wp_query;
+    $query = $wp_query;
 ?>
 
 <section id="jr-about" class="jr-about pb-0" aria-labelledby="Articles-title">
@@ -80,11 +68,11 @@
                                                         <li><?php echo esc_html($date_value); ?></li>
                                                     <?php endif; ?>
                                                     <?php if (!empty($volume_value)): ?>
-                                                        <li>Vol.<?php echo esc_html($volume_value); ?></li>
+                                                        <li><?php echo esc_html($volume_value); ?>巻</li>
                                                     <?php endif; ?>
                                                     <?php if (!empty($start_page_value) || !empty($end_page_value)): ?>
                                                     <li>
-                                                        pp. <?php if (!empty($start_page_value)): echo esc_html($start_page_value); endif; ?><?php if (!empty($start_page_value) && !empty($end_page_value)): echo '–'; endif; ?><?php if (!empty($end_page_value)): echo esc_html($end_page_value); endif; ?>
+                                                        ページ：<?php if (!empty($start_page_value)): echo esc_html($start_page_value); endif; ?><?php if (!empty($start_page_value) && !empty($end_page_value)): echo '-'; endif; ?><?php if (!empty($end_page_value)): echo esc_html($end_page_value); endif; ?>
                                                     </li>
                                                     <?php endif; ?>
                                                 </ul>
