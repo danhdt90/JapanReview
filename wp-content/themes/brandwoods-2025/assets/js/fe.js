@@ -284,15 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const formKeyword = document.getElementById('form-keyword');
     const formIssue = document.getElementById('form-issue');
 
-    if (formKeyword) {
-        formKeyword.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const q = formKeyword.q.value.trim();
-            if (!q) return;
-            // Điều hướng đến trang kết quả tìm theo từ khóa
-            window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
-        });
-    }
 
     if (formIssue) {
         formIssue.addEventListener('submit', (e) => {
