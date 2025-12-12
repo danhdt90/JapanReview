@@ -472,20 +472,88 @@
 
     /**
      * Remove quick edit option for categories and tags from custom post types only
+     * Using both admin_head and admin_footer to ensure it works
      */
     add_action('admin_head', 'brandwoods_hide_quick_edit_taxonomies');
+    add_action('admin_footer', 'brandwoods_hide_quick_edit_taxonomies');
 
     function brandwoods_hide_quick_edit_taxonomies() {
-        global $typenow;
+        global $typenow, $pagenow;
         
-        // Only hide for custom post types, not for default 'post'
-        if ($typenow && $typenow !== 'post') {
+        // Get current screen
+        $screen = get_current_screen();
+        
+        // Check if we're on a custom post type edit page
+        $is_custom_post_type = false;
+        
+        if ($screen && isset($screen->post_type)) {
+            $is_custom_post_type = !in_array($screen->post_type, ['post', 'page', 'attachment']);
+        } elseif ($typenow) {
+            $is_custom_post_type = !in_array($typenow, ['post', 'page', 'attachment']);
+        }
+        
+        // Hide for custom post types only
+        if ($is_custom_post_type || (in_array($pagenow, ['edit.php']) && isset($_GET['post_type']))) {
             echo '<style>
+                /* Hide quick edit categories and tags */
                 .inline-edit-categories,
-                .inline-edit-tags {
+                .inline-edit-tags,
+                fieldset.inline-edit-categories,
+                fieldset.inline-edit-tags {
+                    display: none !important;
+                }
+                
+                /* Hide taxonomy filters in admin list */
+                #category-filter-link,
+                #tag-filter-link {
                     display: none !important;
                 }
             </style>';
+            
+            // Also hide via JavaScript for dynamic content
+            echo '<script>
+                jQuery(document).ready(function($) {
+                    // Hide categories and tags in quick edit
+                    $(".inline-edit-categories, .inline-edit-tags").hide();
+                    
+                    // Remove from bulk edit
+                    $("#bulk-edit .inline-edit-categories, #bulk-edit .inline-edit-tags").hide();
+                });
+            </script>';
+        }
+    }
+
+    /**
+     * Unregister categories and tags from custom post types
+     */
+    add_action('init', 'brandwoods_unregister_taxonomies_from_custom_post_types', 999);
+
+    function brandwoods_unregister_taxonomies_from_custom_post_types() {
+        $post_types = get_post_types(['public' => true, '_builtin' => false], 'names');
+        
+        foreach ($post_types as $post_type) {
+            // Unregister category
+            unregister_taxonomy_for_object_type('category', $post_type);
+            // Unregister post_tag
+            unregister_taxonomy_for_object_type('post_tag', $post_type);
+        }
+    }
+
+    /**
+     * Remove taxonomy boxes from custom post types in admin menu
+     */
+    add_action('admin_menu', 'brandwoods_remove_taxonomy_submenus', 999);
+
+    function brandwoods_remove_taxonomy_submenus() {
+        // Get all custom post types
+        $post_types = get_post_types(['public' => true, '_builtin' => false], 'names');
+        
+        foreach ($post_types as $post_type) {
+            // Remove categories submenu
+            remove_submenu_page('edit.php?post_type=' . $post_type, 'edit-tags.php?taxonomy=category&post_type=' . $post_type);
+            
+            // Remove tags submenu
+            remove_submenu_page('edit.php?post_type=' . $post_type, 'edit-tags.php?taxonomy=post_tag&post_type=' . $post_type);
         }
     }
 
