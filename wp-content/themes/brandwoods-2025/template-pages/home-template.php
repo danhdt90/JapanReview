@@ -118,7 +118,7 @@
             'order'      => 'ASC',
         ));
         
-        if (!empty($all_publication_types) && !is_wp_error($all_genres)): 
+        if (!empty($all_publication_types)): 
             foreach ($all_publication_types as $publication_type): ?>
                 <li>
                     <a href="<?php echo esc_url(get_term_link($publication_type)); ?>">

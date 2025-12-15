@@ -559,11 +559,12 @@
 
     /**
      * Filter for taxonomy issue queries - check if issue volume has related articles
+     * Only show issues with published articles
      */
     function brandwoods_taxonomy_filter_issue_volume_with_articles($where, $query) {
         global $wpdb;
         
-        // Only show issues where the volume exists in at least one article
+        // Only show issues where the volume exists in at least one published article
         $where .= " AND {$wpdb->posts}.ID IN (
             SELECT DISTINCT p.ID
             FROM {$wpdb->posts} p
@@ -577,6 +578,7 @@
                 FROM {$wpdb->posts} p2
                 INNER JOIN {$wpdb->postmeta} pm_article ON p2.ID = pm_article.post_id
                 WHERE p2.post_type = 'article'
+                AND p2.post_status = 'publish'
                 AND pm_article.meta_key = 'volume'
                 AND pm_article.meta_value = pm_issue.meta_value
                 AND pm_article.meta_value != ''

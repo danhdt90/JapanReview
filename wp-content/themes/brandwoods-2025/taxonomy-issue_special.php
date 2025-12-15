@@ -57,7 +57,6 @@ $issue_query = new WP_Query($query_args);
 // Remove filter after query
 remove_filter('posts_where', 'brandwoods_taxonomy_filter_issue_volume_with_articles', 10);
 ?>
-
 <section id="jr-about" class="jr-about pb-0" aria-labelledby="issues-title">
     <div class="container">
         <h1 id="issues-title" class="jr-sec-title jr-sec-title-sub"><?php echo esc_html($term_name); ?></h1>
