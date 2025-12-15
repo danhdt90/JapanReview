@@ -68,10 +68,9 @@ if ($taxonomy === 'publication_type') {
                                     // Display authors
                                     if (!empty($articleDetail['group_author']) && is_array($articleDetail['group_author'])) {
                                         echo '<li>';
-                                        $authors = array_slice($articleDetail['group_author'], 0, 3);
-                                        foreach ($authors as $index => $author) {
+                                        foreach ($articleDetail['group_author'] as $index => $author) {
                                             echo esc_html($author);
-                                            if ($index < count($authors) - 1) echo ', ';
+                                            if ($index < count($articleDetail['group_author']) - 1) echo ', ';
                                         }
                                         echo '</li>';
                                     }
@@ -100,40 +99,6 @@ if ($taxonomy === 'publication_type') {
                                     }
                                     ?>
                                 </ul>
-                                
-                                <?php 
-                                // Show publication types or keywords based on current taxonomy
-                                if ($taxonomy === 'keywords_article') :
-                                    $post_publication_types = get_the_terms(get_the_ID(), 'publication_type');
-                                    if ($post_publication_types && !is_wp_error($post_publication_types)) : ?>
-                                        <div class="art-tags mt-2">
-                                            <?php foreach ($post_publication_types as $publication_type) : ?>
-                                                <a href="<?php echo esc_url(get_term_link($publication_type)); ?>" 
-                                                   class="art-tag">
-                                                    <?php echo esc_html($publication_type->name); ?>
-                                                </a>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php endif;
-                                elseif ($taxonomy === 'publication_type') :
-                                    $post_keywords = get_the_terms(get_the_ID(), 'keywords_article');
-                                    if ($post_keywords && !is_wp_error($post_keywords)) : ?>
-                                        <div class="art-tags mt-2">
-                                            <?php 
-                                            $keyword_count = 0;
-                                            foreach ($post_keywords as $keyword) : 
-                                                if ($keyword_count >= 5) break;
-                                            ?>
-                                                <a href="<?php echo esc_url(get_term_link($keyword)); ?>" 
-                                                   class="art-tag">
-                                                    #<?php echo esc_html($keyword->name); ?>
-                                                </a>
-                                                <?php 
-                                                $keyword_count++;
-                                            endforeach; ?>
-                                        </div>
-                                    <?php endif;
-                                endif; ?>
                             </div>
                         </div>
                     </article>

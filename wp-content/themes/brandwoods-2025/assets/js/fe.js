@@ -165,18 +165,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // });
 
 // ========== SEARCH FORM HANDLER ==========
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('#jr-search .jr-searchbar');
-    if (!form) return;
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const q = form.querySelector('input[type="search"]')?.value?.trim() || '';
-        if (q) {
-            // Điều hướng tới trang list (ví dụ):
-            window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
-        }
-    });
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     const form = document.querySelector('#jr-search .jr-searchbar');
+//     if (!form) return;
+//     form.addEventListener('submit', (e) => {
+//         e.preventDefault();
+//         const q = form.querySelector('input[type="search"]')?.value?.trim() || '';
+//         if (q) {
+//             // Điều hướng tới trang list (ví dụ):
+//             window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
+//         }
+//     });
+// });
 
 // ========== BACK TO TOP BUTTON ==========
 document.addEventListener('DOMContentLoaded', () => {
@@ -298,13 +298,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Optional: click vào tag cloud -> tìm kiếm theo keyword
-    document.querySelectorAll('#jr-search-dual .jr-tagcloud a').forEach(a => {
-        a.addEventListener('click', (e) => {
-            e.preventDefault();
-            const kw = a.textContent.replace(/^#\s*/, '').trim();
-            window.location.href = `/search.html?q=${encodeURIComponent(kw)}`;
-        });
-    });
+    // document.querySelectorAll('#jr-search-dual .jr-tagcloud a').forEach(a => {
+    //     a.addEventListener('click', (e) => {
+    //         e.preventDefault();
+    //         const kw = a.textContent.replace(/^#\s*/, '').trim();
+    //         window.location.href = `/search.html?q=${encodeURIComponent(kw)}`;
+    //     });
+    // });
 });
 
 // Back to index & đánh dấu sidebar theo query
@@ -393,15 +393,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // (tuỳ chọn) Submit search
-    const form = overlay.querySelector('form.jr-searchbar');
-    form?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const fd = new FormData(form);
-        const q = (fd.get('q') || '').toString().trim();
-        if (!q) return;
-        // TODO: đổi URL search thật của bạn
-        window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
-    });
+    // const form = overlay.querySelector('form.jr-searchbar');
+    // form?.addEventListener('submit', (e) => {
+    //     e.preventDefault();
+    //     const fd = new FormData(form);
+    //     const q = (fd.get('q') || '').toString().trim();
+    //     if (!q) return;
+    //     // TODO: đổi URL search thật của bạn
+    //     window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
+    // });
 });
 
 
