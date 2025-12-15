@@ -34,8 +34,6 @@ $extract_value = function($field) {
     </div>
 </section>
 
-<?php get_template_part('/template-parts/components/search', 'dual'); ?>
-
 <?php if (have_posts()) : ?>
     <section id="jr-articles" class="jr-articles" aria-labelledby="articles-title">
         <div class="container-xxl position-relative">
