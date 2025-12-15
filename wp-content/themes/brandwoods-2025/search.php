@@ -83,6 +83,7 @@ $extract_value = function($field) {
                                         <?php endif; ?>
                                         <?php if (!empty($start_page_value) || !empty($end_page_value)): ?>
                                             <li>
+                                                ページ：
                                                <?php if (!empty($start_page_value)): echo esc_html($start_page_value); endif; ?><?php if (!empty($start_page_value) && !empty($end_page_value)): echo '-'; endif; ?><?php if (!empty($end_page_value)): echo esc_html($end_page_value); endif; ?>
                                             </li>
                                         <?php endif; ?>
