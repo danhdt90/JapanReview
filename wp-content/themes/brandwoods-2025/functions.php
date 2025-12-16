@@ -335,6 +335,9 @@
                     $query->set('post__in', [0]);
                 }
                 
+                // Ensure only articles are returned
+                $query->set('post_type', 'article');
+                
                 // Store search term for highlighting
                 $query->set('search_term', $search_term);
             }
