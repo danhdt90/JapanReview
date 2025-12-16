@@ -1,6 +1,6 @@
 <?php
     $page_404 = get_page_by_path('page-404');
-    $title = '404';
+    $title = '404 NOT FOUND';
     $image_url = IMAGE_PATH . "/404.jpg";
     $content = '<p class="mb-4">Page not found.<br>
                     The page you’re looking for may have been moved or no longer exists.<br>
