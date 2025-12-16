@@ -1,7 +1,7 @@
-/* Admin CSS for Book Bulk Importer */
+/* Admin CSS for Article Bulk Importer */
 
 .book-import-container {
-    max-width: 1000px;
+    /* max-width: 1000px; */
 }
 
 .book-import-section {
@@ -310,4 +310,10 @@
         margin-bottom: 10px;
         margin-right: 0;
     }
+}
+
+.preview-table{
+     display: block;
+    overflow-x: auto;
+    white-space: nowrap;
 }

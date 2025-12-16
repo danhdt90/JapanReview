@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Book Bulk Importer
- * Description: Import books in bulk from CSV files with Pods repeatable fields support
+ * Plugin Name: Article Bulk Importer
+ * Description: Import articles in bulk from CSV files with Pods repeatable fields support
  * Version: 1.0.0
  * Author: Your Name
  */
@@ -82,8 +82,8 @@ class BookBulkImporter {
     public function addAdminMenu() {
         add_submenu_page(
             'tools.php',
-            'Book Bulk Importer',
-            'Book Bulk Importer',
+            'Article Bulk Importer',
+            'Article Bulk Importer',
             'manage_options',
             'book-bulk-importer',
             array($this, 'adminPageCallback')
@@ -104,35 +104,53 @@ class BookBulkImporter {
      * Enqueue admin scripts and styles
      */
     public function enqueueAdminScripts($hook) {
-        if ($hook !== 'tools_page_book-bulk-importer') {
-            return;
+        // Load scripts for bulk importer admin page
+        if ($hook === 'tools_page_book-bulk-importer') {
+            wp_enqueue_script(
+                'book-bulk-importer-admin',
+                BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/admin.js',
+                array('jquery'),
+                BOOK_BULK_IMPORTER_VERSION,
+                true
+            );
+            
+            wp_enqueue_style(
+                'book-bulk-importer-admin',
+                BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/admin.css',
+                array(),
+                BOOK_BULK_IMPORTER_VERSION
+            );
+            
+            // Localize script for AJAX
+            wp_localize_script('book-bulk-importer-admin', 'bookBulkImporter', array(
+                'ajaxUrl' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('book_bulk_importer_nonce'),
+                'strings' => array(
+                    'importing' => __('Importing...', 'book-bulk-importer'),
+                    'success' => __('Import completed successfully!', 'book-bulk-importer'),
+                    'error' => __('Import failed. Please try again.', 'book-bulk-importer'),
+                )
+            ));
         }
         
-        wp_enqueue_script(
-            'book-bulk-importer-admin',
-            BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/admin.js',
-            array('jquery'),
-            BOOK_BULK_IMPORTER_VERSION,
-            true
-        );
-        
-        wp_enqueue_style(
-            'book-bulk-importer-admin',
-            BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/admin.css',
-            array(),
-            BOOK_BULK_IMPORTER_VERSION
-        );
-        
-        // Localize script for AJAX
-        wp_localize_script('book-bulk-importer-admin', 'bookBulkImporter', array(
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('book_bulk_importer_nonce'),
-            'strings' => array(
-                'importing' => __('Importing...', 'book-bulk-importer'),
-                'success' => __('Import completed successfully!', 'book-bulk-importer'),
-                'error' => __('Import failed. Please try again.', 'book-bulk-importer'),
-            )
-        ));
+        // Load validation scripts only for Article post type edit/add pages
+        if (in_array($hook, array('post.php', 'post-new.php'))) {
+            global $post;
+            
+            // Check if current post type is 'article'
+            if (!$post || $post->post_type !== 'article') {
+                return;
+            }
+            
+            // Enqueue custom validation JavaScript
+            wp_enqueue_script(
+                'book-importer-article-validation',
+                BOOK_BULK_IMPORTER_PLUGIN_URL . 'assets/js/custom-validate.js',
+                array('jquery'),
+                BOOK_BULK_IMPORTER_VERSION,
+                true
+            );
+        }
     }
     
     /**
@@ -142,14 +160,14 @@ class BookBulkImporter {
         // Check if Pods is active
         if (!class_exists('Pods')) {
             deactivate_plugins(plugin_basename(__FILE__));
-            wp_die('Book Bulk Importer requires Pods plugin to be active.');
+            wp_die('Article Bulk Importer requires Pods plugin to be active.');
         }
         
         // Create upload directory if it doesn't exist
         $upload_dir = wp_upload_dir();
-        $book_import_dir = $upload_dir['basedir'] . '/book-imports';
-        if (!file_exists($book_import_dir)) {
-            wp_mkdir_p($book_import_dir);
+        $article_import_dir = $upload_dir['basedir'] . '/article-imports';
+        if (!file_exists($article_import_dir)) {
+            wp_mkdir_p($article_import_dir);
         }
     }
     
@@ -166,7 +184,7 @@ class BookBulkImporter {
     public function podsNotActiveNotice() {
         ?>
         <div class="notice notice-error">
-            <p><?php _e('Book Bulk Importer requires Pods plugin to be active.', 'book-bulk-importer'); ?></p>
+            <p><?php _e('Article Bulk Importer requires Pods plugin to be active.', 'book-bulk-importer'); ?></p>
         </div>
         <?php
     }
