@@ -335,6 +335,9 @@
                     $query->set('post__in', [0]);
                 }
                 
+                // Ensure only articles are returned
+                $query->set('post_type', 'article');
+                
                 // Store search term for highlighting
                 $query->set('search_term', $search_term);
             }
@@ -588,6 +591,153 @@
         
         return $where;
     }
+
+    /**
+     * Add custom rewrite rules for Issue, Article, and News
+     */
+    function brandwoods_custom_rewrite_rules() {
+        // Issue detail: /issues/{volume-number}
+        add_rewrite_rule(
+            '^issues/([0-9]+)/?$',
+            'index.php?issue_volume=$matches[1]',
+            'top'
+        );
+        
+        // Article detail: /issues/{volume-number}/{post_id}
+        add_rewrite_rule(
+            '^issues/([0-9]+)/([0-9]+)/?$',
+            'index.php?post_type=article&p=$matches[2]',
+            'top'
+        );
+        
+        // Article detail uncategorized: /issues/uncategorized/{post_id}
+        add_rewrite_rule(
+            '^issues/uncategorized/([0-9]+)/?$',
+            'index.php?post_type=article&p=$matches[1]',
+            'top'
+        );
+        
+        // News detail: /news/yyyy/mm/dd/{post_id}
+        add_rewrite_rule(
+            '^news/([0-9]{4})/([0-9]{2})/([0-9]{2})/([0-9]+)/?$',
+            'index.php?p=$matches[4]',
+            'top'
+        );
+    }
+    add_action('init', 'brandwoods_custom_rewrite_rules');
+
+    /**
+     * Add custom query vars
+     */
+    function brandwoods_custom_query_vars($vars) {
+        $vars[] = 'issue_volume';
+        return $vars;
+    }
+    add_filter('query_vars', 'brandwoods_custom_query_vars');
+
+    /**
+     * Parse request to handle custom query vars for issue volume
+     */
+    function brandwoods_parse_request($query) {
+        // Chỉ xử lý khi là main query và không phải admin
+        if ( ! $query->is_main_query() || is_admin() ) {
+            return;
+        }
+
+        // Lấy issue_volume từ query_vars
+        $issue_volume = isset($query->query_vars['issue_volume']) ? $query->query_vars['issue_volume'] : '';
+        
+        if ( ! empty( $issue_volume ) ) {
+            global $wpdb;
+            
+            // Tìm issue post có volume tương ứng
+            $post_id = $wpdb->get_var( $wpdb->prepare(
+                "SELECT p.ID FROM {$wpdb->posts} p
+                INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+                WHERE pm.meta_key = 'volume'
+                AND pm.meta_value = %s
+                AND p.post_type = 'issue'
+                AND p.post_status = 'publish'
+                LIMIT 1",
+                $issue_volume
+            ) );
+            
+            if ( $post_id ) {
+                // Xóa issue_volume và set các params cho single post
+                unset($query->query_vars['issue_volume']);
+                $query->query_vars['post_type'] = 'issue';
+                $query->query_vars['p'] = $post_id;
+                $query->query_vars['name'] = '';
+                
+                // Init query flags
+                $query->is_single = true;
+                $query->is_singular = true;
+                $query->is_home = false;
+                $query->is_archive = false;
+                $query->is_post_type_archive = false;
+            } else {
+                // Không tìm thấy issue, show 404
+                $query->set_404();
+                status_header(404);
+            }
+        }
+    }
+    add_action('parse_query', 'brandwoods_parse_request');
+
+    /**
+     * Custom permalink for Issue post type
+     * Format: /issues/{volume-number}
+     */
+    function brandwoods_issue_permalink($post_link, $post) {
+        if ($post->post_type !== 'issue') {
+            return $post_link;
+        }
+        
+        $volume = get_post_meta($post->ID, 'volume', true);
+        
+        if (!empty($volume)) {
+            return home_url('/issues/' . $volume . '/');
+        }
+        
+        return $post_link;
+    }
+    add_filter('post_type_link', 'brandwoods_issue_permalink', 10, 2);
+
+    /**
+     * Custom permalink for Article post type
+     * Format: /issues/{volume-number}/{post_id} or /issues/uncategorized/{post_id}
+     */
+    function brandwoods_article_permalink($post_link, $post) {
+        if ($post->post_type !== 'article') {
+            return $post_link;
+        }
+        
+        $volume = get_post_meta($post->ID, 'volume', true);
+        
+        if (!empty($volume)) {
+            return home_url('/issues/' . $volume . '/' . $post->ID . '/');
+        } else {
+            return home_url('/issues/uncategorized/' . $post->ID . '/');
+        }
+    }
+    add_filter('post_type_link', 'brandwoods_article_permalink', 10, 2);
+
+    /**
+     * Custom permalink for News (regular post)
+     * Format: /news/yyyy/mm/dd/{post_id}
+     */
+    function brandwoods_news_permalink($post_link, $post) {
+        if ($post->post_type !== 'post') {
+            return $post_link;
+        }
+        
+        $year = get_the_date('Y', $post);
+        $month = get_the_date('m', $post);
+        $day = get_the_date('d', $post);
+        
+        return home_url('/news/' . $year . '/' . $month . '/' . $day . '/' . $post->ID . '/');
+    }
+    add_filter('post_link', 'brandwoods_news_permalink', 10, 2);
 
     
 
