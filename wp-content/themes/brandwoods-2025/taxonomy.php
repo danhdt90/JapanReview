@@ -128,6 +128,13 @@ if ($taxonomy === 'publication_type') {
                         ); 
                         ?>
                     </p>
+                    <a href="<?php echo esc_url(home_url('/articles')); ?>" class="btn btn-viewmore mt-4">
+                        <span>Browse All Articles</span>
+                        <svg class="btn-circle" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="11.5" stroke="white" />
+                            <path d="M13.25 16.3692L12.375 15.4018L14.5938 13.0334H7V11.6991H14.5938L12.375 9.33067L13.25 8.36328L17 12.3663L13.25 16.3692Z" fill="white" />
+                        </svg>
+                    </a>
                 </div>
 
                 <?php endif; ?>
