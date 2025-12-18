@@ -29,14 +29,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // Contact button - open form in new tab
-    const contactButtons = document.querySelectorAll('.btn.btn-contact');
-    
-    contactButtons.forEach(function(button) {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.open('https://forms.office.com/r/3Av5ZsFQDf', '_blank');
-        });
-    });
 });
