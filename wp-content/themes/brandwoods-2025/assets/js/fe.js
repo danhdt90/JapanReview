@@ -285,17 +285,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const formIssue = document.getElementById('form-issue');
 
 
-    if (formIssue) {
-        formIssue.addEventListener('submit', (e) => {
-            e.preventDefault();
-            let issue = formIssue.issue.value.trim();
-            // chuẩn hóa: lấy số (nếu chỉ dùng số), vẫn để nguyên nếu bạn dùng mã khác
-            const pure = issue.replace(/[^\d]/g, '');
-            if (!pure) return;
-            // Điều hướng đến trang số tạp chí
-            window.location.href = `/issues.html?issue=${encodeURIComponent(pure)}`;
-        });
-    }
+    // if (formIssue) {
+    //     formIssue.addEventListener('submit', (e) => {
+    //         e.preventDefault();
+    //         let issue = formIssue.issue.value.trim();
+    //         // chuẩn hóa: lấy số (nếu chỉ dùng số), vẫn để nguyên nếu bạn dùng mã khác
+    //         const pure = issue.replace(/[^\d]/g, '');
+    //         if (!pure) return;
+    //         // Điều hướng đến trang số tạp chí
+    //         window.location.href = `/issues.html?issue=${encodeURIComponent(pure)}`;
+    //     });
+    // }
 
     // Optional: click vào tag cloud -> tìm kiếm theo keyword
     // document.querySelectorAll('#jr-search-dual .jr-tagcloud a').forEach(a => {
@@ -311,13 +311,13 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     // back
     const back = document.getElementById('btn-news-back');
-    if (back) {
-        back.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (history.length > 1) history.back();
-            else window.location.href = back.dataset.back || '/news.html';
-        });
-    }
+    // if (back) {
+    //     back.addEventListener('click', (e) => {
+    //         e.preventDefault();
+    //         if (history.length > 1) history.back();
+    //         else window.location.href = back.dataset.back || '/news.html';
+    //     });
+    // }
 
     // active theo ?category=&tag=
     const url = new URL(location.href);
