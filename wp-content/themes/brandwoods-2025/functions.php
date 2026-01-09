@@ -739,6 +739,28 @@
     }
     add_filter('post_link', 'brandwoods_news_permalink', 10, 2);
 
+    /**
+     * Disable RSS Feeds
+     * Redirect all feed requests to homepage
+     */
+    function brandwoods_disable_rss_feeds() {
+        wp_redirect(home_url('/'), 301);
+        exit;
+    }
+
+    // Disable all feed types
+    add_action('do_feed', 'brandwoods_disable_rss_feeds', 1);
+    add_action('do_feed_rdf', 'brandwoods_disable_rss_feeds', 1);
+    add_action('do_feed_rss', 'brandwoods_disable_rss_feeds', 1);
+    add_action('do_feed_rss2', 'brandwoods_disable_rss_feeds', 1);
+    add_action('do_feed_atom', 'brandwoods_disable_rss_feeds', 1);
+    add_action('do_feed_rss2_comments', 'brandwoods_disable_rss_feeds', 1);
+    add_action('do_feed_atom_comments', 'brandwoods_disable_rss_feeds', 1);
+
+    // Remove RSS feed links from header
+    remove_action('wp_head', 'feed_links', 2);
+    remove_action('wp_head', 'feed_links_extra', 3);
+
     
 
 ?>
