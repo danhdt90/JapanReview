@@ -761,6 +761,25 @@
     remove_action('wp_head', 'feed_links', 2);
     remove_action('wp_head', 'feed_links_extra', 3);
 
+    /**
+     * Get top keywords with most posts
+     * 
+     * @param int $max_keyword Maximum number of keywords to return (default: 20)
+     * @return array|false Array of term objects or false on failure
+     */
+    function brandwoods_get_filtered_keywords($max_keyword = 20) {
+        // Get keywords sorted by post count (highest first)
+        $all_keywords = get_terms(array(
+            'taxonomy'   => 'keywords_article',
+            'hide_empty' => true,
+            'orderby'    => 'count',
+            'order'      => 'DESC',
+            'number'     => $max_keyword, // Limit to max_keyword results
+        ));
+        
+        return (!empty($all_keywords) && !is_wp_error($all_keywords)) ? $all_keywords : false;
+    }
+
     
 
 ?>
