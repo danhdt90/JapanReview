@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <h3 class="jr-subtitle mt-4 mb-3">Keywords</h3>
+        <h3 class="jr-subtitle mt-4 mb-3">Keyword</h3>
         <ul class="jr-tagcloud mb-0">
             <?php 
             // Get top keywords with most posts
