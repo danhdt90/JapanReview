@@ -238,7 +238,7 @@
         <ul class="jr-tagcloud">
             <?php 
             // Get top keywords with most posts
-            $all_keywords = brandwoods_get_filtered_keywords(30);
+            $all_keywords = brandwoods_get_filtered_keywords();
             
             if ($all_keywords): 
                 foreach ($all_keywords as $keyword): ?>
