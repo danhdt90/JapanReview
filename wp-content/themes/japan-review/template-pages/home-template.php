@@ -132,7 +132,7 @@
       </ul>
 
       <!-- Keyword -->
-      <h3 class="jr-subtitle">Keywords</h3>
+      <h3 class="jr-subtitle">Keyword</h3>
       <ul class="jr-tagcloud">
         <?php 
         // Get top keywords with most posts

@@ -180,7 +180,7 @@
                 </div>
 
                     <div class="art-keywords mt-4">
-                        <div class="mb-2">Keyword</div>
+                        <div class="mb-2">Keywords</div>
                         <ul class="jr-tagcloud justify-content-start ms-0">
                             <?php 
                             // Display keywords from taxonomy
@@ -234,11 +234,11 @@
             </div>
         </div>
 
-        <h3 class="jr-subtitle mt-4 mb-3">Keywords</h3>
+        <h3 class="jr-subtitle mt-4 mb-3">Keyword</h3>
         <ul class="jr-tagcloud">
             <?php 
             // Get top keywords with most posts
-            $all_keywords = brandwoods_get_filtered_keywords();
+            $all_keywords = brandwoods_get_filtered_keywords(30);
             
             if ($all_keywords): 
                 foreach ($all_keywords as $keyword): ?>
