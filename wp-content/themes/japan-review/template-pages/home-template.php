@@ -132,18 +132,13 @@
       </ul>
 
       <!-- Keyword -->
-      <h3 class="jr-subtitle">Keyword</h3>
+      <h3 class="jr-subtitle">Keywords</h3>
       <ul class="jr-tagcloud">
         <?php 
-        // Get all keywords from taxonomy
-        $all_keywords = get_terms(array(
-            'taxonomy'   => 'keywords_article',
-            'hide_empty' => true, // Only show keywords that have articles
-            'orderby'    => 'count',
-            'order'      => 'DESC',
-        ));
+        // Get top keywords with most posts
+        $all_keywords = brandwoods_get_filtered_keywords();
         
-        if (!empty($all_keywords) && !is_wp_error($all_keywords)): 
+        if ($all_keywords): 
             foreach ($all_keywords as $keyword): ?>
                 <li>
                     <a href="<?php echo esc_url(get_term_link($keyword)); ?>">
