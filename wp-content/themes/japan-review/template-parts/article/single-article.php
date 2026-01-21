@@ -80,19 +80,8 @@
 
                 <!-- Content -->
                 <div class="col-12 col-lg-7">
-                    <!-- Display post title first -->
-                     <p class="art-section"><?php the_title(); ?></p>
-                    
-                    <?php 
-                    // Display main_title (repeater)
-                    if (!empty($articleDetail['main_title']) && is_array($articleDetail['main_title'])): 
-                        foreach ($articleDetail['main_title'] as $main_title): ?>
-                            <p class="art-section"><?php echo esc_html($main_title); ?></p>
-                        <?php endforeach;
-                    endif; 
-                    ?>
-
-                    <?php 
+                   
+                     <?php 
                     // Display other_title (repeater) - each on new line
                     if (!empty($articleDetail['other_title']) && is_array($articleDetail['other_title'])): 
                         foreach ($articleDetail['other_title'] as $other_title): ?>
@@ -101,6 +90,20 @@
                     elseif (!empty($articleDetail['other_title'])): ?>
                         <h2 class="art-title"><?php echo esc_html($articleDetail['other_title']); ?></h2>
                     <?php endif; ?>
+
+                     <!-- Display post title first -->
+                     <p class="art-section"><?php the_title(); ?></p>
+                    <?php 
+                    
+                    // Display main_title (repeater)
+                    if (!empty($articleDetail['main_title']) && is_array($articleDetail['main_title'])): 
+                        foreach ($articleDetail['main_title'] as $main_title): ?>
+                            <p class="art-section"><?php echo esc_html($main_title); ?></p>
+                        <?php endforeach;
+                    endif; 
+                    ?>
+
+                    
 
                     <ul class="art-meta">
                         <?php 
@@ -139,8 +142,16 @@
                         
                         // Display DOI
                         $doi_value = $extract_value($articleDetail['doi']);
-                        if (!empty($doi_value)): ?>
-                            <li><span class="link-underline" target="_blank" rel="noopener">DOI: <?php echo esc_html($doi_value); ?></span></li>
+                        if (!empty($doi_value)):
+                            $doi_url = 'https://doi.org/' . $doi_value;
+                            ?>
+                            <li>
+                                <span class="link-underline">DOI: 
+                                    <a href="<?php echo esc_url($doi_url); ?>" target="_blank" rel="noopener">
+                                        <?php echo esc_html($doi_value); ?>
+                                    </a>
+                                </span>
+                            </li>
                         <?php endif;
                         
                         // Display publication date
