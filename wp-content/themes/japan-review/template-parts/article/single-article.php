@@ -143,7 +143,7 @@
                         // Display DOI
                         $doi_value = $extract_value($articleDetail['doi']);
                         if (!empty($doi_value)):
-                            $doi_url = 'https://doi.org/' . rawurlencode($doi_value);
+                            $doi_url = 'https://doi.org/' . $doi_value;
                             ?>
                             <li>
                                 <span class="link-underline">DOI: 
