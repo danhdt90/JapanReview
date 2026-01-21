@@ -198,7 +198,7 @@ class BookBulkImporter_BookImporter {
             if (!empty($main_titles)) {
                 $validated_titles = array();
                 foreach ($main_titles as $title) {
-                    $validated_titles[] = $this->validateString($title, 255, 'main_title', true);
+                    $validated_titles[] = sanitize_text_field(trim($title));
                 }
                 
                 // Skip the first title (already used as post title)
@@ -213,7 +213,7 @@ class BookBulkImporter_BookImporter {
             if (!empty($other_titles)) {
                 $validated_other_titles = array();
                 foreach ($other_titles as $title) {
-                    $validated_other_titles[] = $this->validateString($title, 255, 'other_title', true);
+                    $validated_other_titles[] = sanitize_text_field(trim($title));
                 }
                 $this->saveRepeatableField($post_id, 'other_title', $validated_other_titles);
             }
@@ -223,7 +223,7 @@ class BookBulkImporter_BookImporter {
             if (!empty($group_authors)) {
                 $validated_authors = array();
                 foreach ($group_authors as $author) {
-                    $validated_authors[] = $this->validateString($author, 50, 'group_author', true);
+                    $validated_authors[] = sanitize_text_field(trim($author));
                 }
                 $this->saveRepeatableField($post_id, 'group_author', $validated_authors);
             }
@@ -233,7 +233,7 @@ class BookBulkImporter_BookImporter {
             if (!empty($content_descriptions)) {
                 $validated_descriptions = array();
                 foreach ($content_descriptions as $description) {
-                    $validated_descriptions[] = $this->validateString($description, 255, 'content_description', true);
+                    $validated_descriptions[] = sanitize_text_field(trim($description));
                 }
                 $this->saveRepeatableField($post_id, 'content_description', $validated_descriptions);
             }
@@ -254,7 +254,7 @@ class BookBulkImporter_BookImporter {
                 ksort($abstracts);
                 $validated_abstracts = array();
                 foreach ($abstracts as $abstract) {
-                    $validated_abstracts[] = $this->validateString($abstract, 2000, 'abstract', true);
+                    $validated_abstracts[] = sanitize_text_field(trim($abstract));
                 }
                 $this->saveRepeatableField($post_id, 'abstract', $validated_abstracts);
             }
@@ -641,10 +641,6 @@ class BookBulkImporter_BookImporter {
     private function saveRepeatableField($post_id, $field_name, $values) {
         if (empty($values)) {
             return;
-        }
-        
-        if (count($values) > 10) {
-            throw new Exception('Too many ' . $field_name . ' values (maximum 10 allowed)');
         }
         
         // Try Pods Simple Repeatable format first

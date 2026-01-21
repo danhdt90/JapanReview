@@ -325,11 +325,50 @@
                         }
                     }
                 }
+
+                // Find matches by taxonomy keywords (keywords_article)
+                $keyword_post_ids = [];
+                $keyword_terms = get_terms([
+                    'taxonomy' => 'keywords_article',
+                    'search' => $search_term,
+                    'hide_empty' => false,
+                    'fields' => 'ids',
+                    'number' => 100
+                ]);
+
+                if (!is_wp_error($keyword_terms) && !empty($keyword_terms)) {
+                    $keyword_posts = get_posts([
+                        'post_type' => 'article',
+                        'post_status' => 'publish',
+                        'numberposts' => 1000,
+                        'fields' => 'ids',
+                        'tax_query' => [
+                            [
+                                'taxonomy' => 'keywords_article',
+                                'field' => 'term_id',
+                                'terms' => $keyword_terms,
+                                'include_children' => false,
+                                'operator' => 'IN'
+                            ]
+                        ],
+                        'suppress_filters' => true,
+                        'orderby' => 'date',
+                        'order' => 'DESC'
+                    ]);
+
+                    if (!empty($keyword_posts) && is_array($keyword_posts)) {
+                        $keyword_post_ids = array_map('absint', $keyword_posts);
+                    }
+                }
+
+                // Merge results from Pods and taxonomy search
+                $all_post_ids = array_unique(array_merge($post_ids, $keyword_post_ids));
                 
                 // If we found posts, set them as the search result
-                if (!empty($post_ids)) {
-                    $query->set('post__in', $post_ids);
-                    $query->set('orderby', 'post__in');
+                if (!empty($all_post_ids)) {
+                    $query->set('post__in', $all_post_ids);
+                    $query->set('orderby', 'date');
+                    $query->set('order', 'DESC');
                 } else {
                     // No results found, set impossible condition
                     $query->set('post__in', [0]);
