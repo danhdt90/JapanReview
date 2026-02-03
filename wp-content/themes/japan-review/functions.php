@@ -151,13 +151,11 @@
 
     if ( ! function_exists( 'brandwoods_pagination' )) :
 
-        function brandwoods_pagination($query = null) {
+        function brandwoods_pagination($query = null, $base_url = null) {
             if ($query === null) {
                 global $wp_query;
                 $query = $wp_query;
             }
-        
-            $big = 999999999; 
         
             if ($query->max_num_pages <= 1) {
                 return;
@@ -165,6 +163,18 @@
         
             $current = max(1, get_query_var('paged'));
             $total   = $query->max_num_pages;
+        
+            // Nếu không có base_url, generate URL dựa vào issue_volume hoặc default
+            if ($base_url === null) {
+                $issue_volume = get_query_var('issue_volume');
+                if (!empty($issue_volume)) {
+                    // Đang xem issue detail - tạo URL dạng /issues/{volume}/page/{num}
+                    $base_url = home_url('/issues/' . $issue_volume . '/page/%#%/');
+                } else {
+                    // Fallback: sử dụng current URL
+                    $base_url = add_query_arg('paged', '%#%', remove_query_arg('paged'));
+                }
+            }
         
             // Default page
             $pages_to_show = [1, 2, $total];
@@ -181,8 +191,10 @@
             echo '<nav class="jr-pagination mt-4" aria-label="News pagination">';
             echo '<ul class="pagination justify-content-center gap-2">';
         
+            // Previous button
             if ($current > 1) {
-                echo '<li class="page-item"><a class="page-link" href="' . esc_url(get_pagenum_link($current - 1)) . '">‹</a></li>';
+                $prev_url = str_replace('%#%', $current - 1, $base_url);
+                echo '<li class="page-item"><a class="page-link" href="' . esc_url($prev_url) . '">‹</a></li>';
             } else {
                 echo '<li class="page-item disabled"><span class="page-link">‹</span></li>';
             }
@@ -196,14 +208,17 @@
                 if ($page_num == $current) {
                     echo '<li class="page-item active"><span class="page-link">' . $page_num . '</span></li>';
                 } else {
-                    echo '<li class="page-item"><a class="page-link" href="' . esc_url(get_pagenum_link($page_num)) . '">' . $page_num . '</a></li>';
+                    $page_url = str_replace('%#%', $page_num, $base_url);
+                    echo '<li class="page-item"><a class="page-link" href="' . esc_url($page_url) . '">' . $page_num . '</a></li>';
                 }
         
                 $last_page = $page_num;
             }
         
+            // Next button
             if ($current < $total) {
-                echo '<li class="page-item"><a class="page-link" href="' . esc_url(get_pagenum_link($current + 1)) . '">›</a></li>';
+                $next_url = str_replace('%#%', $current + 1, $base_url);
+                echo '<li class="page-item"><a class="page-link" href="' . esc_url($next_url) . '">›</a></li>';
             } else {
                 echo '<li class="page-item disabled"><span class="page-link">›</span></li>';
             }
@@ -214,6 +229,14 @@
     endif;
 
     function add_issues_pagination_rewrite() {
+        // Rewrite rule cho pagination trong issue detail: /issues/{volume}/page/{num}
+        add_rewrite_rule(
+            '^issues/([0-9]+)/page/([0-9]+)/?$',
+            'index.php?issue_volume=$matches[1]&paged=$matches[2]',
+            'top'
+        );
+        
+        // Keep old rule for issues listing page (nếu có)
         add_rewrite_rule(
             '^issues/page/([0-9]+)/?',
             'index.php?pagename=issues&paged=$matches[1]',
